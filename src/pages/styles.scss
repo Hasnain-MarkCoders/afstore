@@ -1,0 +1,388 @@
+.add-category {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0px;
+}
+
+.pageTitle {
+  color: #3e4d60;
+}
+
+.cellWithStatus {
+  color: #000;
+  font-weight: 600;
+  padding: 2px 11px;
+  border-radius: 50px;
+  min-width: 55px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: capitalize;
+  line-height: 21px;
+  background-color: rgba(0, 128, 0, 0.05);
+  color: #6439ff;
+  border: 1px solid #6439ff;
+
+  &:hover {
+    color: #fff;
+    background-color: #6439ff;
+  }
+
+  &.active,
+  &.complete {
+    background-color: rgba(0, 128, 0, 0.05);
+    color: #f0ad4e;
+    border: 1px solid #f0ad4e;
+  }
+
+  &.pending {
+    background-color: rgba(255, 217, 0, 0.05);
+    color: goldenrod;
+    border: 1px solid goldenrod;
+  }
+
+  &.inactive {
+    background-color: rgba(255, 0, 0, 0.05);
+    color: crimson;
+    border: 1px solid crimson;
+  }
+}
+
+.cellAction {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  a {
+    text-decoration: none;
+  }
+
+  .action-btn {
+    font-weight: 600;
+    padding: 2px 11px;
+    border-radius: 50px;
+    line-height: 20px;
+    text-align: center;
+    border: 1px solid #6439ff;
+    background-color: rgba(0, 128, 0, 0.05);
+    color: #6439ff;
+    text-transform: capitalize;
+
+    &:hover {
+      color: #fff;
+      background-color: #6439ff;
+    }
+  }
+
+  .css-1ujsas3.Mui-disabled {
+    border-color: rgba(0, 0, 0, 0.26);
+  }
+
+  .action-icon-btn {
+    padding: 5px;
+    border-radius: 50px;
+    color: #7451f8;
+    height: 20px;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    svg {
+      width: 0.8em;
+      height: 0.8em;
+    }
+
+    &.viewBtn {
+      svg {
+        color: #7451f8;
+      }
+
+      &:hover {
+        background-color: #7551f8b6 !important;
+        svg {
+          color: #fff;
+        }
+      }
+    }
+
+    &.editBtn {
+      svg {
+        color: #f0ad4e;
+      }
+
+      &:hover {
+        background-color: #f0ac4ed0;
+
+        svg {
+          color: #fff;
+        }
+      }
+    }
+    &.approveBtn {
+      svg {
+        color: green;
+      }
+
+      &:hover {
+        background-color: green;
+
+        svg {
+          color: #fff;
+        }
+      }
+    }
+    &.deleteBtn {
+      svg {
+        color: crimson;
+        cursor: pointer;
+      }
+
+      &:hover {
+        background-color: rgba(220, 20, 60, 0.6);
+
+        svg {
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .css-1e6y48t-MuiButtonBase-root-MuiButton-root.Mui-disabled {
+    border-color: rgba(0, 0, 0, 0.26);
+  }
+}
+
+.dataGrid {
+  border-radius: 15px;
+  background-color: #fff;
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47) !important;
+  width: 100%;
+
+  .MuiDataGrid-virtualScroller {
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: 3px;
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: darkgrey;
+      border-radius: 3px;
+      width: 7px;
+      // outline: 1px solid slategrey;
+    }
+  }
+
+  .MuiDataGrid-root {
+    border: none;
+  }
+}
+
+// modal
+
+.custom-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto; 
+  .MuiBox-root {
+    width: 100% !important;
+    max-width: 400px;
+    background: #fff;
+    border-radius: 10px;
+    outline: none;
+    margin-top: 20px;
+    // margin-bottom: 20px !important;
+    // .modal-header {
+    //   display: flex;
+    //   justify-content: space-between;
+    //   align-items: center;
+    //   padding: 15px 15px 0;
+    //   // border-bottom: 1px solid #f0f0f0;
+    //   border-bottom-left-radius: 0;
+    //   border-bottom-right-radius: 0;
+
+    // }
+
+    .modal-body {
+      padding: 20px 20px 40px;
+      width: 100%;
+      border: 0;
+      display: flex;
+      gap: 20px;
+      flex-direction: column;
+      position: relative;
+
+      .field-description {
+        .MuiInputBase-input {
+          height: 75px !important;
+        }
+      }
+
+      .modal-icon {
+        text-align: center;
+
+        svg {
+          font-size: 70px;
+          color: #0000008a;
+        }
+      }
+
+      .main-title {
+        font-size: 35px;
+        text-align: center;
+        font-weight: 600;
+        margin: 10px 0;
+      }
+
+      .close-btn {
+        cursor: pointer;
+        position: absolute;
+        right: 15px;
+      }
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      text-decoration: none;
+      display: inline-block;
+      border-radius: 50px;
+      text-transform: capitalize;
+      width: max-content;
+      padding: 5px 15px;
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 2px;
+      font-size: 15px;
+      width: 90px;
+    }
+
+    .btn-primary {
+      background-color: #6439ff;
+      border: 1px solid #6439ff;
+
+      &:hover {
+        background-color: rgba(0, 128, 0, 0.05);
+        color: #6439ff;
+      }
+    }
+
+    .btn-outline-primary {
+      border: 1px solid #6439ff;
+      background-color: rgba(0, 128, 0, 0.05);
+      color: #6439ff;
+
+      &:hover {
+        color: #fff;
+        background-color: #6439ff;
+      }
+    }
+
+    .btn-danger {
+      background-color: #ff0e0e;
+      border: 1px solid #ff0e0e;
+
+      &:hover {
+        background-color: rgba(0, 128, 0, 0.05);
+        color: #ff0e0e;
+      }
+    }
+
+    .btn-outline-danger {
+      border: 1px solid #ff0e0e;
+      background-color: rgba(0, 128, 0, 0.05);
+      color: #ff0e0e;
+
+      &:hover {
+        color: #fff;
+        background-color: #ff0e0e;
+      }
+    }
+  }
+  >.MuiBox-root{
+    max-height: 100vh;
+    max-width: 440px; 
+  }
+}
+
+// pupring Edit Modal
+
+.edit-modal{
+  .MuiBox-root { 
+    max-width: 900px; 
+    .colorPlate {
+      display: flex;
+      flex-direction: row;
+    }
+    
+    /* Add a common class for all color options */
+    .colorOption {
+      margin: 5px;
+      width: 30px; /* Adjust size as needed */
+      height: 30px; /* Adjust size as needed */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+    
+    /* Specific classes for each color */
+    .red { background-color: red; }
+    .yellow { background-color: #ffa500; }
+    .purple { background-color: #6439ff; }
+    .green { background-color: #03C04A;}
+    .black { background-color: black; }
+    .skyblue {  background-color: #5bc0de ; }
+    .sceen { background-color: #FFCF9D; }
+    .darkpurple { background-color: #662549; }
+    .pink { background-color: #FFB6D9 ; }
+  }
+  >.MuiBox-root { 
+    max-width: 900px; 
+  }
+}
+
+// generate-invoice
+
+.generate-invoice{
+  .MuiBox-root{
+    max-width: 950px;
+    margin: auto;
+    .heading{
+      font-size: 30px;
+      font-weight: 600;
+    }
+    .check-fields{
+      display: flex;
+      gap:10px;
+      padding-left: 10px;
+      >div{
+        width: 50%;
+      }
+    }
+    .modal-footer{
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}
+
+
+.datePicker-field{
+  width: 100% !important;
+  margin-bottom: 30px !important;
+}

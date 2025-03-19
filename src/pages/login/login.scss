@@ -1,0 +1,44 @@
+.login {
+    min-height: calc(100vh);
+    margin-top: 0 !important;
+
+    .left {
+        background-color: #fff;
+
+        .css-150icvb {
+            padding: 30px 150px;
+
+            .login-form {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                gap: 5px;
+
+                .css-17vbkzs-MuiFormControl-root-MuiTextField-root {
+                    margin: 0;
+                }
+
+                .css-181pov7 {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+
+    .right {
+        padding: 0px !important;
+
+        img {
+            height: 100%;
+            width: 100%;
+        }
+    }
+
+    @media only screen and (max-width: 1024px) {
+        .left {
+            .css-150icvb {
+                padding: 30px 50px;
+            }
+        }
+    }
+}

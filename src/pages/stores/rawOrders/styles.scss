@@ -1,0 +1,69 @@
+.sku {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+.sku-title {
+  margin-left: 20px;
+  margin-top: 15px;
+}
+
+.deleteButton {
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: crimson;
+  border: 1px dotted rgba(220, 20, 60, 0.6);
+  cursor: pointer;
+}
+
+.editButton {
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: #FF5733;
+  border: 1px dotted #FF5733;
+  cursor: pointer;
+}
+
+.dataGrid {
+  border-radius: 15px;
+  background-color: #fff;
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47) !important;
+  width: 100%;
+
+  .MuiDataGrid-root {
+    border: none;
+  }
+}
+
+.delete-modal {
+  &.add-shipment{
+    .MuiBox-root{
+      max-width: 350px;
+    }
+  }
+  .MuiBox-root{
+    max-width: 300px;
+    .modal-body {
+      gap: 10px !important;
+      .main-title {
+        font-size: 25px;
+        text-align: center;
+        font-weight: 600;
+        margin: 10px 0 0;
+      }
+      p{
+        text-align: center;
+      }
+    }
+  }
+  
+}
+
+
+@media (min-width: 600px) {
+  .css-78c6dr-MuiToolbar-root-MuiTablePagination-toolbar {
+    padding-right: 0px;
+  }
+}

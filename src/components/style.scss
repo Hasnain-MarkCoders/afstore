@@ -1,0 +1,17 @@
+.mt-0{
+    margin-top: 0;
+}
+
+.MuiFormControl-root {
+    height: 40px;
+    .MuiInputLabel-formControl {
+        top: -8px;
+    }
+
+    .MuiOutlinedInput-input {
+        padding: 8px !important;
+    }
+    .MuiSelect-outlined {
+        padding: 8px 24px 8px 8px !important;
+    }  
+}

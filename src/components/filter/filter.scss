@@ -1,0 +1,158 @@
+.filterContainer {
+    background-color: #fff;
+    padding: 15px 20px;
+    border-radius: 15px;
+    display: flex !important;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    form {
+        flex-grow: 1;
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .MuiOutlinedInput-root {
+            width: 245px !important;
+            margin: 0 12px 0px 0;
+        }
+
+        .collapse {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+
+            .MuiOutlinedInput-root {
+                margin: 0;
+            }
+        }
+
+        .MuiFormControl-root {
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+    }
+
+    .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+}
+
+
+.list-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .MuiBox-root {
+        min-width: 400px !important;
+        max-width: 600px !important;
+        background: #fff;
+        border-radius: 10px;
+        outline: none;
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+
+            .main-title {
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            .close-btn {
+                cursor: pointer;
+            }
+        }
+
+        .modal-body {
+            padding: 15px;
+            height: 150px;
+
+            .MuiInputBase-input {
+                height: 120px !important;
+            }
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-top: 1px solid #f0f0f0;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .btn {
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 50px;
+            text-transform: capitalize;
+            width: max-content;
+            padding: 5px 15px;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .btn-primary {
+            background-color: #6439ff;
+            border: 1px solid #6439ff;
+
+            &:hover {
+                background-color: transparent;
+                color: #6439ff;
+            }
+        }
+
+        .btn-outline-primary {
+            border: 1px solid #6439ff;
+            background-color: transparent;
+            color: #6439ff;
+
+            &:hover {
+                color: #fff;
+                background-color: #6439ff;
+            }
+        }
+    }
+}
+
+.MuiMenu-list {
+    display: flex !important;
+    flex-direction: column !important;
+
+    .multipleSelect {
+        padding: 6px;
+        gap: 5px;
+    }
+}
+
+@media only screen and (max-width: 1400px) {
+    .filterContainer {
+        form {
+            .top-bar {
+                display: flex;
+                justify-content: space-between;
+                align-items: start;
+                flex-wrap: wrap;
+                flex-direction: column-reverse;
+                gap: 15px;  
+            }
+        }
+    }
+}

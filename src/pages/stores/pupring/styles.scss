@@ -1,0 +1,311 @@
+.store {
+  display: flex;
+  flex-direction: column;
+  gap: 25px
+}
+
+.view-list {
+
+  .left {
+    flex: 1;
+    -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+    box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+    padding: 20px;
+    position: relative;
+    background-color: #fff;
+    border-radius: 15px;
+
+    .editButton {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 5px;
+      font-size: 12px;
+      color: #7451f8;
+      background-color: #7551f818;
+      cursor: pointer;
+      border-radius: 0px 0px 0px 5px;
+    }
+
+    .item {
+      display: flex;
+      gap: 20px;
+
+      .itemImg {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .details {
+        .itemTitle {
+          margin-bottom: 10px;
+          color: #555;
+        }
+
+        .detailItem {
+          margin-bottom: 10px;
+          font-size: 14px;
+
+          .itemKey {
+            font-weight: bold;
+            text-transform: capitalize;
+            color: gray;
+            margin-right: 5px;
+          }
+
+          .itemValue {
+            font-weight: 300;
+          }
+        }
+      }
+    }
+  }
+
+  .right {
+    flex: 2;
+  }
+}
+
+.action-select-field {
+  .MuiPopover-paper {
+    box-shadow: 0 0 3px #b9a7a717;
+    width: 150px !important;
+    overflow: hidden;
+
+    a,
+    button {
+      text-decoration: none;
+      width: 100%;
+      gap: 5px;
+      color: #555;
+      text-align: center;
+    }
+  }
+}
+
+.datatable {
+  min-height: 637px;
+  height: calc(100vh - 350px);
+  margin: 20px 0;
+  border-radius: 15px;
+  background-color: #fff;
+  -webkit-box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47) !important;
+  box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47) !important;
+
+  .custom-pagination {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background-color: #FFF;
+    border-radius: 15px;
+    input{
+      border: 1px solid black;
+      border-radius: 20px;
+      padding: 4.5px;
+      text-align: center;
+    }
+
+    li {
+      border-radius: 50% !important;
+      overflow: hidden;
+      .Mui-selected{
+        background-color: #6439ff;
+      }
+    }
+  }
+
+  .MuiDataGrid-overlay {
+    z-index: 100;
+  }
+
+  .MuiDataGrid-root {
+    border: none;
+  }
+
+  .MuiDataGrid-cell {
+    &:nth-child(2) {
+      overflow: inherit !important;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      height: 25px;
+      min-width: 25px !important;
+      padding: 2px 3px !important;
+      border-radius: 50px !important;
+      background-color: rgba(100, 57, 255, 0.05) !important;
+      border: 1px solid #6439ff !important;
+      text-align: center;
+      svg {
+        color: #6439ff;
+      }
+
+      &.red {
+        background-color: rgba(255, 0, 0, 0.2) !important;
+        border-color: #ff0000 !important;
+
+        svg {
+          color: #ff0000;
+        }
+      }
+
+      &.green {
+        background-color: rgba(25, 135, 84, 0.1) !important;
+        border: 1px solid #198754 !important;
+
+        svg {
+          color: #198754;
+        }
+      }
+
+      &.yellow {
+        background-color: rgba(255, 165, 0, 0.1) !important;
+        border: 1px solid #ffa500 !important;
+
+        svg {
+          color: #ffa500;
+        }
+      }
+
+      &.purple {
+        background-color: rgba(100, 57, 255, 0.05) !important;
+        border: 1px solid #6439ff !important;
+
+        svg {
+          color: #6439ff;
+        }
+      }
+
+      &.black {
+        background-color: rgba(0, 0, 0, 0.1) !important;
+        border: 1px solid #000000 !important;
+
+        svg {
+          color: #000000;
+        }
+      }
+
+      &.skyblue {
+        background-color: rgba(91, 192, 222, 0.1) !important;
+        border: 1px solid #5bc0de !important;
+
+        svg {
+          color: #5bc0de;
+        }
+      }
+
+      &.sceen {
+        background-color: rgba(255, 207, 157, 0.1) !important;
+        border: 1px solid #FFCF9D !important;
+
+        svg {
+          color: #FFCF9D;
+        }
+      }
+
+      &.darkpurple {
+        background-color: rgba(102, 37, 73, 0.1) !important;
+        border: 1px solid #662549 !important;
+
+        svg {
+          color: #662549;
+        }
+      }
+
+      &.pink {
+        background-color: rgba(255, 182, 217, 0.1) !important;
+        border: 1px solid #FFB6D9 !important;
+
+        svg {
+          color: #FFB6D9;
+        }
+      }
+
+
+
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 120px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        padding: 5px 0;
+        z-index: 1;
+        left: 0;
+        top: 28px;
+        list-style: none;
+
+        li {
+          >* {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            padding: 5px 15px;
+            text-transform: capitalize;
+            text-decoration: none;
+          }
+
+          a {
+            color: #000;
+            width: calc(100% - 30px);
+          }
+
+          &:hover {
+            >* {
+              background-color: rgba(25, 118, 210, 0.04);
+            }
+          }
+        }
+      }
+
+      &:hover {
+        .dropdown-content {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .datatableTitle {
+    width: 100%;
+    font-size: 24px;
+    color: gray;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .link {
+      text-decoration: none;
+      color: green;
+      font-size: 16px;
+      font-weight: 400;
+      border: 1px solid green;
+      padding: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  }
+
+  .cellWithImg {
+    display: flex;
+    align-items: center;
+
+    .cellImg {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 20px;
+    }
+  }
+
+
+}
