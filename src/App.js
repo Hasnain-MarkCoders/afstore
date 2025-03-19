@@ -31,44 +31,44 @@ function App() {
     const pathname = window?.location?.pathname
   const dispatch = useDispatch()
   const auth = useSelector(state=>state.user)
-  const saveToken =async (token)=>{
-    const response = await API.post(`/update-token`, {
-     token,
-     email:auth?.email
-    });
-  }
-  const requestForToken =async () => {
-    if ('serviceWorker' in navigator) {
-      await navigator.serviceWorker.register('firebase-messaging-sw.js', {
-        scope: '/',
-      });
-    }
-      try {
-        const newToken = await getToken(messaging, { vapidKey: 'BAtDdy_r_vQ8eyuu3ATFOR0zXgZ8ibiK5mj2aUAmyfB-ZrRk1agsXDhMB3nKPdQWswbdCQUSuLFZFA05GBi5HNU' });
-        if(newToken){
-          await saveToken(newToken);
-        }
-      } catch (error) {
-        console.error("Failed to refresh token:", error);
-      }
+  // const saveToken =async (token)=>{
+  //   const response = await API.post(`/update-token`, {
+  //    token,
+  //    email:auth?.email
+  //   });
+  // }
+  // const requestForToken =async () => {
+  //   if ('serviceWorker' in navigator) {
+  //     await navigator.serviceWorker.register('firebase-messaging-sw.js', {
+  //       scope: '/',
+  //     });
+  //   }
+  //     try {
+  //       const newToken = await getToken(messaging, { vapidKey: 'BAtDdy_r_vQ8eyuu3ATFOR0zXgZ8ibiK5mj2aUAmyfB-ZrRk1agsXDhMB3nKPdQWswbdCQUSuLFZFA05GBi5HNU' });
+  //       if(newToken){
+  //         await saveToken(newToken);
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to refresh token:", error);
+  //     }
 
-  };
-useEffect(()=>{
-  if(!pathname.includes("/login")){
-    requestForToken()
-    onMessage(messaging, (payload) => {
-      console.log('Message received in foreground:', payload);
+  // };
+// useEffect(()=>{
+//   if(!pathname.includes("/login")){
+//     requestForToken()
+//     onMessage(messaging, (payload) => {
+//       console.log('Message received in foreground:', payload);
     
-      const notificationTitle = payload.notification.title;
-      const notificationOptions = {
-        body: payload.notification.body,
-        icon: payload.notification.image,
-      };
-      dispatch(handleRefresh())
-      new Notification(notificationTitle, notificationOptions);
-    });
-  }
-},[])
+//       const notificationTitle = payload.notification.title;
+//       const notificationOptions = {
+//         body: payload.notification.body,
+//         icon: payload.notification.image,
+//       };
+//       dispatch(handleRefresh())
+//       new Notification(notificationTitle, notificationOptions);
+//     });
+//   }
+// },[])
 
 
   const [showSideBar, setShowSideBar] = useState(false);
@@ -91,7 +91,7 @@ useEffect(()=>{
                 </ProtectedRoute>
               }
             />
-            <Route path="pupring">
+            <Route path="afstore">
               <Route
                 index
                 element={

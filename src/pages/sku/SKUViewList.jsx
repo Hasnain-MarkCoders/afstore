@@ -153,9 +153,9 @@ const SKUViewList = ({ setShowSideBar }) => {
         <h2 className="page-title">SKU Details</h2>
         {/* <Link to={"/sku/add-sku"}> */}
 
-        <Button onClick={handleAddCountryModal} className="btn btn-outline-primary">
+        {/* <Button onClick={handleAddCountryModal} className="btn btn-outline-primary">
           Add Shipment Price
-        </Button>
+        </Button> */}
 
         <AddCountryModal 
         open={open}
@@ -175,7 +175,19 @@ const SKUViewList = ({ setShowSideBar }) => {
         <div className="left" >
           <div className="item">
             <div className="details">
-              {data?.title && <div className="detailItem">
+            {data?.sku && <div className="detailItem">
+                <span className="itemKey">SKU:</span>
+                <span className="itemValue">{data?.sku}</span>
+              </div>}
+              {data?.sku_id && <div className="detailItem">
+                <span className="itemKey">SKU ID:</span>
+                <span className="itemValue">{data?.sku_id}</span>
+              </div>}
+              {data?.unit_price && <div className="detailItem">
+                <span className="itemKey">SKU PRICE:</span>
+                <span className="itemValue">{data?.unit_price}</span>
+              </div>}
+              {/* {data?.title && <div className="detailItem">
                 <span className="itemKey">Title:</span>
                 <span className="itemValue">{data?.title}</span>
               </div>}
@@ -214,13 +226,13 @@ const SKUViewList = ({ setShowSideBar }) => {
               {data?.date && <div className="detailItem">
                 <span className="itemKey">Date:</span>
                 <span className="itemValue">{localeDateAndTime(data?.date)}</span>
-              </div>}
+              </div>} */}
             </div>
           </div>
         </div>
 
       </div>
-      <div className="datatable skuTable">
+      {/* <div className="datatable skuTable">
         {data?.customer_shipment_price &&
           <DataGridPro
             className="datagrid"
@@ -239,7 +251,7 @@ const SKUViewList = ({ setShowSideBar }) => {
             handleDeleteModal={()=>{handleDeleteModal(null)}}
             deleteId={deleteCountry}
             handleDelete={()=>{deleteSku(deleteCountry)}}
-           />}
+           />} */}
       
     </Container></>);
 };

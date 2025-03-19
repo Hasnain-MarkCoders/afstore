@@ -45,109 +45,138 @@ const formattedDateTime = (date) => {
 };
 
 const columns = [
+  // {
+  //   field: "title",
+  //   headerName: "Title",
+  //   minWidth: 200,
+  //   flex: 1,
+  // },
+  // {
+  //   field: "ename",
+  //   headerName: "Ename",
+  //   minWidth: 120,
+  //   flex: 1,
+  // },
+  // {
+  //   field: "cname",
+  //   headerName: "Cname",
+  //   minWidth: 120,
+  //   flex: 1,
+  // },
+  // {
+  //   field: "production_time",
+  //   headerName: "Production Time",
+  //   minWidth: 120,
+  //   flex: 1,
+  // },
+  // {
+  //   field: "pair",
+  //   headerName: "Pair",
+  //   minWidth: 150,
+  //   flex: 1,
+  //   renderCell: (params) => {
+  //     return params.row.properties ? params.row.properties.pair : "";
+  //   },
+  // },
+  // {
+  //   field: "name",
+  //   headerName: "Name",
+  //   minWidth: 150,
+  //   flex: 1,
+  //   renderCell: (params) => {
+  //     return params.row.properties?.name
+  //       ? params.row.properties.name === "not_mandatory"
+  //         ? "Not Mandatory"
+  //         : params.row.properties.name === "mandatory"
+  //         ? "Mandatory"
+  //         : params.row.properties.name === "optional"
+  //         ? "Optional"
+  //         : ""
+  //       : "";
+  //   },
+  // },
+  // {
+  //   field: "image",
+  //   headerName: "Image",
+  //   minWidth: 150,
+  //   flex: 1,
+  //   renderCell: (params) => {
+  //     return params.row.properties?.image
+  //       ? params.row.properties.image === "not_mandatory"
+  //         ? "Not Mandatory"
+  //         : params.row.properties.image === "mandatory"
+  //         ? "Mandatory"
+  //         : params.row.properties.image === "optional"
+  //         ? "Optional"
+  //         : ""
+  //       : "";
+  //   },
+  // },
+  // {
+  //   field: "factory_price_usd",
+  //   headerName: "Factory Price USD",
+  //   minWidth: 140,
+  //   flex: 1,
+  //   renderCell: (params) => {
+  //     return params.row.factory_price_usd
+  //       ? `$${params.row.factory_price_usd}`
+  //       : "";
+  //   },
+  // },
+  // {
+  //   field: "factory_price",
+  //   headerName: "Factory Price RMB",
+  //   minWidth: 140,
+  //   flex: 1,
+  //   renderCell: (params) => {
+  //     return params.row.factory_price ? `¥${params.row.factory_price}` : "";
+  //   },
+  // },
+  // {
+  //   field: "customer_price",
+  //   headerName: "Customer Price",
+  //   minWidth: 150,
+  //   flex: 1,
+  //   renderCell: (params) => {
+  //     return params.row.customer_price ? `$${params.row.customer_price}` : "";
+  //   },
+  // },
+  // {
+  //   field: "date",
+  //   headerName: "Date",
+  //   minWidth: 190,
+  //   flex: 1,
+  //   renderCell: (params) => {
+  //     return formattedDateTime(params.row.date);
+  //   },
+  // },
+
   {
-    field: "title",
-    headerName: "Title",
+    field: "sku",
+    headerName: "SKU",
     minWidth: 200,
     flex: 1,
   },
   {
-    field: "ename",
-    headerName: "Ename",
+    field: "sku_id",
+    headerName: "SKU_ID",
     minWidth: 120,
     flex: 1,
   },
   {
-    field: "cname",
-    headerName: "Cname",
+    field: "unit_price",
+    headerName: "UNIT_PRICE",
     minWidth: 120,
     flex: 1,
   },
-  {
-    field: "production_time",
-    headerName: "Production Time",
-    minWidth: 120,
-    flex: 1,
-  },
-  {
-    field: "pair",
-    headerName: "Pair",
-    minWidth: 150,
-    flex: 1,
-    renderCell: (params) => {
-      return params.row.properties ? params.row.properties.pair : "";
-    },
-  },
-  {
-    field: "name",
-    headerName: "Name",
-    minWidth: 150,
-    flex: 1,
-    renderCell: (params) => {
-      return params.row.properties?.name
-        ? params.row.properties.name === "not_mandatory"
-          ? "Not Mandatory"
-          : params.row.properties.name === "mandatory"
-          ? "Mandatory"
-          : params.row.properties.name === "optional"
-          ? "Optional"
-          : ""
-        : "";
-    },
-  },
-  {
-    field: "image",
-    headerName: "Image",
-    minWidth: 150,
-    flex: 1,
-    renderCell: (params) => {
-      return params.row.properties?.image
-        ? params.row.properties.image === "not_mandatory"
-          ? "Not Mandatory"
-          : params.row.properties.image === "mandatory"
-          ? "Mandatory"
-          : params.row.properties.image === "optional"
-          ? "Optional"
-          : ""
-        : "";
-    },
-  },
-  {
-    field: "factory_price_usd",
-    headerName: "Factory Price USD",
-    minWidth: 140,
-    flex: 1,
-    renderCell: (params) => {
-      return params.row.factory_price_usd
-        ? `$${params.row.factory_price_usd}`
-        : "";
-    },
-  },
-  {
-    field: "factory_price",
-    headerName: "Factory Price RMB",
-    minWidth: 140,
-    flex: 1,
-    renderCell: (params) => {
-      return params.row.factory_price ? `¥${params.row.factory_price}` : "";
-    },
-  },
-  {
-    field: "customer_price",
-    headerName: "Customer Price",
-    minWidth: 150,
-    flex: 1,
-    renderCell: (params) => {
-      return params.row.customer_price ? `$${params.row.customer_price}` : "";
-    },
-  },
+
   {
     field: "date",
     headerName: "Date",
     minWidth: 190,
     flex: 1,
     renderCell: (params) => {
-      return formattedDateTime(params.row.date);
+      return formattedDateTime(params.row.created_at);
     },
   },
 ];
@@ -218,18 +247,19 @@ export default function ({
   const handleSubmitUpdateSKU = async (e) => {
     e.preventDefault();
     API.post(`/${auth?.type}/sku/edit`, {
-      id: fields._id,
-      title: fields.title,
-      ename:fields.ename,
-      cname:fields.cname,
-      production_time: fields.production_time,
-      factory_price: parseFloat(fields.factory_price),
-      customer_price: parseFloat(fields.customer_price),
-      properties: {
-        pair: fields.properties.pair,
-        name: fields.properties.name,
-        image: fields.properties.image,
-      },
+      ...fields,
+      // id: fields._id,
+      // title: fields.title,
+      // ename:fields.ename,
+      // cname:fields.cname,
+      // production_time: fields.production_time,
+      // factory_price: parseFloat(fields.factory_price),
+      // customer_price: parseFloat(fields.customer_price),
+      // properties: {
+      //   pair: fields.properties.pair,
+      //   name: fields.properties.name,
+      //   image: fields.properties.image,
+      // },
     })
       .then((response) => {
         handleEditModal(null);
@@ -288,6 +318,12 @@ export default function ({
       <Box className="datatable" sx={{ height: "calc(100vh - 180px)" }}>
         {fields && (
               <SKUEditModal
+              sku={fields?.sku}
+              sku_id={fields?.sku_id}
+              unit_price={fields?.unit_price}
+              setSku={(e) => { setFields({ ...fields, sku: e }) }}
+              setSkuId={(e) => { setFields({ ...fields, sku_id: e }) }}
+              setUnitPrice={(e) => { setFields({ ...fields, unit_price: e }) }}
               handleEditModal={()=>handleEditModal(null)}
               fields={fields}
               handleInput={(e)=>handleInput(e)}

@@ -25,8 +25,8 @@ const RejectedOrdersTable = () => {
 
   const sortedSkus = skusNames?.sort((a, b) => {
     // Convert titles to lowercase to ensure case-insensitive sorting
-    let titleA = a?.title.toLowerCase();
-    let titleB = b?.title.toLowerCase();
+    let titleA = a?.title?.toLowerCase();
+    let titleB = b?.title?.toLowerCase();
 
     if (titleA < titleB) {
         return -1;

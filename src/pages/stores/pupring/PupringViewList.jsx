@@ -128,7 +128,7 @@ const PupringViewList = ({ setShowSideBar }) => {
     <Navbar setShowSideBar={setShowSideBar} />
     <Container maxWidth="100" className="contailer-fluid">
       <div className="add-category" style={{ marginBottom: "15px" }} >
-        <h2 className="page-title"><Link to={"/pupring"} >PupRing</Link> / View</h2>
+        <h2 className="page-title"><Link to={"/afstore"} >AfStore</Link> / View</h2>
       </div>
       <div className="view-list">
         <div className="left" >

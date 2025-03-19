@@ -10,15 +10,20 @@ import API from "../../api/api";
 const Widget = ({ type }) => {
 
   const [length, setLength] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
   const auth = useSelector(
     state => state.user
   )
 
   useEffect(() => {
+    setIsLoading(true)
     API.get(`/${auth?.type}/length`)
     .then((response) => {
         setLength(response?.data)
+      }).catch(err=>{
+        console.log(err)
+      }).finally(()=>{
+        setIsLoading(false)
       })
   }, [])
 
@@ -35,8 +40,8 @@ const Widget = ({ type }) => {
       data = {
         title: "USERS",
         isMoney: false,
-        link: "/users",
-        linkText: "See all users",
+        // link: "/users",
+        // linkText: "See all users",
         totalLength: users,
         icon: (
           <PersonIcon
@@ -53,7 +58,7 @@ const Widget = ({ type }) => {
       data = {
         title: "ORDERS",
         isMoney: false,
-        link: "/pupring",
+        link: "/afstore",
         linkText: "View all orders",
         totalLength: lineOrders,
         icon: (
@@ -94,7 +99,7 @@ const Widget = ({ type }) => {
       <div className="left">
         <span className="title">{data.title}</span>
         <span className="counter">
-          {data.isMoney && "$"} {data.totalLength ? data.totalLength : <div className="lds-facebook"><div></div><div></div><div></div></div>}
+          {data.isMoney && "$"} {data.totalLength ? data.totalLength :isLoading? <div className="lds-facebook"><div></div><div></div><div></div></div>:"N/A"}
         </span>
         <Link to={data.link} className="link">{data.linkText}</Link>
       </div>

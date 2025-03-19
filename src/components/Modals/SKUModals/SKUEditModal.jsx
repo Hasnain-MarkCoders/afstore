@@ -3,7 +3,19 @@ import { Backdrop, Box, Button, Fade, FormControl, InputLabel,Select, MenuItem, 
 import React from 'react'
 import CloseIcon from "@mui/icons-material/Close"
 
-const SKUEditModal = ({handleEditModal=()=>{},fields=null, handleInput=()=>{}, handleSubmitUpdateSKU=()=>{} }) => {
+const SKUEditModal = ({
+  handleEditModal=()=>{},
+  fields=null,
+  sku="",
+  setSku=()=>{},
+  sku_id="",
+  setSkuId=()=>{},
+  unit_price=null,
+  setUnitPrice=()=>{},
+ handleInput=()=>{},
+ handleSubmitUpdateSKU=()=>{}
+
+}) => {
   return (
     <Modal
             aria-labelledby="transition-modal-title"
@@ -32,8 +44,37 @@ const SKUEditModal = ({handleEditModal=()=>{},fields=null, handleInput=()=>{}, h
                     <Typography className="main-title" component="h2">
                       Update SKU
                     </Typography>
+                                 <TextField type="text"
+                                    label="SKU"
+                                    fullWidth
+                                    variant="outlined"
+                                    style={{ marginBottom: "20px" }}
+                                    value={sku}
+                                    onChange={(e) => setSku(e.target.value)}
+                                    required
+                                  />
+                     <TextField type="text"
+                     disabled={true}
+                                    label="SKU_ID"
+                                    fullWidth
+                                    variant="outlined"
+                                    style={{ marginBottom: "20px" }}
+                                    value={sku_id}
+                                    onChange={(e) => setSkuId(e.target.value)}
+                                    required
+                                  />
+                                  <TextField type="number"
+                                  inputProps={{ min: 0 }}
+                                  label="UNIT_PRICE"
+                                  fullWidth
+                                  variant="outlined"
+                                  style={{ marginBottom: "20px" }}
+                                  value={unit_price}
+                                  onChange={(e) => setUnitPrice(e.target.value)}
+                                  required
+                                />
 
-                    <TextField
+                    {/* <TextField
                       type="text"
                       label="Title"
                       fullWidth
@@ -131,7 +172,7 @@ const SKUEditModal = ({handleEditModal=()=>{},fields=null, handleInput=()=>{}, h
                         <MenuItem value={"optional"}>Optional</MenuItem>
                         <MenuItem value={"not_mandatory"}> Not Mandatory </MenuItem>
                       </Select>
-                    </FormControl>
+                    </FormControl> */}
                     {/* <FormGroup>
                     <FormControlLabel control={<Switch checked={fields.properties.name} name='name'  onChange={handleInput} />} label="Property Name" />
                   </FormGroup>

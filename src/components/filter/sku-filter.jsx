@@ -13,7 +13,9 @@ const SkuFilter = (props) => {
 
     const handleFilterSubmit = () => {
         props.setPaginationModel({
-            name: name?.length > 0 ? name?.split(/[ ,\n]+/) : [] ,
+            name,
+
+            // name: name?.length > 0 ? name?.split(/[ ,\n]+/) : [] ,
         });
         boolRef.current = !boolRef.current
         console.log(name?.length > 0 ? name?.split(/[ ,\n]+/) : [])
@@ -21,7 +23,9 @@ const SkuFilter = (props) => {
     const handleReset = async () => {
         setName("");
         props.setPaginationModel({
-            name: [],
+            name: "",
+
+            // name: [],
             bool: boolRef.current
         });
         boolRef.current = !boolRef.current

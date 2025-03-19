@@ -11,7 +11,9 @@ import "./sidebar.scss";
 import { logoutAction } from "../../redux/slices/authAction";
 import { connect, useSelector } from "react-redux";
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import Logo from "../../images/Linton-logo.png";
+// import Logo from "../../images/Linton-logo.png";
+import Logo from "../../images/logo-transparent.png";
+
 import CommentIcon from '@mui/icons-material/Comment';
 import StyleIcon from '@mui/icons-material/Style';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -58,10 +60,10 @@ const Sidebar = ({ logoutAction }) => {
             </li>
             {storeDropdownMenu && (
               <ul className="dropdown-items">
-                <NavLink to="/pupring" style={{ textDecoration: "none" }}>
+                <NavLink to="/afstore" style={{ textDecoration: "none" }}>
                   <li>
                     <StoreIcon className="icon" />
-                    <span>PupRing</span>
+                    <span>AfStore</span>
                   </li>
                 </NavLink>
                 {( auth.type === "suadmin") &&
@@ -85,7 +87,7 @@ const Sidebar = ({ logoutAction }) => {
                   <span>SKU</span>
                 </li>
               </NavLink>
-              <div
+              {/* <div
                 className={`dropdown ${(pathname === "invoices" || pathname === "invoices-items") ? "active" : ""}`}
                 style={{ textDecoration: "none" }}
               >
@@ -121,7 +123,6 @@ const Sidebar = ({ logoutAction }) => {
                 )}
               </div>
 
-              {/*  */}
               <NavLink to="/exchange-rate" style={{ textDecoration: "none" }}>
                 <li>
                   <CurrencyYuanIcon className="icon" />
@@ -183,7 +184,7 @@ const Sidebar = ({ logoutAction }) => {
                   <SettingsIcon className="icon" />
                   <span>Settings</span>
                 </li>
-              </NavLink>
+              </NavLink> */}
             </>
           )}
         </ul>
