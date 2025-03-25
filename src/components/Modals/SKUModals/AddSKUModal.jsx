@@ -1,44 +1,29 @@
-import { Backdrop, Box, Button, Fade, FormControl, InputLabel, MenuItem, Modal, Select, TextField, TextareaAutosize, Typography } from '@mui/material'
-import React from 'react'
+import { Backdrop, Box, Button, Fade, IconButton, Modal, TextField, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import CloseIcon from "@mui/icons-material/Close";
-
-
+import DeleteIcon from "@mui/icons-material/Delete";
 const AddSKUModal = ({
-  // setCname = () => { },
-  // setEname = () => { },
-  // cname = "",
-  // ename = "",
-  // description = "",
-  // title = "",
-  // propertyImage = "mandatory",
-  // propertyName = "mandatory",
-  // propertyPair = "",
-  // factoryPrice = "",
-  // customerPrice = "",
-  // setTitle = () => { },
-  // setDescription = () => { },
-  // setFactoryPrice = () => { },
-  // setCustomerPrice = () => { },
-  // setPropertyPair = () => { },
-  // setPropertyName = () => { },
-  // setPropertyImage = () => { },
-  sku="",
-  sku_id="",
-  unit_price=null,
-  setUnitPrice=()=>{},
-  setSkuId=()=>{},
-  setSku=()=>{},
+  sku = "",
+  sku_id = "",
+  unit_price = null,
+  setUnitPrice = () => { },
+  setSkuId = () => { },
+  setSku = () => { },
   handleModal = () => { },
   open = false,
+  keys = {}, 
   handleSubmitAddSKU = () => { },
-
+  removeKey=()=>{},
+  updateKeyValue=()=>{},
+  addNewKey=()=>{},
+  isLoading=false
 }) => {
   return (
     <Modal
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
       open={open}
-      onClose={handleModal}
+      onClose={isLoading ? ()=>{}:handleModal}
 
       closeAfterTransition
       slots={{ backdrop: Backdrop }}
@@ -52,23 +37,16 @@ const AddSKUModal = ({
       <Fade in={open} >
         <Box>
           <Box className="modal-body" >
-            <a onClick={handleModal} className="close-btn">
+            <a onClick={ isLoading ? ()=>{}: handleModal} className="close-btn">
               <CloseIcon className="icon" />
             </a>
             <Typography className="main-title" component="h2">
               Add SKU
             </Typography>
-            <form onSubmit={handleSubmitAddSKU}>
-              {/* <TextField type="text"
-                label="Title"
-                fullWidth
-                variant="outlined"
-                style={{ marginBottom: "20px" }}
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              /> */}
-
+            <form onSubmit={(e)=>{
+              e.preventDefault()
+              handleSubmitAddSKU(e)
+            }}>
               <TextField type="text"
                 label="SKU"
                 fullWidth
@@ -78,7 +56,7 @@ const AddSKUModal = ({
                 onChange={(e) => setSku(e.target.value)}
                 required
               />
- <TextField type="text"
+              <TextField type="text"
                 label="SKU_ID"
                 fullWidth
                 variant="outlined"
@@ -88,124 +66,48 @@ const AddSKUModal = ({
                 required
               />
               <TextField type="number"
-              inputProps={{ min: 0 }}
-              label="UNIT_PRICE"
-              fullWidth
-              variant="outlined"
-              style={{ marginBottom: "20px" }}
-              value={unit_price}
-              onChange={(e) => setUnitPrice(e.target.value)}
-              required
-            />
-              {/* <TextField type="text"
-                label="Cname"
+                inputProps={{ min: 0 }}
+                label="UNIT_PRICE"
                 fullWidth
                 variant="outlined"
                 style={{ marginBottom: "20px" }}
-                value={cname}
-                onChange={(e) => setCname(e.target.value)}
+                value={unit_price}
+                onChange={(e) => setUnitPrice(e.target.value)}
                 required
               />
+               <Typography variant="h6">Custom SKU Properties</Typography>
+               {Object.entries(keys).map(([key, value]) => (
+                <Box key={key} display="flex" alignItems="center" gap={1} mb={1}>
+                  <TextField
+                    label={`Property: ${key}`}
+                    fullWidth
+                    variant="outlined"
+                    value={value}
+                    onChange={(e) => updateKeyValue(key, e.target.value)}
+                  />
+                  <IconButton onClick={() => removeKey(key)} color="error">
+                    <DeleteIcon  />
+                  </IconButton>
+                </Box>
+              ))}
 
+              <Button
+                variant="outlined"
+                onClick={addNewKey}
+                style={{ marginBottom: "20px", marginTop: "10px" }}
+              >
+                + Add Property
+              </Button>
 
-
-
-              <TextField type="number"
-              inputProps={{ min: 0 }}
-              label="SKU ID"
-              fullWidth
-              variant="outlined"
-              style={{ marginBottom: "20px" }}
-              value={skuId}
-              onChange={(e) => setSkuId(e.target.value)}
-              required
-            />
-              <TextField type="text"
-                label="Description"
-                fullWidth
-                className="field-description"
-                InputProps={{
-                  inputComponent: TextareaAutosize,
-                  rows: 5
-                }}
-                variant="outlined"
-                style={{ marginBottom: "35px", height: "75px" }}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-              <TextField
-                inputProps={{ min: 0 }}
-                label="Factory Price"
-                fullWidth
-                variant="outlined"
-                style={{ marginBottom: "20px" }}
-                value={factoryPrice}
-                onChange={(e) => setFactoryPrice(e.target.value)}
-              />
-              <TextField
-                inputProps={{ min: 0 }}
-                label="Customer Price"
-                fullWidth
-                variant="outlined"
-                style={{ marginBottom: "20px" }}
-                value={customerPrice}
-                onChange={(e) => setCustomerPrice(e.target.value)}
-              />
-              <TextField type="number"
-              inputProps={{ min: 0 }}
-              label="Store Id"
-              fullWidth
-              variant="outlined"
-              style={{ marginBottom: "20px" }}
-              value={storeId}
-              onChange={(e) => setStoreId(e.target.value)}
-            />
-              <TextField type="number"
-                inputProps={{ min: 0 }}
-                label="Pair"
-                fullWidth
-                variant="outlined"
-                style={{ marginBottom: "20px" }}
-                value={propertyPair}
-                onChange={(e) => setPropertyPair(e.target.value)}
-              />
-              <FormControl fullWidth style={{ marginBottom: "20px" }}>
-                <InputLabel id="demo-select-small-label">Name</InputLabel>
-                <Select
-                  value={propertyName}
-                  label="Name"
-                  onChange={(e) => setPropertyName(e.target.value)}
-                >
-                  <MenuItem value={"mandatory"}>Mandatory</MenuItem>
-                  <MenuItem value={"optional"}>Optional</MenuItem>
-                  <MenuItem value={"not_mandatory"}>
-                    Not Mandatory
-                  </MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl fullWidth style={{ marginBottom: "20px" }}>
-                <InputLabel id="demo-select-small-label">Image</InputLabel>
-                <Select
-                  value={propertyImage}
-                  label="Image"
-                  onChange={(e) => setPropertyImage(e.target.value)}
-                >
-                  <MenuItem value={"mandatory"}>Mandatory</MenuItem>
-                  <MenuItem value={"optional"}>Optional</MenuItem>
-                  <MenuItem value={"not_mandatory"}>
-                    Not Mandatory
-                  </MenuItem>
-                </Select>
-              </FormControl> */}
               <Box className="modal-footer">
                 <Button
                   className="btn btn-outline-primary"
-                  onClick={handleModal}
+                  onClick={isLoading ? ()=>{}:handleModal}
                 >
                   Cancel
                 </Button>
                 <Button className="btn btn-primary" type="submit">
-                  Add
+                {isLoading? "Adding...":"Add"}
                 </Button>
               </Box>
             </form>

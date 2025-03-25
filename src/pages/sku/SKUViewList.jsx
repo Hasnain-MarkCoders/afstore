@@ -13,7 +13,7 @@ import {  Button,Tooltip, IconButton } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddCountryModal from "../../components/Modals/SKUModals/AddCountryModal";
 import DeleteModal from "../../components/Modals/DeleteModal";
-import { localeDateAndTime } from "../../Utils/Utils";
+import { isEmptyObj, localeDateAndTime } from "../../Utils/Utils";
 
 const userColumns = [
   {
@@ -187,6 +187,13 @@ const SKUViewList = ({ setShowSideBar }) => {
                 <span className="itemKey">SKU PRICE:</span>
                 <span className="itemValue">{data?.unit_price}</span>
               </div>}
+                <pre className="detailItem">
+                <span className="itemKey">SKU KEYS:</span>
+                <span className="itemValue">
+                {Object?.values(isEmptyObj(data?.keys)?{}:data?.keys)?.map(item=>item).join(", ")}
+                </span>
+              
+                </pre>
               {/* {data?.title && <div className="detailItem">
                 <span className="itemKey">Title:</span>
                 <span className="itemValue">{data?.title}</span>

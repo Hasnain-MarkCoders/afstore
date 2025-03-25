@@ -358,3 +358,32 @@ export const tabsFilterFields = (props, boolRef) => {
     return formattedDateTime;
   
   }
+
+  export function isEmptyObj(obj) {
+    for (const prop in obj) {
+      if (Object.hasOwn(obj, prop)) {
+        return false;
+      }
+    }
+  
+    return true;
+  }
+ 
+
+export const ORDER_STATUS = {
+  SUBMITTED: "submitted",
+  ACCEPTED: "accepted",
+  IN_PRODUCTION: "in_production",
+  SHIPPED_OUT: "shipped_out",
+  HOLD: "hold",
+  CANCELLED: "cancelled",
+  REJECTED: "rejected",
+  FTYREJECTED: "fty_rejected",
+  PENDING:"pending",
+ 
+  NOT_INVOICED: "not_invoiced",
+  READY_TO_INVOICE: "ready_to_invoice",
+  INVOICED: "invoiced",
+  PAID: "paid",
+  NOT_PAID: "not_paid",
+}

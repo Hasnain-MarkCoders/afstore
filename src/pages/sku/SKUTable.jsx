@@ -19,7 +19,7 @@ import SKUEditModal from "../../components/Modals/SKUModals/SKUEditModal";
 import DeleteModal from "../../components/Modals/DeleteModal";
 import ErrorModal from "../../components/Modals/ErrorModal";
 import CustomIcon from "../../components/CustomIcon/CustomIcon";
-
+import {isEmptyObj} from "./../../Utils/Utils"
 const formattedDateTime = (date) => {
   const dateTime = new Date(date);
   const formattedDate = dateTime.toLocaleDateString("en-US", {
@@ -169,7 +169,15 @@ const columns = [
     minWidth: 120,
     flex: 1,
   },
-
+  {
+    field: "keys",
+    headerName: "KEYS",
+    minWidth: 120,
+    flex: 1,
+    renderCell: (params) => {
+      return <div>{Object?.values(isEmptyObj(params?.row?.keys)?{}:params?.row?.keys)?.map(item=>item).join(", ")}</div>
+    },
+  },
   {
     field: "date",
     headerName: "Date",
@@ -192,7 +200,10 @@ export default function ({
   const [addSkuError, setAddSkuError] = useState(null);
   const [fields, setFields] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [isSKUDeleting, setIsSKUDeleting] = useState(false)
+  const [isEditingSKU, setIsEditingSKU] = useState(false)
   const boolRef = useRef(false);
+
   const navigate = useNavigate()
   // add Action
 
@@ -205,12 +216,15 @@ export default function ({
     setDeleteId(data);
   };
   const deleteSku = async (_id) => {
+    setIsSKUDeleting(true)
     API.post(`/admin/sku/delete`, {
       id: _id,
     }).then((response) => {
       setDeleteId(null);
       setPaginationModel({ bool: boolRef.current });
       boolRef.current = !boolRef.current;
+    }).finally(()=>{
+      setIsSKUDeleting(false)
     });
   };
 
@@ -245,6 +259,7 @@ export default function ({
   };
 
   const handleSubmitUpdateSKU = async (e) => {
+    setIsEditingSKU(true)
     e.preventDefault();
     API.post(`/${auth?.type}/sku/edit`, {
       ...fields,
@@ -268,6 +283,8 @@ export default function ({
       })
       .catch((error) => {
         handleAddSkuError(error?.response?.data?.message);
+      }).finally(()=>{
+        setIsEditingSKU(false)
       });
   };
 
@@ -281,23 +298,29 @@ export default function ({
         return (
           <div className="cellAction">
             <CustomIcon
-             title={"View"}
-             className="action-icon-btn viewBtn"
-             cb={()=>navigate(`/sku/${params.row._id}`)}
-             icon={ <RemoveRedEyeIcon />}
+              title={"View"}
+              className="action-icon-btn viewBtn"
+              cb={() => navigate(`/sku/${params.row._id}`)}
+              icon={<RemoveRedEyeIcon />}
             />
             <CustomIcon
-             title={"Edit"}
-             className="action-icon-btn editBtn"
-             cb={()=>handleEditModal(params.row)}
-             icon={ <EditIcon />}
+              title={"Edit"}
+              className="action-icon-btn editBtn"
+              cb={() => {handleEditModal(
+                {
+                  ...params.row,
+                  keys:(isEmptyObj(params?.row?.keys)?{}:params?.row?.keys)
+                }
+              )
+            }}
+              icon={<EditIcon />}
             />
 
             <CustomIcon
-             title={"Delete"}
-             className="action-icon-btn deleteBtn"
-             cb={()=>handleDeleteModal(params.row._id)}
-             icon={ <DeleteForeverIcon />}
+              title={"Delete"}
+              className="action-icon-btn deleteBtn"
+              cb={() => handleDeleteModal(params.row._id)}
+              icon={<DeleteForeverIcon />}
             />
           </div>
         );
@@ -311,40 +334,69 @@ export default function ({
       [fieldName]: value,
     }));
   };
+  function handleRemoveKey(key) {
+    setFields(prev => {
+      const updatedKeys = { ...prev.keys }
+      delete updatedKeys[key]
+      return { ...prev, keys: updatedKeys }
+
+    })
+  }
+  function handleUpdateKey(key, value) {
+    setFields(prev=>({
+      ...prev,
+      keys:{...prev.keys, [key]:value}
+    }))
+  }
+  function handleAddKey() {
+    console.log(fields.keys)
+    const key = `key${Object.keys(fields.keys).length+1}`
+    setFields(prev=>({
+      ...prev,
+      keys:{...prev.keys, [key]:""}
+    }))
+  }
+
 
   return (
     <>
-    
+
       <Box className="datatable" sx={{ height: "calc(100vh - 180px)" }}>
         {fields && (
-              <SKUEditModal
-              sku={fields?.sku}
-              sku_id={fields?.sku_id}
-              unit_price={fields?.unit_price}
-              setSku={(e) => { setFields({ ...fields, sku: e }) }}
-              setSkuId={(e) => { setFields({ ...fields, sku_id: e }) }}
-              setUnitPrice={(e) => { setFields({ ...fields, unit_price: e }) }}
-              handleEditModal={()=>handleEditModal(null)}
-              fields={fields}
-              handleInput={(e)=>handleInput(e)}
-              handleSubmitUpdateSKU={(e)=>handleSubmitUpdateSKU(e)}
-              />
+          <SKUEditModal
+          isLoading= {isEditingSKU}
+            handleRemoveKey={handleRemoveKey}
+            handleUpdateKey={handleUpdateKey}
+            handleAddKey={handleAddKey}
+            sku={fields?.sku}
+            sku_id={fields?.sku_id}
+            unit_price={fields?.unit_price}
+            keys={fields.keys}
+            setSku={(e) => { setFields({ ...fields, sku: e }) }}
+            setSkuId={(e) => { setFields({ ...fields, sku_id: e }) }}
+            setUnitPrice={(e) => { setFields({ ...fields, unit_price: e }) }}
+            handleEditModal={() => handleEditModal(null)}
+            fields={fields}
+            handleInput={(e) => handleInput(e)}
+            handleSubmitUpdateSKU={(e) => handleSubmitUpdateSKU(e)}
+          />
         )}
-         
-         
+
+
         {addSkuError && (
-           <ErrorModal
-           reason={addSkuError}
-           handleErrorModal ={()=>handleAddSkuError(null)}
-           />
+          <ErrorModal
+            reason={addSkuError}
+            handleErrorModal={() => handleAddSkuError(null)}
+          />
         )}
-          
+
         {deleteId && (
           <DeleteModal
-          title={"Delete SKU"}
-          handleDeleteModal={()=>{handleDeleteModal(null)}}
-          deleteId={deleteId}
-          handleDelete={()=>{deleteSku(deleteId)}}
+          isLoading={isSKUDeleting}
+            title={"Delete SKU"}
+            handleDeleteModal={() => { handleDeleteModal(null) }}
+            deleteId={deleteId}
+            handleDelete={() => { deleteSku(deleteId) }}
           />
         )}
 

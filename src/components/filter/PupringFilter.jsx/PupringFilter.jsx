@@ -25,6 +25,7 @@ import "./../filter.scss";
 import "./../../style.scss";
 import API from "../../../api/api";
 import CustomDatePicker from "../../CustomDatePicker/CustomDatePicker";
+import { ORDER_STATUS } from "../../../Utils/Utils";
 
 const PupringFilter = (props) => {
   const [wayBill, setWayBill] = useState([]);
@@ -269,12 +270,12 @@ const PupringFilter = (props) => {
                 onChange={(e) => setSelectedDateType(e.target.value)}
               >
                 <MenuItem value="date">Date</MenuItem>
-                <MenuItem value="submitted_date">Submitted Date</MenuItem>
-                <MenuItem value="accepted_date">Accepted Date</MenuItem>
-                <MenuItem value="in_production_date">
+                <MenuItem value={ORDER_STATUS.SUBMITTED}>Submitted Date</MenuItem>
+                <MenuItem value={ORDER_STATUS.ACCEPTED}>Accepted Date</MenuItem>
+                <MenuItem value={ORDER_STATUS.IN_PRODUCTION}>
                   In Production Date
                 </MenuItem>
-                <MenuItem value="shipped_out_date">Shipped Out</MenuItem>
+                <MenuItem value={ORDER_STATUS.SHIPPED_OUT}>Shipped Out</MenuItem>
                 {auth.type === "factory" ? null : (
                   <MenuItem value="last_comment_date">
                     Last Ticket Date
@@ -385,7 +386,15 @@ const PupringFilter = (props) => {
               label="Invoice Status"
               checkValue={invoiceStatus}
               setCheckValue={setInvoiceStatus}
-              names={["Not invoiced", "Ready To Invoice", "Invoiced"]}
+              // names={["Not invoiced", "Ready To Invoice", "Invoiced"]}
+              
+              names={
+                [
+                  ORDER_STATUS.NOT_INVOICED,
+                  ORDER_STATUS.READY_TO_INVOICE,
+                  ORDER_STATUS.INVOICED
+                ]
+              }
             />
           </Box>
 
@@ -468,25 +477,46 @@ const PupringFilter = (props) => {
               names={
                 auth.type === "customer"
                   ? [
-                      "Submitted",
-                      "Accepted",
-                      "In Production",
-                      "Shipped Out",
-                      "Hold",
-                      "Rejected",
-                      "Cancelled",
-                      "Pending"
+                      // "Submitted",
+                      // "Accepted",
+                      // "In Production",
+                      // "Shipped Out",
+                      // "Hold",
+                      // "Rejected",
+                      // "Cancelled",
+                      // "Pending"
+
+                      // new Status
+                      ORDER_STATUS.SUBMITTED,
+                      ORDER_STATUS.ACCEPTED,
+                      ORDER_STATUS.IN_PRODUCTION,
+                      ORDER_STATUS.SHIPPED_OUT,
+                      ORDER_STATUS.HOLD,
+                      ORDER_STATUS.REJECTED,
+                      ORDER_STATUS.CANCELLED,
+                      ORDER_STATUS.PENDING,
                     ]
                   : [
-                      "Submitted",
-                      "Accepted",
-                      "In Production",
-                      "Shipped Out",
-                      "Hold",
-                      "Rejected",
-                      "Cancelled",
-                      "FtyRejected",
-                      "Pending"
+                      // "Submitted",
+                      // "Accepted",
+                      // "In Production",
+                      // "Shipped Out",
+                      // "Hold",
+                      // "Rejected",
+                      // "Cancelled",
+                      // "FtyRejected",
+                      // "Pending"
+                      // new Status
+
+                      ORDER_STATUS.SUBMITTED,
+                      ORDER_STATUS.ACCEPTED,
+                      ORDER_STATUS.IN_PRODUCTION,
+                      ORDER_STATUS.SHIPPED_OUT,
+                      ORDER_STATUS.HOLD,
+                      ORDER_STATUS.REJECTED,
+                      ORDER_STATUS.CANCELLED,
+                      ORDER_STATUS.PENDING,
+                      ORDER_STATUS.FTYREJECTED
                     ]
               }
             />

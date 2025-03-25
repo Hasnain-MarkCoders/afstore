@@ -717,7 +717,7 @@ const PupringTable = ({
                   title="View"
                   style={{ fontWeight: 600 }}
                   
-                  cb={() => window.open(`/pupring/${params.row._id}`, '_blank', 'noopener,noreferrer')}
+                  cb={() => window.open(`/afstore/${params.row._id}`, '_blank', 'noopener,noreferrer')}
                 />
 
                 <CustomListItem

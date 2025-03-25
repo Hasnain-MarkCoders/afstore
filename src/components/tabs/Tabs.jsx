@@ -27,7 +27,7 @@ import API from "../../api/api";
 import CircularProgress from "@mui/material/CircularProgress";
 import ColorPlate from "./colorPlate";
 import { useNavigate } from "react-router-dom";
-import { tabsFilterFields } from "../../Utils/Utils";
+import { ORDER_STATUS, tabsFilterFields } from "../../Utils/Utils";
 import AutohideSnackbar from "../snackbar/Snackbar";
 import UploadButton from "../UploadButton/UploadButton";
 import DownloadButton from "../DownloadButton/DownloadButton";
@@ -900,23 +900,23 @@ useEffect(() => {
           <Tab
             label="Submitted"
             {...a11yProps(1)}
-            onClick={() => getOrderStatus("Submitted")}
+            onClick={() => getOrderStatus(ORDER_STATUS.SUBMITTED)}
           />
           <Tab
             label="Accepted"
             {...a11yProps(2)}
-            onClick={() => getOrderStatus("Accepted")}
+            onClick={() => getOrderStatus(ORDER_STATUS.ACCEPTED)}
           />
           <Tab
             label="In Production"
             {...a11yProps(3)}
-            onClick={() => getOrderStatus("In Production")}
+            onClick={() => getOrderStatus(ORDER_STATUS.IN_PRODUCTION)}
           />
           <Tab
             label="Shipped Out"
             {...a11yProps(4)}
             onClick={() => {
-              getOrderStatus("Shipped Out");
+              getOrderStatus(ORDER_STATUS.SHIPPED_OUT);
             }}
           />
           {/* {(auth.type === "admin" || auth.type === "suadmin" ) && (
