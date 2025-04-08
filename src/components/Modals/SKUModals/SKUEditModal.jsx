@@ -67,8 +67,9 @@ const SKUEditModal = ({
                 onChange={(e) => setSkuId(e.target.value)}
                 required
               />
-              <TextField type="number"
-                inputProps={{ min: 0 }}
+              <TextField 
+              type="number"
+                inputProps={{ min: 0, step: "any" }}
                 label="UNIT_PRICE"
                 fullWidth
                 variant="outlined"

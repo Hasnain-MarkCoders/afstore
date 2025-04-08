@@ -66,7 +66,7 @@ const AddSKUModal = ({
                 required
               />
               <TextField type="number"
-                inputProps={{ min: 0 }}
+                inputProps={{ min: 0, step: "any"  }}
                 label="UNIT_PRICE"
                 fullWidth
                 variant="outlined"
