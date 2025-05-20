@@ -217,7 +217,7 @@ export default function ({
   };
   const deleteSku = async (_id) => {
     setIsSKUDeleting(true)
-    API.post(`/admin/sku/delete`, {
+    API.post(`/${auth.type}/sku/delete`, {
       id: _id,
     }).then((response) => {
       setDeleteId(null);

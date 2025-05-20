@@ -9,16 +9,17 @@ import API from "../../api/api";
 import AddTagModal from "../../components/Modals/TagModals/AddTagModal";
 import useQueryTags from "../../Hooks/useQueryTags/useQueryTags";
 import ErrorModal from "../../components/Modals/ErrorModal";
+import { useSelector } from "react-redux";
 
  const Tags = ({ setShowSideBar }) => {
-
+  const auth  = useSelector(state=>state.user)
   const [paginationModel, setPaginationModel] = useState({
     page: 0, pageSize: 10
   })
   const [type, setType] = useState("red")
   const [name, setName] = useState("")
   const [open, setOpen] = useState(false);
-  const { isLoading, rows } = useQueryTags("/admin/get-tags", "/login", paginationModel);
+  const { isLoading, rows } = useQueryTags(`/${auth.type}/get-tags`, "/login", paginationModel);
   const [tagError, setTagError] = useState(null)
   const handleTagError = (data) => {
     setTagError(data);
@@ -32,7 +33,7 @@ import ErrorModal from "../../components/Modals/ErrorModal";
   const handleSubmitAddTag = async (e) => {
     e.preventDefault();
 
-    API.post(`/admin/add-tag`, {
+    API.post(`/${auth.type}/add-tag`, {
       name,
       type 
     })

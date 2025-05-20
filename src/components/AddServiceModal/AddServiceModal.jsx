@@ -15,6 +15,7 @@ import { Country, State } from 'country-state-city';
 import axios from 'axios';
 import API from '../../api/api';
 import "./AddServiceStyles.css"
+import { useSelector } from 'react-redux';
 
 const AddPostServiceModal = ({ open, handleClose, cb=()=>{} }) => {
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ const AddPostServiceModal = ({ open, handleClose, cb=()=>{} }) => {
   const [lossCode, setLossCode] = useState('');
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: '' });
-
+  const auth  = useSelector(state=>state.user)
   // Fetch list of countries
   const countryList = Country.getAllCountries().map((country) => ({
     name: country.name,
@@ -77,8 +78,7 @@ const AddPostServiceModal = ({ open, handleClose, cb=()=>{} }) => {
 
     try {
       setLoading(true)
-      const response = await  API.post('/admin/add-post-service', data);
-      console.log('Response:', response.data);
+      const response = await  API.post(`${auth.type}/add-post-service`, data); console.log('Response:', response.data);
       setSnackbar({ open: true, message: 'Post Service added successfully!', severity: 'success' });
       // Reset form
       cb()

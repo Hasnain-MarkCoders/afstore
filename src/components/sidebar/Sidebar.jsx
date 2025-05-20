@@ -66,14 +66,14 @@ const Sidebar = ({ logoutAction }) => {
                     <span>AfStore</span>
                   </li>
                 </NavLink>
-                {( auth.type === "suadmin") &&
+                {/* {( auth.type === "suadmin") &&
                   <NavLink to="/raw-orders" style={{ textDecoration: "none" }}>
                     <li>
                       <StoreIcon className="icon" />
                       <span>Raw Orders</span>
                     </li>
                   </NavLink>
-                }
+                } */}
               </ul>
             )}
           </div>
@@ -87,7 +87,7 @@ const Sidebar = ({ logoutAction }) => {
                   <span>SKU</span>
                 </li>
               </NavLink>
-              {/* <div
+               {/* <div
                 className={`dropdown ${(pathname === "invoices" || pathname === "invoices-items") ? "active" : ""}`}
                 style={{ textDecoration: "none" }}
               >
@@ -121,7 +121,7 @@ const Sidebar = ({ logoutAction }) => {
                     </NavLink>
                   </ul>
                 )}
-              </div>
+              </div> */}
 
               <NavLink to="/exchange-rate" style={{ textDecoration: "none" }}>
                 <li>
@@ -135,30 +135,30 @@ const Sidebar = ({ logoutAction }) => {
                   <span>Post Service</span>
                 </li>
               </NavLink>
-            { auth.type === "suadmin" && <NavLink to="/users" style={{ textDecoration: "none" }}>
+            {/* { auth.type === "suadmin" && <NavLink to="/users" style={{ textDecoration: "none" }}>
                 <li>
                   <AccountCircleOutlinedIcon className="icon" />
                   <span>Users</span>
                 </li>
-              </NavLink>}
+              </NavLink>} */}
             </>
           )}
-          {(auth.type === "customer" || (auth.type === "admin" || auth.type === "suadmin")) && (
+          {/* {(auth.type === "customer" || (auth.type === "admin" || auth.type === "suadmin")) && (
             <NavLink to="/tickets-system" style={{ textDecoration: "none" }}>
               <li>
                 <CommentIcon className="icon" />
                 <span>Tickets System</span>
               </li>
             </NavLink>
-          )}
-            {(auth.type === "customer" || (auth.type === "admin" || auth.type === "suadmin")) && (
+          )} */}
+            {/* {(auth.type === "customer" || (auth.type === "admin" || auth.type === "suadmin")) && (
             <NavLink to="/dynamic-properties" style={{ textDecoration: "none" }}>
               <li>
                 <CommentIcon className="icon" />
                 <span>Dynamic Properties</span>
               </li>
             </NavLink>
-          )}
+          )} */}
           {(auth.type === "admin" || auth.type === "suadmin") && (
             <>
               <NavLink to="/tags" style={{ textDecoration: "none" }}>
@@ -169,14 +169,14 @@ const Sidebar = ({ logoutAction }) => {
               </NavLink>
             </>
           )}
-             <>
+             {/* <>
               <NavLink to="/download-center" style={{ textDecoration: "none" }}>
                 <li>
                   <GetAppIcon className="icon" />
                   <span>Download Center</span>
                 </li>
               </NavLink>
-            </>
+            </> */}
             {( auth.type === "suadmin") && (
             <>
               <NavLink to="/settings" style={{ textDecoration: "none" }}>
@@ -184,7 +184,7 @@ const Sidebar = ({ logoutAction }) => {
                   <SettingsIcon className="icon" />
                   <span>Settings</span>
                 </li>
-              </NavLink> */}
+              </NavLink> 
             </>
           )}
         </ul>

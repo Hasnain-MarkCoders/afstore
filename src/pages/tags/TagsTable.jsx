@@ -87,7 +87,7 @@ export default function ({
     setDeleteId(data);
   };
   const deleteTag = async (_id) => {
-    API.delete(`/admin/delete-tag`, {
+    API.delete(`/${auth.type}/delete-tag`, {
       params: { id: _id, }
     }).then((response) => {
       setDeleteId(null);
@@ -117,7 +117,7 @@ export default function ({
   const handleSubmitUpdateTag = async (e) => {
     e.preventDefault();
 
-    API.post(`/admin/edit-tag`, {
+    API.post(`/${auth.type}/edit-tag`, {
       id: fields._id,
       type: fields.type,
       name: fields.name,

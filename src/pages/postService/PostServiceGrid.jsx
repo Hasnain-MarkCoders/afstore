@@ -103,27 +103,8 @@ const PostServiceGrid = ({ rows, isLoading , handleRefresh=()=>{}, setPagination
   const handleSetServiceError = (data) => {
     setServiceError(data);
   };
-
-  // Handle input change in the edit modal
-  const handleInput = (e) => {
-    const value  = e?.target?.value;
-    const name= e?.target?.name;
-    if (name=="state"){
-
-      // setEditFields((p) => ({ ...p, [name]: value.split(",").map(item=>{name:item}) }));
-    }
-    if (name!="state"){
-
-      setEditFields((p) => ({ ...p, [name]: value }));
-    }
-  };
-
   const handleEditModal = (data) => {
     setEditFields(data);
-  };
-
-  const handlePremiumPostServiceModal = (data) => {
-    setPremiumPostServiceField(data);
   };
 
   const handleDeletePostServiceModal = (data) => {
@@ -131,24 +112,6 @@ const PostServiceGrid = ({ rows, isLoading , handleRefresh=()=>{}, setPagination
   };
 
 
-  const handleSubmitEdit = async (e) => {
-    e.preventDefault();
-    await API.post(`/suadmin/edit-post-service`, {
-      id: editFields._id,
-      code: editFields.code,
-      type: editFields.type,
-      cost: editFields.cost,
-    })
-      .then((responce) => {
-        setEditFields(null);
-        setPaginationModel({ bool: boolRef.current });
-        boolRef.current = !boolRef.current;
-        // Reset the form fields
-      })
-      .catch((error) => {
-        handleSetServiceError(error?.response?.data?.message);
-      });
-  };
 
   const handleModal = (data) => {
     setFields(data);
@@ -182,7 +145,7 @@ const PostServiceGrid = ({ rows, isLoading , handleRefresh=()=>{}, setPagination
   const handlePremium =async(data)=>{
     try{
       setLoading(true)
-    const response = await API.post('/admin/toggle-premium', data);
+    const response = await API.post(`${auth.type}/toggle-premium`, data);
     handleRefresh()
     if (response.data){
       setSnackbar({
@@ -204,43 +167,6 @@ const PostServiceGrid = ({ rows, isLoading , handleRefresh=()=>{}, setPagination
     }
   }
 
-  const handleDirectActivate = async (id) => {
-    await API.post(`/admin/set-post-service-active`, {
-      id,
-    })
-      .then((responce) => {
-        setFields(null);
-        setPaginationModel({ bool: boolRef.current });
-        boolRef.current = !boolRef.current;
-        // Reset the form fields
-        setStartDate(dayjs());
-        setEndDate(dayjs());
-      })
-      .catch((error) => {
-        handleSetServiceError(error?.response?.data?.message);
-      });
-  };
-
-  const handleDeleteService = async (id) => {
-    await API.post(`/admin/delete-post-service`, {
-      id,
-    })
-      .then((responce) => {
-        setFields(null);
-        setPaginationModel({ bool: boolRef.current });
-        boolRef.current = !boolRef.current;
-        // Reset the form fields
-        setStartDate(dayjs());
-        setEndDate(dayjs());
-      })
-      .catch((error) => {
-        handleSetServiceError(error?.response?.data?.message);
-      });
-  };
-
-
-
-  
 const columns = [
   {
     field: "country",

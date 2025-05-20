@@ -4,7 +4,6 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import PostServiceGrid from "./PostServiceGrid";
 import CloseIcon from "@mui/icons-material/Close";
-import API from "../../api/api";
 import useQueryPostService from "../../Hooks/useQueryPostService/useQueryPostService";
 import AddPostServiceModal from "../../components/AddServiceModal/AddServiceModal";
 
@@ -13,11 +12,6 @@ export const PostService = ({ setShowSideBar }) => {
   const [paginationModel, setPaginationModel] = useState({})
   const [refresh, setRefresh] = useState(false);
   const { isLoading, data } = useQueryPostService(paginationModel, refresh);
-
-  const [serviceCode, setServiceCode] = useState('');
-  const [serviceType, setServiceType] = useState('');
-  const [serviceCost, setServiceCost] = useState(null);
-
   const [addServiceError, setAddServiceError] = useState(null)
   const handleAddServiceError = (data) => {
     setAddServiceError(data);
@@ -33,37 +27,6 @@ export const PostService = ({ setShowSideBar }) => {
   }
 
   const boolRef = useRef(false);
-  const handleSubmitAddServicePost = async (e) => {
-    e.preventDefault();
-
-    API.post(`/admin/add-post-service`, {
-      code: serviceCode,
-      type: serviceType,
-      cost: serviceCost,
-    })
-      .then((responce) => {
-        handleModal();
-        setPaginationModel({ bool: boolRef.current })
-        boolRef.current = !boolRef.current
-        // Reset the form fields
-        setServiceCode("");
-        setServiceType("");
-        setServiceCost(null);
-      }).catch((error) => {
-        handleAddServiceError(error?.response?.data?.message)
-      })
-
-  };
-
-  const handleResetSchedule = async () => {
-    API.get(`/admin/reset-post-service`)
-      .then((response) => {
-        setPaginationModel({ bool: boolRef.current })
-        boolRef.current = !boolRef.current
-      }).catch((error) => {
-        handleAddServiceError(error?.response?.data?.message)
-      })
-  }
 
   return (<>
     <Sidebar />

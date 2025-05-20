@@ -8,10 +8,11 @@ import {
   Alert,
 } from '@mui/material';
 import API from '../../api/api';
+import { useSelector } from 'react-redux';
 
 const DeletePostServiceModal = ({ open, handleClose, postService, cb=()=>{} }) => {
   const [loading, setLoading] = useState(false);
-
+  const auth = useSelector(state=>state.user)
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
@@ -25,7 +26,7 @@ const DeletePostServiceModal = ({ open, handleClose, postService, cb=()=>{} }) =
 
     try {
       setLoading(true);
-      const response = await API.delete('/admin/delete-post-service', {
+      const response = await API.delete(`/${auth.type}/delete-post-service`, {
         params: data,
       });
       console.log('Response:', response.data);
