@@ -1,33 +1,40 @@
 import "./widget.scss";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import ArticleIcon from '@mui/icons-material/Article';
+import ArticleIcon from "@mui/icons-material/Article";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 
 const Widget = ({ type }) => {
-
   const [length, setLength] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const auth = useSelector(
-    state => state.user
-  )
+  const auth = useSelector((state) => state.user);
 
+ 
   useEffect(() => {
-    setIsLoading(true)
-    API.get(`/${auth?.type}/length`)
-    .then((response) => {
-        setLength(response?.data)
-      }).catch(err=>{
-        console.log(err)
-      }).finally(()=>{
-        setIsLoading(false)
-      })
-  }, [])
-
-
+    const abortController = new AbortController()
+      const fetchStats = async () => {
+        try {
+          setIsLoading(true);
+          const res = await API.get(`${auth.type}/length`,{
+            signal:abortController.signal
+          });
+          if (res.data) {
+            setLength(res.data);
+          }
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+    fetchStats()
+    return  ()=>{
+      abortController.abort()
+    }
+  }, []);
 
   let data;
   //temporary
@@ -72,7 +79,7 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-      case "sku":
+    case "sku":
       data = {
         title: "SKU",
         isMoney: false,
@@ -90,18 +97,29 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-   default:
+    default:
       break;
   }
 
   return (
-    <div className="widget"> 
+    <div className="widget">
       <div className="left">
         <span className="title">{data.title}</span>
         <span className="counter">
-          {data.isMoney && "$"} {data.totalLength ? data.totalLength :isLoading? <div className="lds-facebook"><div></div><div></div><div></div></div>:"N/A"}
+          {data.isMoney && "$"}{" "}
+          {isLoading ? (
+            <div className="lds-facebook">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          ) : (
+            data.totalLength ?? "N/A"
+          )}
         </span>
-        <Link to={data.link} className="link">{data.linkText}</Link>
+        <Link to={data.link} className="link">
+          {data.linkText}
+        </Link>
       </div>
       <div className="right">
         {/* <div className="percentage positive">

@@ -19,15 +19,23 @@ function useQueryInvoicesItems(paginationModel) {
     const navigate = useNavigate()
   
     useEffect(() => {
+      const controller = new AbortController()
       const fetchData = async () => {
         try {
-          const response = await API.post(`/admin/line-orders`, {
-            params: {
-              page: (paginationModel.page || 0) + 1,
-              limit: (paginationModel.pageSize || obj.pageSize)
+          const response = await API.post(`/admin/line-orders`, 
+             {
+
+              filter:[{type:"invoice_status" , value:"Invoiced"}]
             },
-            filter:[{type:"invoice_status" , value:"Invoiced"}]
-          });
+            {
+              params: {
+                page: (paginationModel.page || 0) + 1,
+                limit: (paginationModel.pageSize || obj.pageSize)
+              },
+              signal :controller.signal
+            }
+           
+          );
           const { pagination, lineOrders } = response.data;
   
           setIsLoading(false);
@@ -50,6 +58,9 @@ function useQueryInvoicesItems(paginationModel) {
   
       setIsLoading(true);
       fetchData();
+      return ()=>{
+        controller.abort()
+      }
     }, [paginationModel]);
   
     return { isLoading, rows, pageInfo };

@@ -246,7 +246,7 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
     const auth = useSelector((state) => state.user);
     const navigate = useNavigate();
     useEffect(() => {
-  
+      const controller = new AbortController()
       const fetchData = async () => {
         try {
           
@@ -263,7 +263,7 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
           const response = await API.post(
             `/${auth?.type}/line-orders`,
             requestBody,
-            { params: queryParams }
+            { params: queryParams , signal:controller.signal}
           );
           // console.log("main", response.data);
           const { pagination, lineOrders } = response.data;
@@ -299,6 +299,9 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
       setIsPaginationLoading(true)
       setIsLoading(true);
       fetchData();
+      return()=>{
+        controller.abort()
+      }
     }, [paginationModel]);
     return { isLoading, rows, pageInfo };
   }

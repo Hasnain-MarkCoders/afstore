@@ -250,6 +250,7 @@ function useQueryPupring(paginationModel) {
     const auth = useSelector((state) => state.user);
     const navigate = useNavigate();
     useEffect(() => {
+      const controller = new AbortController()
       const fetchData = async () => {
         try {
           const queryParams = {
@@ -265,7 +266,7 @@ function useQueryPupring(paginationModel) {
           const response = await API.post(
             `/${auth?.type}/line-orders`,
             requestBody,
-            { params: queryParams }
+            { params: queryParams, signal:controller.signal }
           );
           const { pagination, lineOrders } = response.data;
 
@@ -299,6 +300,9 @@ function useQueryPupring(paginationModel) {
   
       setIsLoading(true);
       fetchData();
+      return ()=>{
+        controller.abort()
+      }
     }, [paginationModel]);
   
     return { isLoading, rows, pageInfo };

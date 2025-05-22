@@ -269,7 +269,7 @@ export default function TicketList({
   const handleSubmitremarksNote = async (e) => {
     e.preventDefault();
 
-    API.post(`/admin/add-note`, {
+    API.post(`/${auth.type}/add-note`, {
       order_id: remarksNote?._id,
       note: remarksNoteField,
     }).then((response) => {
@@ -301,6 +301,7 @@ export default function TicketList({
   // Handle edit modal for line orders
   const handleEditModal = async (data) => {
     try {
+    setFields(data);
       const response = await API.get(`${auth.type}/sku/get`, {
         params: {
           name: [data?.name],
@@ -312,7 +313,6 @@ export default function TicketList({
         navigate("/login");
       }
     }
-    setFields(data);
   };
 
   // Handle input change in the edit modal

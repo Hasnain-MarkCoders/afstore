@@ -20,6 +20,7 @@ function useQueryRejectedOrders(paginationModel) {
     const navigate = useNavigate()
   
     useEffect(() => {
+      const controller =  new AbortController()
       const fetchData = async () => {
         try {
           const response = await API.get(`/customer/hold-rejected-orders`, {
@@ -28,6 +29,7 @@ function useQueryRejectedOrders(paginationModel) {
               limit: (paginationModel.pageSize || obj.pageSize),
               order_status: ["Rejected"],
             },
+            signal:controller.signal
           });
           const { pagination, lineOrders, skus } = response.data;
   
@@ -52,6 +54,9 @@ function useQueryRejectedOrders(paginationModel) {
   
       setIsLoading(true);
       fetchData();
+      return ()=>{
+        controller.abort()
+      }
     }, [paginationModel]);
   
     return { setIsLoading ,isLoading, rows, skusNames, pageInfo };

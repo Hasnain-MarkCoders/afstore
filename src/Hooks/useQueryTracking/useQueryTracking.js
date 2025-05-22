@@ -8,10 +8,12 @@ function useQueryTracking(paginationModel) {
     const navigate = useNavigate()
   
     useEffect(() => {
+      const controller = new AbortController()
       const fetchData = async () => {
         try {
           const response = await API.get(`/admin/tracking/get-all`, {
             params: paginationModel,
+            signal:controller.signal
           });
           const trackingData = response.data;
           setData(trackingData);
@@ -26,6 +28,9 @@ function useQueryTracking(paginationModel) {
   
       setIsLoading(true);
       fetchData();
+      return()=>{
+        controller.abort()
+      }
     }, [paginationModel]);
   
     return { isLoading, data };

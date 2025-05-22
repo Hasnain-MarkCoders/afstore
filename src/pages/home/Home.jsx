@@ -45,7 +45,9 @@ const Home = ({ setShowSideBar }) => {
         setError(error);
       }
     };
-    fetchData();
+    if(auth.type!="customer"){
+      fetchData();
+    }
   }, []);
 
   return (<>

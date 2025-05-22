@@ -164,7 +164,7 @@ const PupringFilter = (props) => {
     setTagRed([]);
     setAllTagBlue(false);
     setAllTagRed(false);
-    props.setUpdatedData(false);
+    // props?.setUpdatedData(false);
     props.setPaginationModel({
       _id: [],
       order_status:

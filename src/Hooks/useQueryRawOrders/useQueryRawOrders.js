@@ -18,6 +18,7 @@ function useQueryRawOrders(paginationModel) {
     const navigate = useNavigate()
   
     React.useEffect(() => {
+      const controller = new AbortController()
       const fetchData = async () => {
         try {
           const response = await API.get('/suadmin/orders', {
@@ -25,6 +26,7 @@ function useQueryRawOrders(paginationModel) {
               page: (paginationModel.page || 0) + 1,
               limit: (paginationModel.pageSize || obj.pageSize)
             },
+            signal:controller.signal
           });
           const { pagination, orders } = response.data;
   
@@ -48,6 +50,9 @@ function useQueryRawOrders(paginationModel) {
   
       setIsLoading(true);
       fetchData();
+      return()=>{
+        controller.abort()
+      }
     }, [paginationModel]);
   
     return { isLoading, rows, pageInfo };

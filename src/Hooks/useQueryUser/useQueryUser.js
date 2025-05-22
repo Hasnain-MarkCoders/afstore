@@ -8,10 +8,12 @@ function useQueryUser(paginationModel) {
     const navigate = useNavigate()
   
     useEffect(() => {
+      const controller = new AbortController()
       const fetchData = async () => {
         try {
           const response = await API.get(`/suadmin/users`, {
             params: paginationModel,
+            signal:controller.signal
           });
           const users = response.data;
           setData(users);
@@ -26,6 +28,9 @@ function useQueryUser(paginationModel) {
   
       setIsLoading(true);
       fetchData();
+      return()=>{
+        controller.abort()
+      }
     }, [paginationModel]);
   
     return { isLoading, data };

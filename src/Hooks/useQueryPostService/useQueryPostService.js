@@ -10,10 +10,13 @@ function useQueryPostService(paginationModel, refresh=false) {
     const navigate = useNavigate()
     const auth = useSelector(state=>state.user)
     useEffect(() => {
+      const controller = new AbortController()
+
       const fetchData = async () => {
         try {
           const response = await API.get(`/${auth.type}/get-post-services`, {
             params: paginationModel,
+            signal:controller.signal
           });
          
           const users = response.data;
@@ -29,6 +32,9 @@ function useQueryPostService(paginationModel, refresh=false) {
   
       setIsLoading(true);
       fetchData();
+          return ()=>{
+        controller.abort()
+      }
     }, [paginationModel,refresh]);
   
     return { isLoading, data };

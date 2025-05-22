@@ -22,6 +22,7 @@ function useQueryHoldOrdersTable(paginationModel) {
     )
   
     useEffect(() => {
+      const controller = new AbortController()
       const fetchData = async () => {
         try {
           const queryParams = {
@@ -33,7 +34,7 @@ function useQueryHoldOrdersTable(paginationModel) {
             filter: [{ type: "order_status", value: ["Hold"] }],
             // ...other properties you want to include in the request body...
           };
-          const response = await API.post(`/${auth.type}/line-orders`, requestBody, { params: queryParams });
+          const response = await API.post(`/${auth.type}/line-orders`, requestBody, { params: queryParams, signal:controller.signal });
           const { pagination, lineOrders } = response.data;
   
           setIsLoading(false);
@@ -56,6 +57,9 @@ function useQueryHoldOrdersTable(paginationModel) {
   
       setIsLoading(true);
       fetchData();
+      return()=>{
+        controller.abort()
+      }
     }, [paginationModel]);
   
     return { isLoading, rows, pageInfo };

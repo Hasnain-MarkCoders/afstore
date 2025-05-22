@@ -26,6 +26,7 @@ function useQuerySKU(paginationModel) {
     const navigate = useNavigate()
   
     React.useEffect(() => {
+      const controller = new AbortController()
       const fetchData = async () => {
         try {
           const response = await API.get(`/${auth?.type}/sku/get`, {
@@ -34,6 +35,7 @@ function useQuerySKU(paginationModel) {
               limit: (paginationModel.pageSize || obj.pageSize),
               name: [(paginationModel.name || obj.name)],
             },
+            signal:controller.signal
           });
           const { pagination, skus } = response.data;
   
@@ -58,6 +60,9 @@ function useQuerySKU(paginationModel) {
   
       setIsLoading(true);
       fetchData();
+      return()=>{
+        controller.abort()
+      }
     }, [paginationModel]);
   
     return { isLoading, rows, pageInfo };

@@ -14,9 +14,10 @@ endpoint="",
     const navigate = useNavigate()
   
     useEffect(() => {
+      const controller = new AbortController()
       const fetchData = async () => {
         try {
-          const response = await API.get(endpoint);
+          const response = await API.get(endpoint, {signal:controller.signal});
           setIsLoading(false);
           setRows(response.data || []); 
         } catch (error) {
@@ -29,6 +30,9 @@ endpoint="",
   
       setIsLoading(true);
       fetchData();
+      return()=>{
+        controller.abort()
+      }
     }, [paginationModel]);
   
     return { isLoading, rows };

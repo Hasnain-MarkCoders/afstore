@@ -18,6 +18,7 @@ function useQueryInvoices(paginationModel) {
     const navigate = useNavigate()
   
     useEffect(() => {
+        const controller = new AbortController()
       const fetchData = async () => {
         try {
           const response = await API.get(`/admin/invoice/get-invoice`, {
@@ -26,6 +27,7 @@ function useQueryInvoices(paginationModel) {
               limit: (paginationModel.pageSize || obj.pageSize),
               po_number: (paginationModel.po_number || obj.po_number),
             },
+            signal:controller.signal
           });
           const { pagination, invoices } = response.data;
   
@@ -49,6 +51,9 @@ function useQueryInvoices(paginationModel) {
   
       setIsLoading(true);
       fetchData();
+      return ()=>{
+        controller.abort()
+      }
     }, [paginationModel]);
   
     return { isLoading, rows, pageInfo };
