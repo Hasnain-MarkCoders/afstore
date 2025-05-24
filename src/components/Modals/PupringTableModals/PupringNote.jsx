@@ -1,12 +1,24 @@
 import { Box, Button, Fade, Modal, TextField, TextareaAutosize, Typography } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import CloseIcon from "@mui/icons-material/Close"
-const PupringNote = ({title="", isFade=null,handleModal=()=>{},handleField=()=>{}, field="",submitNote=()=>{}}) => {
+const PupringNote = ({title="", isFade=null,handleModal=()=>{},handleField=()=>{}, field="",submitNote=async()=>{}}) => {
+  const [isLoading, setIsLoading] = useState(false)
+    const handleSubmitNote = async(e)=>{
+      try {
+        setIsLoading(true)
+         await submitNote(e)
+      } catch (error) {
+        console.log(error)
+      }finally{
+        setIsLoading(false)
+      }
+
+    }
 
 return (
     <Modal
         open={true}
-        onClose={handleModal}
+        onClose={!isLoading&& handleModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         className="list-modal"
@@ -17,11 +29,12 @@ return (
               <Typography className="main-title" component="h2">
                {title}
               </Typography>
-              <a onClick={handleModal} className="close-btn">
+              <a
+              onClick={!isLoading &&handleModal} className="close-btn">
                 <CloseIcon className="icon" />
               </a>
             </Box>
-            <form onSubmit={submitNote}>
+            <form onSubmit={handleSubmitNote}>
               <Box component={"div"} className="modal-body">
                 <TextField
                   type="text"
@@ -37,9 +50,9 @@ return (
                 />
               </Box>
               <Box component={"div"} className="modal-footer">
-                <Button className="btn btn-outline-primary" onClick={handleModal}>Cancel</Button>
-                <Button className="btn btn-primary" type="submit">
-                  Add Note
+                <Button disabled={isLoading} className="btn btn-outline-primary" onClick={ handleModal}>Cancel</Button>
+                <Button disabled={isLoading}  className="btn btn-primary" type="submit">
+                  {isLoading?"Note is Adding...":"Add Note"}
                 </Button>
               </Box>
             </form>

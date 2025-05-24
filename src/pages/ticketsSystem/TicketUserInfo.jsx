@@ -105,11 +105,11 @@ export default function   TicketUserInfo({ data }) {
   }
   return (
     <div className="user-details">
-      {data ? Object.entries(data)?.map(([key, value]) => {
+      {data ? Object.entries(data)?.map(([key, value], index) => {
         console.log(data)
         if (shouldDisplayKey(key)) {
           return (
-            <>
+            <div key={index}>
             {key === "factory_color" && auth.type !== "admin" ? null :
             <>
             
@@ -142,7 +142,7 @@ export default function   TicketUserInfo({ data }) {
               </div>
               </>
             }
-          </>
+          </div>
           );
         } else {
           return null; // Skip rendering for other keys

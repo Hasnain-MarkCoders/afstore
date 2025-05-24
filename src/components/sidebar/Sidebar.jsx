@@ -135,22 +135,22 @@ const Sidebar = ({ logoutAction }) => {
                   <span>Post Service</span>
                 </li>
               </NavLink>
-            {/* { auth.type === "suadmin" && <NavLink to="/users" style={{ textDecoration: "none" }}>
+            { auth.type === "suadmin" && <NavLink to="/users" style={{ textDecoration: "none" }}>
                 <li>
                   <AccountCircleOutlinedIcon className="icon" />
                   <span>Users</span>
                 </li>
-              </NavLink>} */}
+              </NavLink>}
             </>
           )}
-          {/* {(auth.type === "customer" || (auth.type === "admin" || auth.type === "suadmin")) && (
+          {(auth.type === "customer" || (auth.type === "admin" || auth.type === "suadmin")) && (
             <NavLink to="/tickets-system" style={{ textDecoration: "none" }}>
               <li>
                 <CommentIcon className="icon" />
                 <span>Tickets System</span>
               </li>
             </NavLink>
-          )} */}
+          )}
             {/* {(auth.type === "customer" || (auth.type === "admin" || auth.type === "suadmin")) && (
             <NavLink to="/dynamic-properties" style={{ textDecoration: "none" }}>
               <li>

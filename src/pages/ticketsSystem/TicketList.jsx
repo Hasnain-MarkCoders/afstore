@@ -36,6 +36,7 @@ import AdsClickIcon from "@mui/icons-material/AdsClick";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { TicketListEditFieldConfigs , TicketListEditNonHoldFieldConfigs, TicketListEditCustomerFieldsConfigs, filterFields, getColor} from "../../Utils/Utils";
 import CustomPagination from "../../components/CustomPagination/CustomPagination";
+import PupringNote from "../../components/Modals/PupringTableModals/PupringNote";
 const formattedDateTime = (date) => {
   const dateTime = new Date(date);
   const formattedDate = dateTime.toLocaleDateString("en-US", {
@@ -95,7 +96,6 @@ export default function TicketList({
   const [factoryNote, setFactoryNote] = useState(null);
   const [factoryNoteField, setFactoryNoteField] = useState("");
   const [limit, setLimit] = useState(10);
-
   const handleSelect = React.useCallback(
     (value) => {
       if (pupringId === value._id) {
@@ -170,9 +170,10 @@ export default function TicketList({
       .then((response) => {
         handleApiResponse("Waybill generated successfully!");
       })
-      .catch((error) => {
-        handleApiResponse("Error generating waybill!", "red");
-      });
+    .catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Generating Waybill!")
+
+    })
   };
   const generateLabel = (po_number) => {
     const po = [po_number];
@@ -180,29 +181,34 @@ export default function TicketList({
       .then((response) => {
         handleApiResponse("Label generated successfully!");
       })
-      .catch((error) => {
-        handleApiResponse("Error generating label!");
-      });
+      .catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Generating Label!")
+
+    })
   };
   const handleCancelOrder = (id) => {
     const orderId = [id];
-    API.post(`/admin/cancel-line-orders`, { order_ids: orderId }).then(
+    API.post(`/${auth.type}/cancel-line-orders`, { order_ids: orderId }).then(
       (response) => {
         handleApiResponse("Order cancelled successfully!");
       }
-    );
+    ).catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Cancelling the Order!")
+
+    });
   };
 
   const placeOrderOnHold = (ids) => {
-    API.post(`/admin/hold-orders`, {
+    API.post(`/${auth.type}/hold-orders`, {
       order_id: ids,
     })
       .then((response) => {
         handleApiResponse("Order placed on hold!");
       })
-      .catch((error) => {
-        handleApiResponse("Error placing order on hold!");
-      });
+      .catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Placing Order ON Hold!")
+
+    })
   };
 
   const handlePlaceOrder = (id) => {
@@ -214,6 +220,7 @@ export default function TicketList({
       })
       .catch((error) => {
         handleApiResponse("Error placing order!");
+        alert(error?.response?.data?.message??error.message??"Error Placing Order!")
       });
   };
 
@@ -222,7 +229,10 @@ export default function TicketList({
       order_id: id,
     }).then((response) => {
       handleApiResponse("Ticket closed successfully!");
-    });
+    }).catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Closing Ticket!")
+
+    })
   };
   const handleSubmitUpdateLineOrder = async (e) => {
     e.preventDefault();
@@ -258,7 +268,10 @@ export default function TicketList({
       handleEditModal(null);
        filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Editing Order!")
+
+    })
   };
 
   const handleFactoryNoteModal = (data) => {
@@ -269,7 +282,7 @@ export default function TicketList({
   const handleSubmitremarksNote = async (e) => {
     e.preventDefault();
 
-    API.post(`/${auth.type}/add-note`, {
+    return API.post(`/${auth.type}/add-note`, {
       order_id: remarksNote?._id,
       note: remarksNoteField,
     }).then((response) => {
@@ -283,14 +296,17 @@ export default function TicketList({
   const handleSubmitfactoryNote = async (e) => {
     e.preventDefault();
 
-    API.post(`/factory/add-note`, {
+    return API.post(`/factory/add-note`, {
       id: factoryNote?._id,
       note: factoryNoteField,
     }).then((response) => {
       handleFactoryNoteModal(null);
        filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Adding Note!")
+
+    })
   };
 
 
@@ -307,8 +323,10 @@ export default function TicketList({
           name: [data?.name],
         },
       });
-      setPair(response.data.skus[0].properties.pair);
+      setPair(response?.data?.skus?.[0]?.properties?.pair);
     } catch (error) {
+        alert(error?.response?.data?.message??error.message??"Error Editing SKU!")
+
       if (error?.response?.status === 480) {
         navigate("/login");
       }
@@ -354,7 +372,9 @@ export default function TicketList({
       })
       .catch((error) => {
         setForceAcceptError(error?.response?.data?.message);
+       alert(error?.response?.data?.message??error.message??"Error Force Accepting Order!")
       })
+      
       .finally(() => {
         setLoadingForceAccept(false);
       });
@@ -373,6 +393,8 @@ export default function TicketList({
       })
       .catch((error) => {
         setApproveOrderError(error?.response?.data?.message);
+       alert(error?.response?.data?.message??error.message??"Error Direct Approving the Order!")
+
       });
   };
 
@@ -1101,105 +1123,30 @@ export default function TicketList({
           </Fade>
         </Modal>
       )}
-      {factoryNote && (
-        <Modal
-          open={true}
-          onClose={() => handleFactoryNoteModal(null)}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-          className="list-modal"
-        >
-          <Fade in={!!factoryNote}>
-            <Box component={"div"}>
-              <Box component={"div"} className="modal-header">
-                <Typography className="main-title" component="h2">
-                  Add Note
-                </Typography>
-                <a
-                  onClick={() => handleFactoryNoteModal(null)}
-                  className="close-btn"
-                >
-                  <CloseIcon className="icon" />
-                </a>
-              </Box>
-              <form onSubmit={handleSubmitfactoryNote}>
-                <Box component={"div"} className="modal-body">
-                  <TextField
-                    type="text"
-                    onChange={(e) => setFactoryNoteField(e.target.value)}
-                    fullWidth
-                    InputProps={{
-                      inputComponent: TextareaAutosize,
-                      rows: 3,
-                    }}
-                    value={factoryNoteField}
-                    label="Enter note"
-                    variant="outlined"
-                  />
-                </Box>
-                <Box component={"div"} className="modal-footer">
-                  <Button
-                    className="btn btn-outline-primary"
-                    onClick={() => handleFactoryNoteModal(null)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button className="btn btn-primary" type="submit">
-                    Add Note
-                  </Button>
-                </Box>
-              </form>
-            </Box>
-          </Fade>
-        </Modal>
-      )}
-      {remarksNote && (
-        <Modal
-          open={true}
-          onClose={() => handleRemarksNoteModal(null)}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-          className="list-modal"
-        >
-          <Fade in={!!remarksNote}>
-            <Box component={"div"}>
-              <Box component={"div"} className="modal-header">
-                <Typography className="main-title" component="h2">
-                  Remarks Note Add
-                </Typography>
-                <a
-                  onClick={() => handleRemarksNoteModal(null)}
-                  className="close-btn"
-                >
-                  <GridCloseIcon className="icon" />
-                </a>
-              </Box>
-              <form onSubmit={handleSubmitremarksNote}>
-                <Box component={"div"} className="modal-body">
-                  <TextField
-                    type="text"
-                    onChange={(e) => setRemarksNoteField(e.target.value)}
-                    fullWidth
-                    InputProps={{
-                      inputComponent: TextareaAutosize,
-                      rows: 3,
-                    }}
-                    value={remarksNoteField}
-                    label="Enter note"
-                    variant="outlined"
-                  />
-                </Box>
-                <Box component={"div"} className="modal-footer">
-                  {/* <Button className="btn btn-outline-primary" onClick={() => handleCustomerNoteModal(null)}>Cancel</Button> */}
-                  <Button className="btn btn-primary" type="submit">
-                    Add Remarks
-                  </Button>
-                </Box>
-              </form>
-            </Box>
-          </Fade>
-        </Modal>
-      )}
+
+      {/*Factory Add Note */}
+              {factoryNote && (
+                <PupringNote
+                  submitNote={(e) => handleSubmitfactoryNote(e)}
+                  title={"Add Factory Note"}
+                  handleModal={() => handleFactoryNoteModal(null)}
+                  handleField={(e) => setFactoryNoteField(e.target.value)}
+                  field={factoryNoteField}
+                  isFade={factoryNote}
+                />
+              )}
+      
+               {/*Remarks Add Note */}
+              {remarksNote && (
+                <PupringNote
+                  submitNote={(e) => handleSubmitremarksNote(e)}
+                  title={"Add Remark Note"}
+                  handleModal={() => handleRemarksNoteModal(null)}
+                  handleField={(e) => setRemarksNoteField(e.target.value)}
+                  field={remarksNoteField}
+                  isFade={remarksNote}
+                />
+              )}
       {forceAccept && (
         <Modal
           aria-labelledby="transition-modal-title"

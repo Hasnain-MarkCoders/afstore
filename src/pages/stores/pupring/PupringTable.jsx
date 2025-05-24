@@ -124,7 +124,7 @@ const PupringTable = ({
   const handleSubmitfactoryNote = async (e) => {
     e.preventDefault();
 
-    API.post(`/factory/add-note`, {
+    return API.post(`/factory/add-note`, {
       id: factoryNote?._id,
       note: factoryNoteField,
     }).then((response) => {
@@ -143,7 +143,7 @@ const PupringTable = ({
   const handleSubmitcustomerNote = async (e) => {
     e.preventDefault();
 
-    API.post(`/customer/add-note`, {
+   return API.post(`/customer/add-note`, {
       id: customerNote?._id,
       note: customerNoteField,
     }).then((response) => {
@@ -162,7 +162,7 @@ const PupringTable = ({
   const handleSubmitremarksNote = async (e) => {
     e.preventDefault();
 
-    API.post(`/${auth.type}/add-note`, {
+  return  API.post(`/${auth.type}/add-note`, {
       order_id: remarksNote?._id,
       note: remarksNoteField,
     }).then((response) => {
@@ -234,7 +234,7 @@ const PupringTable = ({
       flex: 1,
       minWidth: 200,
       renderCell:params=>{
-        console.log(params.row)
+        // console.log(params.row)
         return (<Box sx={{
           display:"flex",
           alignItems:"center",
@@ -679,25 +679,31 @@ const PupringTable = ({
           }).then((response) => {
             filterFields(pageInfo, setPaginationModel, boolRef);
             boolRef.current = !boolRef.current;
-          });
+          }).catch((error) => {
+        alert(error?.response?.data?.message??error.message??"Error Placing Order!")
+      });
         };
 
         const generateLabel = (po_number) => {
           const po = [po_number];
-          API.post(`/${auth?.type}/generate-label`, po).then((response) => {
+          API.post(`/factory/generate-label`, po).then((response) => {
             filterFields(pageInfo, setPaginationModel, boolRef);
             boolRef.current = !boolRef.current;
-          });
+          }).catch((error) => {
+        alert(error?.response?.data?.message??error.message??"Error Generating WayBill!")
+      });
         };
 
         const handleCancelOrder = (id) => {
           const orderId = [id];
-          API.post(`/${auth?.type}/cancel-line-orders`, {
+          API.post(`/factory/cancel-line-orders`, {
             order_ids: orderId,
           }).then((response) => {
             filterFields(pageInfo, setPaginationModel, boolRef);
             boolRef.current = !boolRef.current;
-          });
+          }).catch((error) => {
+        alert(error?.response?.data?.message??error.message??"Error Cancelling Order!")
+      });
         };
 
         return (
@@ -1570,6 +1576,18 @@ const PupringTable = ({
           />
         )}
 
+         {/*Remarks Add Note */}
+        {remarksNote && (
+          <PupringNote
+            submitNote={(e) => handleSubmitremarksNote(e)}
+            title={"Add Remark Note"}
+            handleModal={() => handleRemarksNoteModal(null)}
+            handleField={(e) => setRemarksNoteField(e.target.value)}
+            field={remarksNoteField}
+            isFade={remarksNote}
+          />
+        )}
+
         {/*Customer Add Note */}
 
         {customerNote && (
@@ -1583,17 +1601,7 @@ const PupringTable = ({
           />
         )}
 
-        {/*Remarks Add Note */}
-        {remarksNote && (
-          <PupringNote
-            submitNote={(e) => handleSubmitremarksNote(e)}
-            title={"Add Remark Note"}
-            handleModal={() => handleRemarksNoteModal(null)}
-            handleField={(e) => setRemarksNoteField(e.target.value)}
-            field={remarksNoteField}
-            isFade={remarksNote}
-          />
-        )}
+       
 
         {forceAccept && (
           <Modal

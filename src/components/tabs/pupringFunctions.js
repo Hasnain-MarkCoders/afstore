@@ -67,7 +67,10 @@ export const placeOrderOnHold = (ids, props, auth, boolRef) => {
     }).then((response) => {
         filterFields(props, boolRef);
         boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Placing Order on Hold!")
+
+    })
 };
 
 // Function to place orders for selected rows
@@ -77,7 +80,10 @@ export const selectedWaybill = (id, props, boolRef) => {
     }).then((response) => {
         filterFields(props, boolRef);
         boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Placing Order on Yun Express!")
+
+    })
 };
 export const selectedLabel = (id, props, boolRef) => {
     API.post(`/factory/generate-label`, {
@@ -85,7 +91,9 @@ export const selectedLabel = (id, props, boolRef) => {
     }).then((response) => {
         filterFields(props, boolRef);
         boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Generating WayBIll!")
+    })
 };
 export const seletedPlaceOrder = (id, props, boolRef) => {
     API.post(`/factory/place-order`, {
@@ -93,7 +101,9 @@ export const seletedPlaceOrder = (id, props, boolRef) => {
     }).then((response) => {
         filterFields(props, boolRef);
         boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Placing Order!")
+    })
 };
 
 // Function to combineOrder for selected rows
@@ -103,7 +113,9 @@ export const combineOrder = (id, props, boolRef) => {
     }).then((response) => {
         filterFields(props, boolRef);
         boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error Combining Order!")
+    })
 };
 
 

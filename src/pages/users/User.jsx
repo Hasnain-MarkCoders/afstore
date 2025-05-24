@@ -18,14 +18,16 @@ export const Users = ({ setShowSideBar }) => {
   const boolRef = useRef(false);
   const [paginationModel, setPaginationModel] = useState({})
   const { isLoading, data } = useQueryUser(paginationModel);
-
+  const [loading, setLoading] = useState(false)
   const handleModal = () => {
     setOpen((prevOpenModal) => !prevOpenModal);
   };
+  const isPending = isLoading ||loading
 
   const handleSubmitAddUser = async (e) => {
     e.preventDefault();
-    API.post(`/suadmin/add-user`, {
+    setLoading(true)
+   return API.post(`/suadmin/add-user`, {
       name: name,
       email: email,
       password: password,
@@ -45,6 +47,8 @@ export const Users = ({ setShowSideBar }) => {
       })
       .catch((error) => {
         setError(error);
+      }).finally(()=>{
+        setLoading(false)
       })
   };
 
@@ -64,7 +68,7 @@ export const Users = ({ setShowSideBar }) => {
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
             open={open}
-            onClose={handleModal}
+            onClose={!isPending &&handleModal}
             closeAfterTransition
             slots={{ backdrop: Backdrop }}
             slotProps={{
@@ -77,7 +81,7 @@ export const Users = ({ setShowSideBar }) => {
             <Fade in={open} >
               <Box>
                 <Box className="modal-body" >
-                  <a onClick={handleModal} className="close-btn">
+                  <a onClick={!isPending ? handleModal:()=>{}} className="close-btn">
                     <CloseIcon className="icon" />
                   </a>
                   <Typography className="main-title" component="h2">
@@ -109,13 +113,17 @@ export const Users = ({ setShowSideBar }) => {
 
                     <Box className="modal-footer">
                       <Button
+                      disabled={isPending}
+
                         className="btn btn-outline-primary"
                         onClick={handleModal}
                       >
                         Cancel
                       </Button>
-                      <Button className="btn btn-primary" type="submit">
-                        Add
+                      <Button 
+                      disabled={isPending}
+                      className="btn btn-primary" type="submit">
+                        {isPending?"Adding...":"Add"}
                       </Button>
                     </Box>
                   </form>
