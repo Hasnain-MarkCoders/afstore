@@ -24,7 +24,6 @@ const RejectedOrdersTable = () => {
   const { skusNames, setIsLoading ,isLoading, rows, pageInfo } = useQueryRejectedOrders(paginationModel);
 
   const sortedSkus = skusNames?.sort((a, b) => {
-    // Convert titles to lowercase to ensure case-insensitive sorting
     let titleA = a?.title?.toLowerCase();
     let titleB = b?.title?.toLowerCase();
 
@@ -53,22 +52,6 @@ const RejectedOrdersTable = () => {
     {
       field: "po_id", headerName: "Po Id", minWidth: 240, flex: 1
     },
-    // {
-    //   field: "Copy to clip", headerName: "Copy to clip", minWidth: 240, flex: 1,
-    //   renderCell: (params) => {
-    //     const handleSubmit = () => {
-    //      console.log(params.row)
-    //      navigator.clipboard.writeText(`PO : ${params?.row?.po_id??"N/A"} | Name : ${params?.row?.name??"N/A"} | Tracking number : ${params?.row?.tracking_number??"N/A"}`)
-    //     }
-    //     return (
-    //       <div className="cellAction">
-    //         <Button className="action-btn"  onClick={() => { handleSubmit() }}>
-    //           copy to clip 
-    //         </Button>
-    //       </div>
-    //     );
-    //   },
-    // },
     {
       field: "multiple",
       headerName: "Multiple",
@@ -323,7 +306,6 @@ const RejectedOrdersTable = () => {
     }
   };
 
-  // Column definition for the action column in the data grid
   const actionColumn = [
     {
       field: "action",
@@ -395,45 +377,14 @@ const RejectedOrdersTable = () => {
         flex: 1,
         minWidth: 200,
         renderCell: (params) => {
-  
           return (
-            params.row?.value?.startsWith("http") ?
-              <Link to={params.row?.value} className={`cellWithStatus status-btn`} target="blank">
-                View Image
-              </Link>
-              : params.row?.value
+            params.row?.value
           )
         },
       }
     ];
-  }else if(fields?.properties[0]?.customizedContent){
-     propertiesColumns = [
-      {
-        field: "customizedContent", headerName: "Name", minWidth: 100, flex: 1,
-        renderCell: (params) => {
-          return (params.row?.customizedContent &&  <div className="">
-              {params.row?.customizedContent}
-            </div>
-          );
-          }
-      },
-      {
-        field: "url",
-        headerName: "Value",
-        flex: 1,
-        minWidth: 200,
-        renderCell: (params) => {
-          return (
-            params.row?.url &&  params.row?.url?.startsWith("http") ?
-              <Link to={params.row.url} className={`cellWithStatus status-btn`} target="blank">
-                View Image
-              </Link>
-              : params.row.url
-          )
-        },
-      }
-    ];
-  }else{
+  }
+else{
      propertiesColumns = []
   }
 

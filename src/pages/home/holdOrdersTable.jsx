@@ -1,74 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import API from "../../api/api";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { Box, Button, Fade, IconButton, Backdrop, Modal, Slide, TextField, Tooltip, Typography, AppBar, Dialog } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
+import { Box, Button, Fade, IconButton, Slide, Tooltip, Typography, AppBar, Dialog } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { Toolbar } from "../../components/pagination/paginationDataGrid";
 import { formattedDateTime } from "./Home";
-import OrderEditModal from "../../components/Modals/OrdersModals/OrderEditModal";
 import useQueryHoldOrdersTable from "../../Hooks/useQueryHoldOrdersTable/useQueryHoldOrdersTable";
 import CustomIcon from "../../components/CustomIcon/CustomIcon";
+import LineOrderPropertiesComponent  from "./../../components/LineOrderPropertiesComponent/LineOrderPropertiesComponent"
 import { v4 as uuidv4 } from 'uuid';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
 const HoldOrdersTable = () => {
-  const [propertyAddModal, setPropertyAddModal] = useState(false);
-  const [dynamicFormFields, setDynamicFormFields] = useState([]);
-  const [pair, setPair] = useState(null)
-  const [isAdding, setIsAdding] = useState(false)
-  const [loading, setLoading] = useState(false)
-  useEffect(() => {
-    setDynamicFormFields(Array.from({ length: pair }, () => ({ name: '', value: '' })));
-  }, [pair]);
-
-  const handleFieldChange = (index, field, value) => {
-    const updatedFields = dynamicFormFields.map((item, i) => {
-      if (i === index) {
-        return { ...item, [field]: value };
-      }
-      return item;
-    });
-    setDynamicFormFields(updatedFields);
-  };
-
-
   const navigate = useNavigate()
   const auth = useSelector(
     state => state.user
   )
-  
-const handleRemoveProperty = (item) => {
-  setLoading(true)
-  const newData = [...fields?.properties?.filter(x=>x._id!=item._id)]
-      setFields(prev => ({
-        ...prev,
-        properties:newData,
-      }));
-      API.post('/customer/add-missing-name', {
-      order_id: fields?._id,
-      properties: [...newData]
-    }).then((response) => {
-  setLoading(false)
-    }).catch(error=>{
-  setLoading(false)
-      alert(error?.response?.data?.message??error?.message??"Error Removing Property")
-    }).finally(()=>{
-
-   setPaginationModel({ bool: boolRef.current });
-      boolRef.current = !boolRef.current;
-    })
-
-};
-
-
-
   const userColumns = [
     {
       field: "po_id", headerName: "Po Id", minWidth: 240, flex: 1
@@ -97,7 +50,7 @@ const handleRemoveProperty = (item) => {
       flex: 1,
       minWidth: 200
     },
-    ...(auth.type === "admin" || auth.type==="suadmin"? [{
+    ...(auth.type === "admin" || auth.type === "suadmin" ? [{
       field: "admin_remarks",
       headerName: "Admin Remarks",
       flex: 1,
@@ -110,7 +63,7 @@ const handleRemoveProperty = (item) => {
         </div>
       }
     },] : []),
-    ...(auth.type === "admin" || auth.type==="suadmin"? [{
+    ...(auth.type === "admin" || auth.type === "suadmin" ? [{
       field: "remarks",
       headerName: "Remarks",
       flex: 1,
@@ -123,7 +76,7 @@ const handleRemoveProperty = (item) => {
         </div>
       }
     },] : []),
-    ...(auth.type === "customer" || auth.type === "admin" || auth.type==="suadmin"? [{
+    ...(auth.type === "customer" || auth.type === "admin" || auth.type === "suadmin" ? [{
       field: "customer_note",
       headerName: "Customer Note",
       flex: 1,
@@ -136,7 +89,7 @@ const handleRemoveProperty = (item) => {
         </div>
       }
     },] : []),
-    ...(auth.type === "factory" || auth.type === "admin" || auth.type==="suadmin"? [{
+    ...(auth.type === "factory" || auth.type === "admin" || auth.type === "suadmin" ? [{
       field: "factory_note",
       headerName: "Factory Note",
       flex: 1,
@@ -162,7 +115,7 @@ const handleRemoveProperty = (item) => {
         );
       },
     },] : []),
-    ...(auth.type === "admin" || auth.type==="suadmin"? [{
+    ...(auth.type === "admin" || auth.type === "suadmin" ? [{
       field: "shipment_customer_price",
       headerName: "Shiptment Price",
       flex: 1,
@@ -222,7 +175,7 @@ const handleRemoveProperty = (item) => {
       minWidth: 200,
       flex: 1,
       renderCell: (params) => {
-        return (!!params.row.date ? formattedDateTime(params.row.date): null)
+        return (!!params.row.date ? formattedDateTime(params.row.date) : null)
       },
     },
     {
@@ -286,7 +239,7 @@ const handleRemoveProperty = (item) => {
         );
       }
     },
-    ...((auth.type === "admin")|| auth.type==="suadmin" ? [{
+    ...((auth.type === "admin") || auth.type === "suadmin" ? [{
       field: "invoice_status",
       headerName: "Invoice Status",
       minWidth: 200,
@@ -300,157 +253,21 @@ const handleRemoveProperty = (item) => {
       }
     }] : []),
   ];
-
-
   const [paginationModel, setPaginationModel] = useState({
     page: 0, pageSize: 10
   })
-
-  const { isLoading, rows, pageInfo } = useQueryHoldOrdersTable(paginationModel);
-
-
-  const boolRef = useRef(false);
-  
+  const { isLoading, rows, pageInfo , refetch} = useQueryHoldOrdersTable(paginationModel);
   const [fields, setFields] = useState(null)
   const handlePropertiesModal = async (data) => {
-    if (!data) {
-    setFields(null);
-    return;
-  }
-    try{
-
-      const response = await API.get(`${auth.type}/sku/get`, {
-        params: {
-          name: [data?.name]
-        }
-      })
-      setPair(response.data.skus[0].properties.pair)
-    } catch(error) {
-      if(error?.response?.status === 480) {
-        navigate("/login");
-      }
-    }
-    const newData = {...data, properties: data.properties.map(item=>({...item,_id:uuidv4()}))}
-    setFields(newData)
+    setFields(data)     
   };
 
-  const renderDynamicFormFields = () => {
-    return dynamicFormFields.map((field, index) => (
-      <div key={index}>
-        <TextField
-          label="Name"
-          fullWidth
-          variant="outlined"
-          value={field.name}
-          onChange={(e) => handleFieldChange(index, 'name', e.target.value)}
-          style={{ marginBottom: "10px" }}
-        />
-        <TextField
-          label="Value"
-          fullWidth
-          variant="outlined"
-          value={field.value}
-          onChange={(e) => handleFieldChange(index, 'value', e.target.value)}
-          style={{ marginBottom: "10px" }}
-        />
-      </div>
-    ));
-  };
-
-
-  let propertiesColumns = []
-  if (fields?.properties && (fields?.properties[0]?.name || fields?.properties[0]?.value)) {
-    propertiesColumns = [
-      {
-        field: "name", headerName: "Name", minWidth: 100, flex: 1,
-        renderCell: (params) => {
-          return (params.row?.name && <div className="">
-            {params.row?.name}
-          </div>
-          );
-        }
-      },
-      {
-        field: "value",
-        headerName: "Value",
-        flex: 1,
-        minWidth: 200,
-        renderCell: (params) => {
-
-          return (
-            params.row?.value?.startsWith("http") ?
-              <Link to={params.row?.value} className={`cellWithStatus status-btn`} target="blank">
-                View Image
-              </Link>
-              : params.row?.value
-          )
-        },
-      }
-    ];
-  } else if (fields?.properties && (fields?.properties[0]?.customizedContent || fields?.properties && fields?.properties[0]?.url)) {
-    propertiesColumns = [
-      {
-        field: "customizedContent", headerName: "Name", minWidth: 100, flex: 1,
-        renderCell: (params) => {
-          return (params.row?.customizedContent && <div className="">
-            {params.row?.customizedContent}
-          </div>
-          );
-        }
-      },
-      {
-        field: "url",
-        headerName: "Value",
-        flex: 1,
-        minWidth: 200,
-        renderCell: (params) => {
-          return (
-            params.row?.url && params.row?.url?.startsWith("http") ?
-              <Link to={params.row.url} className={`cellWithStatus status-btn`} target="blank">
-                View Image
-              </Link>
-              : params.row.url
-          )
-        },
-      }
-    ];
-  } else {
-    propertiesColumns = []
-  }
-
-
-  const [propertyFields, setPropertyFields] = useState(null)
-  const handleEditModal = (data) => {
-    setPropertyFields(data)
-  };
-  const handleInput = (e) => {
-    const { name, value } = e?.target;
-    setPropertyFields(p => ({ ...p, [name]: value }))
-  }
-  const handleSubmitUpdateProperties = async (e) => {
-    setLoading(true)
-    e.preventDefault();
-    console.log(propertyFields)
-   return API.post('/customer/add-missing-name', {
-      order_id: fields?._id,
-      properties: isAdding?[...fields.properties,propertyFields]:[...fields.properties]
-    }).then((response) => {
-    setLoading(false)
-      handleEditModal(null);
-      handlePropertiesModal(null);
-      setPaginationModel({ bool: boolRef.current });
-      boolRef.current = !boolRef.current;
-    }).catch(error=>{
-    setLoading(false)
-
-      alert(error?.response?.data?.message??error?.message??"Error added property")
-    }).finally(()=>{
-   setPaginationModel({ bool: boolRef.current });
-      boolRef.current = !boolRef.current;
-    })
-  };
-
-
+  useEffect(()=>{
+setPaginationModel(prev=>({
+  ...prev,
+  length:fields?.length
+}))
+  },[fields?.length])
   const actionColumn = [
     {
       field: "action",
@@ -463,47 +280,18 @@ const handleRemoveProperty = (item) => {
           <div className="cellAction">
 
             <CustomIcon
-             title={"View Properties"}
-             className="action-icon-btn viewBtn"
-             cb={()=>handlePropertiesModal(params.row)}
-             icon={ <RemoveRedEyeIcon />}
+              title={"View Properties"}
+              className="action-icon-btn viewBtn"
+              cb={() => handlePropertiesModal(params.row)}
+              icon={<RemoveRedEyeIcon />}
             />
-         
+
           </div>
         );
       },
     },
   ];
 
-  // Column definition for the action column in the data grid
-  const propertiesActionColumn = [
-    {
-      field: "action",
-      headerName: "Action",
-      flex: 1,
-      minWidth: 70,
-      renderCell: (params) => {
-        return (
-          <div className="cellAction">
-
-            <CustomIcon
-            isDisabled={(params.row.value===""||params.row.url==="")?false:true}
-             title={"Edit"}
-             className="action-icon-btn editBtn"
-             cb={()=>{handleEditModal(params.row);;setIsAdding(false)}}
-             icon={ <EditIcon />}
-            />
-                      <CustomIcon
-            title="Remove"
-            className="action-icon-btn editBtn"
-            cb={() => handleRemoveProperty(params?.row)}
-            icon={<CloseIcon />}
-          />
-          </div>
-        );
-      },
-    },
-  ];
 
   const handlePagination = (fieldName, value) => {
     setPaginationModel(prev => ({
@@ -532,62 +320,6 @@ const handleRemoveProperty = (item) => {
             Toolbar,
           }}
         />}
-      
-      {propertyFields && 
-        <OrderEditModal
-        loading={loading}
-        title={isAdding?"Add":"Edit"}
-        handleInput={(e)=>handleInput(e)}
-        handleSubmitUpdateProperties={(e)=>handleSubmitUpdateProperties(e)}
-        handleEditModal={() => handleEditModal(null)}
-        propertyFields={propertyFields}
-        
-        />
-     }
-
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={propertyAddModal}
-        onClose={() => setPropertyAddModal((e) => !e)}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-        className="custom-modal"
-      >
-        <Fade in={!!propertyAddModal} >
-          <Box>
-            <form>
-              <Box className="modal-body" >
-                <a onClick={() => setPropertyAddModal((e) => !e)} className="close-btn">
-                  <CloseIcon className="icon" />
-                </a>
-                <Typography className="main-title" component="h2">
-                  Add Properties
-                </Typography>
-                  {renderDynamicFormFields()}
-
-                <Box className="modal-footer">
-                  <Button
-                    className="btn btn-outline-primary"
-                    onClick={() => setPropertyAddModal((e) => !e)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button className="btn btn-primary" type="submit">
-                    Add
-                  </Button>
-                </Box>
-              </Box>
-            </form>
-          </Box>
-        </Fade>
-      </Modal>
-
       {fields && <Dialog
         fullScreen
         open={true}
@@ -612,39 +344,16 @@ const handleRemoveProperty = (item) => {
           </Box>
         </AppBar>
         <Box>
-          <Box className="modal-body" >
-             <div style={{ display: "flex", justifyContent: "space-between", margin: "20px auto", padding: "20px" }}>
-                <h2>Add Fields</h2>
-                <div className="action-icon-btn editBtn">
-                  <Tooltip title="Edit">
-                    <IconButton
-                      onClick={() =>{ handleEditModal({name:"", value:""});setIsAdding(true)}}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-              </div>
-            {fields?.properties && fields?.properties.length > 0 ?
-            <>
-            
-          
-             
-              <div style={{ height: "300px", maxWidth: "1000px", margin: "20px auto", padding: "20px" }}>
-                <DataGridPro
-                  key={fields.properties.map(p => p._id).join(',')} 
-                  className="datagrid"
-                  loading={isLoading}
-                  getRowId={(row) => row._id}
-                  rows={fields?.properties}
-                  columns={[...propertiesActionColumn, ...propertiesColumns]}
-                  pageSize={10}
-                  rowsPerPageOptions={[10]}
-                />
-              </div>
-            </>
-            :""
-            }
+          <Box className="modal-body" sx={{
+            maxWidth: "1000px", margin: "20px auto", padding: "20px" 
+          }}>
+
+          <LineOrderPropertiesComponent
+          cb={refetch}
+          isDisabeld={false}
+          fields={fields}
+          setFields={setFields}
+          />
 
             <div className="view-list" >
               <div className="left" style={{ maxWidth: "1000px", margin: "20px auto", padding: "20px" }}>

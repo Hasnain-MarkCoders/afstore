@@ -79,11 +79,7 @@ const PupringViewList = ({ setShowSideBar }) => {
     //     renderCell: (params) => {
   
     //       return (
-    //         // params.row?.value?.startsWith("http") ?
-    //           // <Link to={params.row?.value} className={`cellWithStatus status-btn`} target="blank">
-    //           //   View Image
-    //           // </Link>
-    //           // : params.row?.value
+    //          params.row?.value
     //           <>
     //           {params.row.value}
               

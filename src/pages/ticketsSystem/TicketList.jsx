@@ -37,6 +37,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { TicketListEditFieldConfigs , TicketListEditNonHoldFieldConfigs, TicketListEditCustomerFieldsConfigs, filterFields, getColor, ORDER_STATUS} from "../../Utils/Utils";
 import CustomPagination from "../../components/CustomPagination/CustomPagination";
 import PupringNote from "../../components/Modals/PupringTableModals/PupringNote";
+import LineOrderPropertiesComponent from "../../components/LineOrderPropertiesComponent/LineOrderPropertiesComponent";
 const formattedDateTime = (date) => {
   const dateTime = new Date(date);
   const formattedDate = dateTime.toLocaleDateString("en-US", {
@@ -497,55 +498,8 @@ export default function TicketList({
         minWidth: 200,
         renderCell: (params) => {
 
-          return params.row?.value?.startsWith("http") ? (
-            <Link
-              to={params.row?.value}
-              className={`cellWithStatus status-btn`}
-              target="blank"
-            >
-              View Image
-            </Link>
-          ) : (
-            params.row?.value
-          );
-        },
-      },
-    ];
-  } else if (
-    fields?.properties &&
-    (fields?.properties[0]?.customizedContent ||
-      (fields?.properties && fields?.properties[0]?.url))
-  ) {
-    propertiesColumns = [
-      {
-        field: "customizedContent",
-        headerName: "Name",
-        minWidth: 100,
-        flex: 1,
-        renderCell: (params) => {
           return (
-            params.row?.customizedContent && (
-              <div className="">{params.row?.customizedContent}</div>
-            )
-          );
-        },
-      },
-      {
-        field: "url",
-        headerName: "Value",
-        flex: 1,
-        minWidth: 200,
-        renderCell: (params) => {
-          return params.row?.url && params.row?.url?.startsWith("http") ? (
-            <Link
-              to={params.row.url}
-              className={`cellWithStatus status-btn`}
-              target="blank"
-            >
-              View Image
-            </Link>
-          ) : (
-            params.row.url
+            params.row?.value
           );
         },
       },
@@ -755,55 +709,16 @@ export default function TicketList({
                     Update Line Order
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid xs="12">
-                      {fields?.properties && fields?.properties.length === 0 ? (
-                        dynamicFormFields.length !== 0 && (
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              padding: "0 20px",
-                            }}
-                          >
-                            <h2>Add Fields</h2>
-                            <div className="action-icon-btn editBtn">
-                              <Tooltip title="Add Field">
-                                <IconButton
-                                  onClick={() => setPropertyAddModal((e) => !e)}
-                                >
-                                  <EditIcon />
-                                </IconButton>
-                              </Tooltip>
-                            </div>
-                          </div>
-                        )
-                      ) : (
-                        <div
-                          style={{
-                            height: "300px",
-                            maxWidth: "1000px",
-                            margin: "20px auto",
-                            padding: "20px",
-                          }}
-                        >
-                          <DataGridPro
-                            className="datagrid"
-                            loading={isLoading}
-                            // getRowId={(rows) => rows?.customizedContent ? rows?.customizedContent : rows?.name}
-                            getRowId={(row) =>
-                              row.id ? row.id : Math.random().toString()
-                            }
-                            rows={fields?.properties}
-                            columns={[
-                              ...propertiesActionColumn,
-                              ...propertiesColumns,
-                            ]}
-                            pageSize={10}
-                            rowsPerPageOptions={[10]}
-                          />
-                        </div>
-                      )}
-                    </Grid>
+                  <Box sx={{
+                        padding:"20px"
+                      }}>
+
+                     <LineOrderPropertiesComponent
+          isDisabeld={true}
+          fields={fields}
+          setFields={setFields}
+          />
+                      </Box>
                     <Grid xs={12}>
                       <div className="tool-bar">
                       <FormControl>

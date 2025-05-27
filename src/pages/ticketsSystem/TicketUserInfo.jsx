@@ -56,38 +56,7 @@ export default function   TicketUserInfo({ data }) {
         renderCell: (params) => {
 
           return (
-            params.row?.value?.startsWith("http") ?
-              <Link to={params.row?.value} className={`cellWithStatus status-btn`} target="blank">
-                View Image
-              </Link>
-              : params.row?.value
-          )
-        },
-      }
-    ];
-  } else if (data?.properties && (data?.properties[0]?.customizedContent || data?.properties && data?.properties[0]?.url)) {
-    userColumns = [
-      {
-        field: "customizedContent", headerName: "Name", minWidth: 100, flex: 1,
-        renderCell: (params) => {
-          return (params.row?.customizedContent && <div>
-            {params.row?.customizedContent}
-          </div>
-          );
-        }
-      },
-      {
-        field: "url",
-        headerName: "Value",
-        flex: 1,
-        minWidth: 200,
-        renderCell: (params) => {
-          return (
-            params.row?.url && params.row?.url?.startsWith("http") ?
-              <Link to={params.row.url} className={`cellWithStatus status-btn`} target="blank">
-                View Image
-              </Link>
-              : params.row.url
+             params.row?.value
           )
         },
       }

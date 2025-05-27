@@ -21,9 +21,8 @@ function useQueryHoldOrdersTable(paginationModel) {
     const auth = useSelector(
       state => state.user
     )
-  
-    useEffect(() => {
-      const controller = new AbortController()
+
+     const controller = new AbortController()
       const fetchData = async () => {
         try {
           const queryParams = {
@@ -56,6 +55,9 @@ function useQueryHoldOrdersTable(paginationModel) {
         }
       };
   
+  
+    useEffect(() => {
+     
       setIsLoading(true);
       fetchData();
       return()=>{
@@ -63,7 +65,7 @@ function useQueryHoldOrdersTable(paginationModel) {
       }
     }, [paginationModel]);
   
-    return { isLoading, rows, pageInfo };
+    return { isLoading, rows, pageInfo, refetch: fetchData};
   }
 
   export default useQueryHoldOrdersTable
