@@ -25,10 +25,12 @@ import "./../filter.scss";
 import "./../../style.scss";
 import API from "../../../api/api";
 import CustomDatePicker from "../../CustomDatePicker/CustomDatePicker";
-import { ORDER_STATUS } from "../../../Utils/Utils";
+import { INVOICE_STATUS, ORDER_STATUS } from "../../../Utils/Utils";
 const TicketSystemFilter = (props) => {
   const [wayBill, setWayBill] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [openPOIDSModal, setOpenPOIDSModal] = useState(false);
+  const [POIDS, SETPOIDS] = useState("");
   const [selectedDateType, setSelectedDateType] = useState("date");
   const [query, setQuery] = useState("");
   const [quickQuery, setQuickQuery] = useState("");
@@ -109,6 +111,10 @@ const TicketSystemFilter = (props) => {
   const handleModal = () => {
     setOpenModal((current) => !current);
   };
+   const handlePOIDSModal = () => {
+    setOpenPOIDSModal((current) => !current);
+  };
+
 
   const handleSubmit = () => {
     props.setPaginationModel({
@@ -120,6 +126,16 @@ const TicketSystemFilter = (props) => {
     });
     handleModal();
   };
+    const handleSubmitPOIDSFIlTER = () => {
+    props.setPaginationModel({
+      order_status:
+        props.pageInfo.order_status === "all"
+          ? []
+          : props.pageInfo.order_status || [],
+      po_ids: POIDS.split(/[, \n]+/),
+    });
+    handlePOIDSModal();
+  };
 
   const handleReset = async () => {
     localStorage.removeItem("savedId");
@@ -130,6 +146,7 @@ const TicketSystemFilter = (props) => {
     setSelectedDateType("date");
     setQuickQuery("");
     setQuery("");
+    SETPOIDS("")
     setInvoiceStatus([]);
     setStatus([]);
     setColor([]);
@@ -212,6 +229,21 @@ const TicketSystemFilter = (props) => {
               value={quickQuery}
               onChange={(e) => setQuickQuery(e.target.value)}
             />
+
+                        <FormControl onClick={handlePOIDSModal}>
+                          <InputLabel>Enter PoID </InputLabel>
+                          <Select
+                            labelId="Enter PoID"
+                            value={!!POIDS ? POIDS?.split("\n") : POIDS}
+                            label="Enter PoID"
+                            // onChange={(e) => setWayBill(e?.target?.value)}
+                            disabled
+                            renderValue={(selected) => selected?.join(", ")}
+                          >
+                            <MenuItem value={POIDS}>{POIDS}</MenuItem>
+                          </Select>
+                        </FormControl>
+
             <FormControl onClick={handleModal}>
               <InputLabel>Enter Po Number</InputLabel>
               <Select
@@ -309,6 +341,56 @@ const TicketSystemFilter = (props) => {
               </Box>
             </Modal>
 
+
+                        <Modal
+                          open={openPOIDSModal}
+                          onClose={handlePOIDSModal}
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description"
+                          className="list-modal"
+                        >
+                          <Box component={"div"}>
+                            <Box component={"div"} className="modal-header">
+                              <Typography className="main-title" component="h2">
+                                Enter PoIds
+                              </Typography>
+                              <a onClick={handlePOIDSModal} className="close-btn">
+                                <CloseIcon className="icon" />
+                              </a>
+                            </Box>
+                            <Box component={"div"} className="modal-body">
+                              <TextField
+                                type="text"
+                                onChange={(e) => SETPOIDS(e.target.value)}
+                                fullWidth
+                                InputProps={{
+                                  inputComponent: TextareaAutosize,
+                                  rows: 3,
+                                }}
+                                value={POIDS}
+                                label="Quick query POIDS"
+                                variant="outlined"
+                              />
+                            </Box>
+                            <Box component={"div"} className="modal-footer">
+                              <Button
+                                className="btn btn-outline-primary"
+                                onClick={() => {
+                                  SETPOIDS("");
+                                  handlePOIDSModal();
+                                  props.setPaginationModel({ po_ids: [] });
+                                }}
+                              >
+                                All Clear
+                              </Button>
+                              <Button className="btn btn-primary" onClick={handleSubmitPOIDSFIlTER}>
+                                Query
+                              </Button>
+                            </Box>
+                          </Box>
+                        </Modal>
+            
+
             <MultipleSelectCheckmarks
               label="Invoice Status"
               checkValue={invoiceStatus}
@@ -316,9 +398,9 @@ const TicketSystemFilter = (props) => {
               // names={["Not invoiced", "Ready To Invoice", "Invoiced"]}
                 names={
                               [
-                                ORDER_STATUS.NOT_INVOICED,
-                                ORDER_STATUS.READY_TO_INVOICE,
-                                ORDER_STATUS.INVOICED
+                                INVOICE_STATUS.NOT_INVOICED,
+                                INVOICE_STATUS.READY_TO_INVOICE,
+                                INVOICE_STATUS.INVOICED
                               ]
                             }
             />

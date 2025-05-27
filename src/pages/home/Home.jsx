@@ -87,7 +87,7 @@ const Home = ({ setShowSideBar }) => {
         </>
         }
         <div className="listContainer">
-          {/* { (auth.type === "customer" || auth.type === "admin" || auth.type === "suadmin") &&
+          { (auth.type === "customer" || auth.type === "admin" || auth.type === "suadmin") &&
             <>
               <div className="listRow">
                 <h3 className="listTitle">Hold Orders</h3>
@@ -97,7 +97,7 @@ const Home = ({ setShowSideBar }) => {
                 <h3 className="listTitle">Rejected Orders</h3>
                 <RejectedOrdersTable />
               </div>
-            </>} */}
+            </>}
 
 
           <div className="listRow">

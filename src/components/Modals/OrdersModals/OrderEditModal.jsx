@@ -6,7 +6,10 @@ const OrderEditModal = ({
     handleEditModal=()=>{},
     handleSubmitUpdateProperties=()=>{},
     handleInput=()=>{},
+    title="",
+    loading
 }) => {
+  title= loading?title+"ing":title 
   return (
     <Modal
         aria-labelledby="transition-modal-title"
@@ -30,7 +33,7 @@ const OrderEditModal = ({
                   <CloseIcon className="icon" />
                 </a>
                 <Typography className="main-title" component="h2">
-                  Edit Properties
+                  {title??"Edit"} Properties
                 </Typography>
 
                 <TextField type="text"
@@ -60,7 +63,7 @@ const OrderEditModal = ({
                     Cancel
                   </Button>
                   <Button className="btn btn-primary" type="submit">
-                    Update
+                    {title??"Update"}
                   </Button>
                 </Box>
               </Box>

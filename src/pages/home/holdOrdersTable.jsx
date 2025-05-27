@@ -10,25 +10,20 @@ import CloseIcon from "@mui/icons-material/Close";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { Toolbar } from "../../components/pagination/paginationDataGrid";
 import { formattedDateTime } from "./Home";
-import DeleteModal from "./../../components/Modals/DeleteModal"
-import ForceAddedOrderModal from "../../components/Modals/OrdersModals/ForceAddedOrderModal";
 import OrderEditModal from "../../components/Modals/OrdersModals/OrderEditModal";
 import useQueryHoldOrdersTable from "../../Hooks/useQueryHoldOrdersTable/useQueryHoldOrdersTable";
 import CustomIcon from "../../components/CustomIcon/CustomIcon";
-
-
+import { v4 as uuidv4 } from 'uuid';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
 
 const HoldOrdersTable = () => {
-  const [progressExport, setProgressExport] = useState(false);
-  const [propertyAddName, setPropertyAddName] = useState('');
-  const [propertyAddValue, setPropertyAddValue] = useState('');
   const [propertyAddModal, setPropertyAddModal] = useState(false);
   const [dynamicFormFields, setDynamicFormFields] = useState([]);
   const [pair, setPair] = useState(null)
-
+  const [isAdding, setIsAdding] = useState(false)
+  const [loading, setLoading] = useState(false)
   useEffect(() => {
     setDynamicFormFields(Array.from({ length: pair }, () => ({ name: '', value: '' })));
   }, [pair]);
@@ -40,8 +35,6 @@ const HoldOrdersTable = () => {
       }
       return item;
     });
-    setPropertyAddName(updatedFields[0].name)
-    setPropertyAddValue(updatedFields[0].value)
     setDynamicFormFields(updatedFields);
   };
 
@@ -50,6 +43,31 @@ const HoldOrdersTable = () => {
   const auth = useSelector(
     state => state.user
   )
+  
+const handleRemoveProperty = (item) => {
+  setLoading(true)
+  const newData = [...fields?.properties?.filter(x=>x._id!=item._id)]
+      setFields(prev => ({
+        ...prev,
+        properties:newData,
+      }));
+      API.post('/customer/add-missing-name', {
+      order_id: fields?._id,
+      properties: [...newData]
+    }).then((response) => {
+  setLoading(false)
+    }).catch(error=>{
+  setLoading(false)
+      alert(error?.response?.data?.message??error?.message??"Error Removing Property")
+    }).finally(()=>{
+
+   setPaginationModel({ bool: boolRef.current });
+      boolRef.current = !boolRef.current;
+    })
+
+};
+
+
 
   const userColumns = [
     {
@@ -292,9 +310,13 @@ const HoldOrdersTable = () => {
 
 
   const boolRef = useRef(false);
-  // edit
+  
   const [fields, setFields] = useState(null)
   const handlePropertiesModal = async (data) => {
+    if (!data) {
+    setFields(null);
+    return;
+  }
     try{
 
       const response = await API.get(`${auth.type}/sku/get`, {
@@ -308,7 +330,8 @@ const HoldOrdersTable = () => {
         navigate("/login");
       }
     }
-    setFields(data)
+    const newData = {...data, properties: data.properties.map(item=>({...item,_id:uuidv4()}))}
+    setFields(newData)
   };
 
   const renderDynamicFormFields = () => {
@@ -334,30 +357,6 @@ const HoldOrdersTable = () => {
     ));
   };
 
-
-  const handlePropertyAdd = async (e) => {
-    e.preventDefault();
-  
-    // Map dynamicFormFields to the desired format for the API request
-    const propertiesToAdd = dynamicFormFields.map(field => ({
-      customizedContent: field.name,
-      url: field.value
-    }));
-  
-    try {
-      const response = await API.post('/customer/add-missing-name', {
-        order_id: fields._id,
-        properties: propertiesToAdd
-      });
-      // Reset states and close the modal after successful addition
-      setPropertyAddModal(false);
-      setDynamicFormFields([]);
-      setPaginationModel({ bool: boolRef.current });
-      boolRef.current = !boolRef.current;
-    } catch (error) {
-      // Handle any errors here
-    }
-  };
 
   let propertiesColumns = []
   if (fields?.properties && (fields?.properties[0]?.name || fields?.properties[0]?.value)) {
@@ -429,67 +428,29 @@ const HoldOrdersTable = () => {
     setPropertyFields(p => ({ ...p, [name]: value }))
   }
   const handleSubmitUpdateProperties = async (e) => {
+    setLoading(true)
     e.preventDefault();
-
-    API.post('/customer/add-missing-name', {
+    console.log(propertyFields)
+   return API.post('/customer/add-missing-name', {
       order_id: fields?._id,
-      properties: [propertyFields]
+      properties: isAdding?[...fields.properties,propertyFields]:[...fields.properties]
     }).then((response) => {
+    setLoading(false)
       handleEditModal(null);
       handlePropertiesModal(null);
       setPaginationModel({ bool: boolRef.current });
       boolRef.current = !boolRef.current;
+    }).catch(error=>{
+    setLoading(false)
+
+      alert(error?.response?.data?.message??error?.message??"Error added property")
+    }).finally(()=>{
+   setPaginationModel({ bool: boolRef.current });
+      boolRef.current = !boolRef.current;
     })
   };
 
-  const [deleteId, setDeleteId] = useState(null);
-  const handleDeleteModal = (data) => {
-    setDeleteId(data)
-  };
-  const handleDelete = (id) => {
-    API.post(`/customer/cancel-order`, {
-      order_id: id,
-    })
-      .then((response) => {
-        handleDeleteModal(null);
-        setPaginationModel({ bool: boolRef.current });
-        boolRef.current = !boolRef.current;
-      });
-  };
 
-  const handleApproveModal = (data) => {
-    API.post(`/admin/direct-approve`, {
-      id: data,
-    })
-      .then((response) => {
-        setPaginationModel({ bool: boolRef.current });
-        boolRef.current = !boolRef.current;
-      });
-  }
-
-
-  // force accept
-  const [forceAccept, setForceAccept] = useState(null);
-  const handleForceAcceptModal = (data) => {
-    setForceAccept(data)
-  };
-  const handleForceAccept = (e) => {
-    e.preventDefault()
-    setProgressExport(true);
-    API.post(`/admin/force-accept`, {
-        id: forceAccept._id
-    })
-      .then((response) => {
-        handleForceAcceptModal(null);
-        setPaginationModel({ bool: boolRef.current });
-        boolRef.current = !boolRef.current;
-      }).catch((error) => {
-      }).finally(() => {
-        setProgressExport(false);
-      })
-  };
-  
-  // Column definition for the action column in the data grid
   const actionColumn = [
     {
       field: "action",
@@ -507,15 +468,7 @@ const HoldOrdersTable = () => {
              cb={()=>handlePropertiesModal(params.row)}
              icon={ <RemoveRedEyeIcon />}
             />
-            {/* <div className="action-icon-btn viewBtn">
-              <Tooltip title="View Properties">
-                <IconButton
-                  onClick={() => handlePropertiesModal(params.row)}
-                  id="edit-field">
-                  <RemoveRedEyeIcon />
-                </IconButton>
-              </Tooltip>
-            </div> */}
+         
           </div>
         );
       },
@@ -537,9 +490,15 @@ const HoldOrdersTable = () => {
             isDisabled={(params.row.value===""||params.row.url==="")?false:true}
              title={"Edit"}
              className="action-icon-btn editBtn"
-             cb={()=>handleEditModal(params.row)}
+             cb={()=>{handleEditModal(params.row);;setIsAdding(false)}}
              icon={ <EditIcon />}
             />
+                      <CustomIcon
+            title="Remove"
+            className="action-icon-btn editBtn"
+            cb={() => handleRemoveProperty(params?.row)}
+            icon={<CloseIcon />}
+          />
           </div>
         );
       },
@@ -576,6 +535,8 @@ const HoldOrdersTable = () => {
       
       {propertyFields && 
         <OrderEditModal
+        loading={loading}
+        title={isAdding?"Add":"Edit"}
         handleInput={(e)=>handleInput(e)}
         handleSubmitUpdateProperties={(e)=>handleSubmitUpdateProperties(e)}
         handleEditModal={() => handleEditModal(null)}
@@ -600,7 +561,7 @@ const HoldOrdersTable = () => {
       >
         <Fade in={!!propertyAddModal} >
           <Box>
-            <form onSubmit={handlePropertyAdd}>
+            <form>
               <Box className="modal-body" >
                 <a onClick={() => setPropertyAddModal((e) => !e)} className="close-btn">
                   <CloseIcon className="icon" />
@@ -652,30 +613,37 @@ const HoldOrdersTable = () => {
         </AppBar>
         <Box>
           <Box className="modal-body" >
-            {fields?.properties && fields?.properties.length === 0 ?
-              <div style={{ display: "flex", justifyContent: "space-between", margin: "20px auto", padding: "20px" }}>
+             <div style={{ display: "flex", justifyContent: "space-between", margin: "20px auto", padding: "20px" }}>
                 <h2>Add Fields</h2>
                 <div className="action-icon-btn editBtn">
                   <Tooltip title="Edit">
                     <IconButton
-                      onClick={() => setPropertyAddModal((e) => !e)}
+                      onClick={() =>{ handleEditModal({name:"", value:""});setIsAdding(true)}}
                     >
                       <EditIcon />
                     </IconButton>
                   </Tooltip>
                 </div>
               </div>
-              : <div style={{ height: "300px", maxWidth: "1000px", margin: "20px auto", padding: "20px" }}>
+            {fields?.properties && fields?.properties.length > 0 ?
+            <>
+            
+          
+             
+              <div style={{ height: "300px", maxWidth: "1000px", margin: "20px auto", padding: "20px" }}>
                 <DataGridPro
+                  key={fields.properties.map(p => p._id).join(',')} 
                   className="datagrid"
                   loading={isLoading}
-                  getRowId={(row) => row.id ? row.id : Math.random().toString()}
+                  getRowId={(row) => row._id}
                   rows={fields?.properties}
                   columns={[...propertiesActionColumn, ...propertiesColumns]}
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                 />
               </div>
+            </>
+            :""
             }
 
             <div className="view-list" >
@@ -711,25 +679,6 @@ const HoldOrdersTable = () => {
           </Box>
         </Box>
       </Dialog>
-      }
-       
-      {deleteId && 
-       <DeleteModal 
-       handleDeleteModal={() => handleDeleteModal(null)}
-       deleteId={deleteId}
-       handleDelete={handleDelete(deleteId)}
-       title={"Delete Hold Order"}
-       />
-     }
-
-
-      {forceAccept && 
-      <ForceAddedOrderModal
-      handleForceAcceptModal={() => handleForceAcceptModal(null)}
-      forceAccept={forceAccept}
-      progressExport={progressExport}
-      handleForceAccept={(e)=>handleForceAccept(e)}
-      />
       }
     </div>
   );

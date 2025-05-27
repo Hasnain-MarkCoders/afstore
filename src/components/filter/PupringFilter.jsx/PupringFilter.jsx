@@ -25,7 +25,7 @@ import "./../filter.scss";
 import "./../../style.scss";
 import API from "../../../api/api";
 import CustomDatePicker from "../../CustomDatePicker/CustomDatePicker";
-import { ORDER_STATUS } from "../../../Utils/Utils";
+import { INVOICE_STATUS, ORDER_STATUS } from "../../../Utils/Utils";
 
 const PupringFilter = (props) => {
   const [wayBill, setWayBill] = useState([]);
@@ -237,7 +237,7 @@ const PupringFilter = (props) => {
                 labelId="Enter Po Number"
                 value={!!query ? query?.split("\n") : query}
                 label="Enter Po Number"
-                onChange={(e) => setWayBill(e?.target?.value)}
+                // onChange={(e) => setWayBill(e?.target?.value)}
                 disabled
                 renderValue={(selected) => selected?.join(", ")}
               >
@@ -251,7 +251,7 @@ const PupringFilter = (props) => {
                 labelId="Enter PoID"
                 value={!!POIDS ? POIDS?.split("\n") : POIDS}
                 label="Enter PoID"
-                onChange={(e) => setWayBill(e?.target?.value)}
+                // onChange={(e) => setWayBill(e?.target?.value)}
                 disabled
                 renderValue={(selected) => selected?.join(", ")}
               >
@@ -390,9 +390,9 @@ const PupringFilter = (props) => {
               
               names={
                 [
-                  ORDER_STATUS.NOT_INVOICED,
-                  ORDER_STATUS.READY_TO_INVOICE,
-                  ORDER_STATUS.INVOICED
+                  INVOICE_STATUS.NOT_INVOICED,
+                  INVOICE_STATUS.READY_TO_INVOICE,
+                  INVOICE_STATUS.INVOICED
                 ]
               }
             />

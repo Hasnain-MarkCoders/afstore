@@ -822,7 +822,7 @@ useEffect(() => {
           </>
         )}
         {(auth.type === "admin" || auth.type === "suadmin") && selectedRow.length > 0 &&
-          selectedRow.every(id => props.rows.find(row => row._id === id && row.order_status === "Hold")) && (
+          selectedRow.every(id => props.rows.find(row => row._id === id && row.order_status === ORDER_STATUS.HOLD)) && (
             <Button
               className="btn btn-primary"
               onClick={() => setForceAccept(selectedRow)}

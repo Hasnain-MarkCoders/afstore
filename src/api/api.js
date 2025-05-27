@@ -3,7 +3,10 @@ import axios from "axios";
 const API = axios.create({
   // baseURL: "https://anton.markcoders.com/linton_backend/api",
   // baseURL: "https://afstore.lintonusa.com/server/api/",
-  baseURL: "https://mnq31p67-4242.inc1.devtunnels.ms/api/",
+  // baseURL: "https://mnq31p67-4242.inc1.devtunnels.ms/api/",
+  baseURL: "https://pqzfs3nc-4242.inc1.devtunnels.ms/api/",
+
+  
 
 
   // baseURL: "https://9hjl5qp6-5000.inc1.devtunnels.ms/api",

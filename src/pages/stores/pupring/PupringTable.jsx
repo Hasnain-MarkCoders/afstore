@@ -37,6 +37,7 @@ import {
   editCustomerFieldsConfigs,
   filterFields,
   formattedDateTime,
+  ORDER_STATUS,
 } from "../../../Utils/Utils";
 import PupringNote from "../../../components/Modals/PupringTableModals/PupringNote";
 import CustomChip from "../../../components/CustomChip/CustomChip";
@@ -63,6 +64,7 @@ const PupringTable = ({
   const [remarksNoteField, setRemarksNoteField] = useState("");
   const [customerNote, setCustomerNote] = useState(null);
   const [customerNoteField, setCustomerNoteField] = useState("");
+  const [isLineOrderUpdating, setIsLineOrderUpdating]= useState(false)
   const [snackbar, setSnackbar] = useState({
     open:false,
     message:""
@@ -79,8 +81,9 @@ const PupringTable = ({
 
   // Handle form submission for updating line order
   const handleSubmitUpdateLineOrder = async (e) => {
+      setIsLineOrderUpdating(true)
     e.preventDefault();
-    API.post(`/${auth?.type}/edit-line-order`, {
+    return API.post(`/${auth?.type}/edit-line-order`, {
       id: fields._id,
       shipping_address: fields.shipping_address,
       name: fields.name,
@@ -109,10 +112,15 @@ const PupringTable = ({
       shipping_label: fields.shipping_label,
       color: fields.color,
     }).then((response) => {
+      setIsLineOrderUpdating(false)
       handleEditModal(null);
       filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+      setIsLineOrderUpdating(false)
+        alert(error?.response?.data?.message??error.message??"Error Editing Line Order!")
+
+    })
   };
 
   const handleFactoryNoteModal = (data) => {
@@ -123,7 +131,6 @@ const PupringTable = ({
   // Handle form submission for updating line order
   const handleSubmitfactoryNote = async (e) => {
     e.preventDefault();
-
     return API.post(`/factory/add-note`, {
       id: factoryNote?._id,
       note: factoryNoteField,
@@ -131,7 +138,10 @@ const PupringTable = ({
       handleFactoryNoteModal(null);
       filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+        alert(error?.response?.data?.message??error.message??"Error adding note!")
+    })
+    ;
   };
 
   const handleCustomerNoteModal = (data) => {
@@ -192,7 +202,7 @@ const PupringTable = ({
           alignItems:"center",
           gap:"10px"
         }}>
-          <Tooltip onClick={()=>handleCopy("PO number",params.row.po)} sx={{
+          <Tooltip onClick={()=>handleCopy("PO number",params.row.po_id)} sx={{
             cursor:"pointer"
           }} title="Copy PO number">
           <ContentCopyIcon />
@@ -222,7 +232,10 @@ const PupringTable = ({
                 handleSubmit();
               }}
             >
-              {params.row.multiple ? "Yes" : "No"} {params.row.multiple}
+
+              
+              {/* {params.row.multiple ? "Yes" : "No"} {params.row.multiple} */}
+              {params.row.multiple ? "Yes" : "No"}
             </Button>
           </div>
         );
@@ -696,7 +709,7 @@ const PupringTable = ({
 
         const handleCancelOrder = (id) => {
           const orderId = [id];
-          API.post(`/factory/cancel-line-orders`, {
+          API.post(`/${auth.type}/cancel-line-orders`, {
             order_ids: orderId,
           }).then((response) => {
             filterFields(pageInfo, setPaginationModel, boolRef);
@@ -704,8 +717,25 @@ const PupringTable = ({
           }).catch((error) => {
         alert(error?.response?.data?.message??error.message??"Error Cancelling Order!")
       });
-        };
 
+
+  
+        };
+      const placeOrderOnHold = (row) => {
+          API.post(`/${auth.type}/hold-orders`, {
+            order_id: row?._id,
+          })
+            .then((response) => {
+               filterFields(pageInfo, setPaginationModel, boolRef);
+            boolRef.current = !boolRef.current;
+              alert(response?.data?.message??"Order placed on hold!");
+            })
+            .catch(error=>{
+              alert(error?.response?.data?.message??error.message??"Error Placing Order ON Hold!")
+      
+          })
+        };
+        
         return (
           <div className="cellAction">
             <div
@@ -748,6 +778,12 @@ const PupringTable = ({
                   style={{ fontWeight: 600 }}
                   cb={() => handleCustomerNoteModal(params.row)}
                 />
+                    <CustomListItem
+                  isVisible={auth.type != "customer"}
+                  title={"Put On Hold"}
+                  style={{ fontWeight: 600 }}
+                  cb={() => placeOrderOnHold(params.row)}
+                />
 
                   <CustomListItem
                   isVisible={auth.type === "suadmin" || auth.type === "admin" || auth.type === "customer"}
@@ -771,8 +807,7 @@ const PupringTable = ({
                 />
 
                   <CustomListItem
-                  isVisible={(auth.type === "suadmin" || auth.type === "admin" || auth.type === "customer") &&
-                  params?.row?.order_status === "Hold"}
+                  isVisible={(auth.type === "suadmin" || auth.type === "admin") }
                   title={ "Cancel Order"}
                   style={{ fontWeight: 600 }}
                   cb={() => handleCancelOrder(params.row?._id)}
@@ -1255,7 +1290,7 @@ const PupringTable = ({
 
                           <div style={{ display: "flex", gap: 15 }}>
                             {auth?.type === "admin" &&
-                              fields.order_status === "Hold" && (
+                              fields.order_status === ORDER_STATUS.HOLD && (
                                 <>
                                   <div
                                     className="action-icon-btn editBtn"
@@ -1286,7 +1321,7 @@ const PupringTable = ({
                         </div>
                       </Grid>
                       {(auth.type === "admin"||auth.type === "suadmin") &&
-                        fields.order_status === "Hold" &&
+                        fields.order_status === ORDER_STATUS.HOLD &&
                         editFieldConfigs.map(
                           (
                             {
@@ -1341,7 +1376,7 @@ const PupringTable = ({
                           )
                         )}
                       {(auth.type === "admin"||auth.type === "suadmin") &&
-                        fields.order_status !== "Hold" &&
+                        fields.order_status !== ORDER_STATUS.HOLD &&
                         editNonHoldFieldConfigs.map(
                           (
                             {
@@ -1397,7 +1432,7 @@ const PupringTable = ({
                           )
                         )}
                       {auth.type === "customer" &&
-                        fields.order_status === "Hold" &&
+                        fields.order_status === ORDER_STATUS.HOLD &&
                         editCustomerFieldsConfigs.map(
                           (
                             {
@@ -1463,7 +1498,7 @@ const PupringTable = ({
                         Cancel
                       </Button>
                       <Button className="btn btn-primary" type="submit">
-                        Update
+                        {isLineOrderUpdating?"Updating...":"Update"}
                       </Button>
                     </Box>
                   </Box>

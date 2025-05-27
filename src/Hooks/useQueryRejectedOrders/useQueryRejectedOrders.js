@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../api/api";
+import { ORDER_STATUS } from "../../Utils/Utils";
 
 
 function useQueryRejectedOrders(paginationModel) {
@@ -27,12 +28,12 @@ function useQueryRejectedOrders(paginationModel) {
             params: {
               page: (paginationModel.page || 0) + 1,
               limit: (paginationModel.pageSize || obj.pageSize),
-              order_status: ["Rejected"],
+              order_status: [ORDER_STATUS.REJECTED],
             },
             signal:controller.signal
           });
           const { pagination, lineOrders, skus } = response.data;
-  
+          console.log("ye ha rejected orders", skus) 
           setIsLoading(false);
           setRows(lineOrders || []);
           setSkusNames(skus || []);

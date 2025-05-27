@@ -37,6 +37,7 @@ const RejectedOrdersTable = () => {
     return 0;
 });
 
+
   const [skus, setSkus] = useState('');
   const boolRef = useRef(false);
   const auth = useSelector(
@@ -308,6 +309,7 @@ const RejectedOrdersTable = () => {
   const changeName = async (id) => {
     setIsLoading(true);
     try {
+      console.log("ye hai sku ki id", skus)
       const response = await API.post(`/customer/change-name`, {
         order_id: id,
         sku_id: skus
@@ -329,6 +331,7 @@ const RejectedOrdersTable = () => {
       flex: 1,
       minWidth: 350,
       renderCell: (params) => {
+        console.log(params.row)
       
         return (
           <div className="cellAction">
@@ -339,9 +342,11 @@ const RejectedOrdersTable = () => {
                 border: "1px solid black",
                 borderRadius: "7px"
               }}
-              onChange={(e) => setSkus(e.target.value)}>
+              onChange={(e) => {
+                setSkus(e.target.value)
+                }}>
               <option>Choose Name</option>
-              {sortedSkus && sortedSkus?.map((item) => {
+              {sortedSkus && sortedSkus?.map((item, index) => {
                 return <option value={item._id}>{item.title}</option>
               })}
             </select>

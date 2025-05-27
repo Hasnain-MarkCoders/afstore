@@ -34,7 +34,7 @@ import { GridCloseIcon } from "@mui/x-data-grid";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import AdsClickIcon from "@mui/icons-material/AdsClick";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { TicketListEditFieldConfigs , TicketListEditNonHoldFieldConfigs, TicketListEditCustomerFieldsConfigs, filterFields, getColor} from "../../Utils/Utils";
+import { TicketListEditFieldConfigs , TicketListEditNonHoldFieldConfigs, TicketListEditCustomerFieldsConfigs, filterFields, getColor, ORDER_STATUS} from "../../Utils/Utils";
 import CustomPagination from "../../components/CustomPagination/CustomPagination";
 import PupringNote from "../../components/Modals/PupringTableModals/PupringNote";
 const formattedDateTime = (date) => {
@@ -95,6 +95,8 @@ export default function TicketList({
   const [pair, setPair] = useState(null);
   const [factoryNote, setFactoryNote] = useState(null);
   const [factoryNoteField, setFactoryNoteField] = useState("");
+  const [isLineOrderUpdating, setIsLineOrderUpdating]= useState(false)
+  
   const [limit, setLimit] = useState(10);
   const handleSelect = React.useCallback(
     (value) => {
@@ -454,17 +456,23 @@ export default function TicketList({
     setPropertyFields((p) => ({ ...p, [name]: value }));
   };
   const handleSubmitUpdateProperties = async (e) => {
+    setIsLineOrderUpdating(true)
     e.preventDefault();
 
     API.post("/customer/add-missing-name", {
       order_id: fields?._id,
       properties: [propertyFields],
     }).then((response) => {
+    setIsLineOrderUpdating(false)
       setPropertyFields(null);
       handleEditModal(null);
        filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+    setIsLineOrderUpdating(false)
+        alert(error?.response?.data?.message??error.message??"Error Editing Line Order!")
+
+    })
   };
 
   let propertiesColumns = [];
@@ -836,7 +844,7 @@ export default function TicketList({
 
                         <div style={{ display: "flex", gap: 15 }}>
                           {auth?.type === "admin" &&
-                            fields.order_status === "Hold" && (
+                            fields.order_status === ORDER_STATUS.HOLD && (
                               <>
                                 <div
                                   className="action-icon-btn editBtn"
@@ -865,7 +873,7 @@ export default function TicketList({
                       </div>
                     </Grid>
                     {(auth.type === "admin"||auth.type === "suadmin") &&
-                      fields.order_status === "Hold" &&
+                      fields.order_status === ORDER_STATUS.HOLD &&
                       TicketListEditFieldConfigs.map(
                         (
                           { label, valueKey, type, disabled = false, options },
@@ -914,7 +922,7 @@ export default function TicketList({
                         )
                       )}
                     {(auth.type === "admin"||auth.type === "suadmin") &&
-                      fields.order_status !== "Hold" &&
+                      fields.order_status !== ORDER_STATUS.HOLD &&
                       TicketListEditNonHoldFieldConfigs.map(
                         (
                           { label, valueKey, type, disabled = false, options },
@@ -964,7 +972,7 @@ export default function TicketList({
                         )
                       )}
                     {auth.type === "customer" &&
-                      fields.order_status === "Hold" &&
+                      fields.order_status === ORDER_STATUS.HOLD &&
                       TicketListEditCustomerFieldsConfigs.map(
                         (
                           { label, valueKey, type, disabled = false, options },
@@ -1024,7 +1032,8 @@ export default function TicketList({
                       Cancel
                     </Button>
                     <Button className="btn btn-primary" type="submit">
-                      Update
+                      {isLineOrderUpdating?"Updating...":"Update"}
+
                     </Button>
                   </Box>
                 </Box>

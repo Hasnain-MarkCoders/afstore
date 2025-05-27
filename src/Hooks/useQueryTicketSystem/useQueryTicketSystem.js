@@ -12,6 +12,7 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
       pageSize: 10,
       _id: [],
       po_number: [],
+      po_ids:[],
       first_date: "",
       last_date: "",
       name: [],
@@ -66,6 +67,7 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
   
     //
     const filters = [];
+    
   
     const savedItem = localStorage.getItem("savedId");
     if (savedItem !== null) {
@@ -74,6 +76,9 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
       // console.log('No item found for key "myKey"');
     }
   
+       if (paginationModel.po_ids && paginationModel.po_ids?.length > 0) {
+      filters.push({ type: "po_id", value: paginationModel.po_ids });
+    }
     // console.log(paginationModel._id);
     // Check for active po_number filter
     if (paginationModel._id && paginationModel._id?.length > 0) {

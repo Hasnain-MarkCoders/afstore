@@ -1,3 +1,48 @@
+const SUBMITTED = "submitted";
+const ACCEPTED = "accepted";
+const IN_PRODUCTION = "in_production";
+const SHIPPED_OUT = "shipped_out";
+const HOLD = "hold";
+const CANCELLED = "cancelled";
+const REJECTED = "rejected";
+const FTYREJECTED = "fty_rejected";
+const PENDING = "pending"
+
+const NOT_INVOICED = "not_invoiced";
+const READY_TO_INVOICE = "ready_to_invoice";
+const INVOICED = "invoiced";
+
+const PAID = "paid";
+const NOT_PAID = "not_paid";
+
+
+
+
+export const ORDER_STATUS = {
+  SUBMITTED,
+  ACCEPTED,
+  IN_PRODUCTION,
+  SHIPPED_OUT,
+  HOLD,
+  CANCELLED,
+  REJECTED,
+  FTYREJECTED,
+  PENDING,
+}
+
+
+export const INVOICE_STATUS = {
+ NOT_INVOICED,
+ READY_TO_INVOICE,
+ INVOICED
+}
+
+
+export const PAYMENT_STATUS = {
+ PAID,
+ NOT_PAID 
+}
+
 export const editFieldConfigs = [
     { label: "Po Number", valueKey: "po", type: "text", disabled: true },
     { label: "Po Id", valueKey: "po_id", type: "text", disabled: true },
@@ -18,9 +63,31 @@ export const editFieldConfigs = [
     { label: "Province", valueKey: "province", type: "text" },
     { label: "City", valueKey: "city", type: "text" },
     { label: "Country", valueKey: "country", type: "text" },
-    { label: "Order Status", valueKey: "order_status", type: "select", options: ["Submitted", "Accepted", "In Production", "Shipped Out", "Hold", "Rejected", "Cancelled"] },
-    { label: "Invoice Status", valueKey: "invoice_status", type: "select", options: ["Not invoiced", "Ready To Invoice", "Invoiced"] },
-    { label: "Payment Status", valueKey: "payment_status", type: "text" },
+    { label: "Order Status", valueKey: "order_status", type: "select",
+       options: [
+        ORDER_STATUS.SUBMITTED,
+        ORDER_STATUS.ACCEPTED,
+        ORDER_STATUS.IN_PRODUCTION,
+        ORDER_STATUS.SHIPPED_OUT,
+        ORDER_STATUS.HOLD,
+        ORDER_STATUS.REJECTED,
+        ORDER_STATUS.CANCELLED,
+    ]
+     },
+    { label: "Invoice Status", valueKey: "invoice_status", type: "select",
+       options: [
+        INVOICE_STATUS.NOT_INVOICED,
+        INVOICE_STATUS.READY_TO_INVOICE,
+        INVOICE_STATUS.INVOICED,      
+
+       ] },
+    { label: "Payment Status", valueKey: "payment_status", 
+      type: "select", 
+      options:[
+      PAYMENT_STATUS.NOT_PAID,
+      PAYMENT_STATUS.PAID
+    ] 
+  },
     { label: "Remarks", valueKey: "remarks", type: "text" },
     { label: "Admin Remarks", valueKey: "admin_remarks", type: "text" },
     { label: "Customer Note", valueKey: "customer_note", type: "text" },
@@ -48,9 +115,31 @@ export const editFieldConfigs = [
     { label: "Province", valueKey: "province", type: "text", disabled: true },
     { label: "City", valueKey: "city", type: "text",disabled: true },
     { label: "Country", valueKey: "country", type: "text", disabled: true },
-    { label: "Order Status", valueKey: "order_status", type: "select", options: ["Submitted", "Accepted", "In Production", "Shipped Out", "Hold", "Rejected", "Cancelled"], disabled: true },
-    { label: "Invoice Status", valueKey: "invoice_status", type: "select", options: ["Not invoiced", "Ready To Invoice", "Invoiced"], disabled: true },
-    { label: "Payment Status", valueKey: "payment_status", type: "text", disabled: true },
+    { label: "Order Status", valueKey: "order_status", type: "select",
+       options: [
+        ORDER_STATUS.SUBMITTED,
+        ORDER_STATUS.ACCEPTED,
+        ORDER_STATUS.IN_PRODUCTION,
+        ORDER_STATUS.SHIPPED_OUT,
+        ORDER_STATUS.HOLD,
+        ORDER_STATUS.REJECTED,
+        ORDER_STATUS.CANCELLED,
+      ], disabled: true },
+    { label: "Invoice Status", valueKey: "invoice_status", type: "select", options: [
+      INVOICE_STATUS.NOT_INVOICED,
+        INVOICE_STATUS.READY_TO_INVOICE,
+        INVOICE_STATUS.INVOICED,   
+    
+    ], disabled: true },
+    { label: "Payment Status", valueKey: "payment_status", 
+      
+      type: "select", 
+      options:[
+      PAYMENT_STATUS.NOT_PAID,
+      PAYMENT_STATUS.PAID
+    ] ,
+      
+      disabled: true },
     { label: "Remarks", valueKey: "remarks", type: "text", disabled: true },
     { label: "Admin Remarks", valueKey: "admin_remarks", type: "text", disabled: true },
     { label: "Customer Note", valueKey: "customer_note", type: "text", disabled: true },
@@ -184,22 +273,34 @@ export const tabsFilterFields = (props, boolRef) => {
       valueKey: "order_status",
       type: "select",
       options: [
-        "Submitted",
-        "Accepted",
-        "In Production",
-        "Shipped Out",
-        "Hold",
-        "Rejected",
-        "Cancelled",
+        ORDER_STATUS.SUBMITTED,
+        ORDER_STATUS.ACCEPTED,
+        ORDER_STATUS.IN_PRODUCTION,
+        ORDER_STATUS.SHIPPED_OUT,
+        ORDER_STATUS.HOLD,
+        ORDER_STATUS.REJECTED,
+        ORDER_STATUS.CANCELLED,
+     
       ],
     },
     {
       label: "Invoice Status",
       valueKey: "invoice_status",
       type: "select",
-      options: ["Not invoiced", "Ready To Invoice", "Invoiced"],
+      options: [
+        INVOICE_STATUS.NOT_INVOICED,
+        INVOICE_STATUS.READY_TO_INVOICE,
+        INVOICE_STATUS.INVOICED,   
+      ],
     },
-    { label: "Payment Status", valueKey: "payment_status", type: "text" },
+    { label: "Payment Status", valueKey: "payment_status", 
+       type: "select", 
+      options:[
+      PAYMENT_STATUS.NOT_PAID,
+      PAYMENT_STATUS.PAID
+    ] 
+    
+    },
     { label: "Remarks", valueKey: "remarks", type: "text" },
     { label: "Admin Remarks", valueKey: "admin_remarks", type: "text" },
     { label: "Customer Note", valueKey: "customer_note", type: "text" },
@@ -270,27 +371,35 @@ export const tabsFilterFields = (props, boolRef) => {
       valueKey: "order_status",
       type: "select",
       options: [
-        "Submitted",
-        "Accepted",
-        "In Production",
-        "Shipped Out",
-        "Hold",
-        "Rejected",
-        "Cancelled",
-      ],
+        ORDER_STATUS.SUBMITTED,
+        ORDER_STATUS.ACCEPTED,
+        ORDER_STATUS.IN_PRODUCTION,
+        ORDER_STATUS.SHIPPED_OUT,
+        ORDER_STATUS.HOLD,
+        ORDER_STATUS.REJECTED,
+        ORDER_STATUS.CANCELLED,
+          ],
       disabled: true,
     },
     {
       label: "Invoice Status",
       valueKey: "invoice_status",
       type: "select",
-      options: ["Not invoiced", "Ready To Invoice", "Invoiced"],
+      options: [
+         INVOICE_STATUS.NOT_INVOICED,
+        INVOICE_STATUS.READY_TO_INVOICE,
+        INVOICE_STATUS.INVOICED,   
+      ],
       disabled: true,
     },
     {
       label: "Payment Status",
       valueKey: "payment_status",
-      type: "text",
+            type: "select", 
+      options:[
+      PAYMENT_STATUS.NOT_PAID,
+      PAYMENT_STATUS.PAID
+    ] ,
       disabled: true,
     },
     { label: "Remarks", valueKey: "remarks", type: "text", disabled: true },
@@ -369,21 +478,3 @@ export const tabsFilterFields = (props, boolRef) => {
     return true;
   }
  
-
-export const ORDER_STATUS = {
-  SUBMITTED: "submitted",
-  ACCEPTED: "accepted",
-  IN_PRODUCTION: "in_production",
-  SHIPPED_OUT: "shipped_out",
-  HOLD: "hold",
-  CANCELLED: "cancelled",
-  REJECTED: "rejected",
-  FTYREJECTED: "fty_rejected",
-  PENDING:"pending",
- 
-  NOT_INVOICED: "not_invoiced",
-  READY_TO_INVOICE: "ready_to_invoice",
-  INVOICED: "invoiced",
-  PAID: "paid",
-  NOT_PAID: "not_paid",
-}

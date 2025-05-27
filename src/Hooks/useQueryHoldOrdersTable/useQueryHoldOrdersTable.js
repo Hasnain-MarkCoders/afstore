@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import API from "../../api/api";
+import { ORDER_STATUS } from "../../Utils/Utils";
 
 function useQueryHoldOrdersTable(paginationModel) {
     const [isLoading, setIsLoading] = useState(true);
@@ -31,7 +32,7 @@ function useQueryHoldOrdersTable(paginationModel) {
           };
   
           const requestBody = {
-            filter: [{ type: "order_status", value: ["Hold"] }],
+            filter: [{ type: "order_status", value: [ORDER_STATUS.HOLD] }],
             // ...other properties you want to include in the request body...
           };
           const response = await API.post(`/${auth.type}/line-orders`, requestBody, { params: queryParams, signal:controller.signal });

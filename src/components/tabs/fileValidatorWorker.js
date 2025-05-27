@@ -1,5 +1,7 @@
 /* eslint-disable no-restricted-globals */
 
+import { INVOICE_STATUS, ORDER_STATUS } from "../../Utils/Utils";
+
 self.onmessage = function (event) {
   const { jsonData, importOptions } = event.data;
 
@@ -12,8 +14,23 @@ self.onmessage = function (event) {
   const expectedHeaders = ["po_id", "invoice_status", "order_status", "tracking_number"];
   const requiredColumns = importOptions.map((opt) => opt.key);
 
-  const validInvoiceStatuses = new Set(["Not invoiced","Ready To Invoice","Invoiced"]);
-  const validOrderStatuses = new Set(["Submitted", "Accepted","In Production","Shipped Out","Hold","Rejected","FtyRejected"]);
+  const validInvoiceStatuses = new Set([
+    INVOICE_STATUS.NOT_INVOICED,
+    INVOICE_STATUS.READY_TO_INVOICE,
+    INVOICE_STATUS.INVOICED,
+  ]);
+  const validOrderStatuses = new Set([
+    ORDER_STATUS.SUBMITTED,
+    ORDER_STATUS.ACCEPTED,
+    ORDER_STATUS.IN_PRODUCTION,
+    ORDER_STATUS.SHIPPED_OUT,
+    ORDER_STATUS.HOLD,
+    ORDER_STATUS.REJECTED,
+    ORDER_STATUS.FTYREJECTED,
+    ORDER_STATUS.SUBMITTED
+  ]);
+
+
 
   // Validate header structure based on importOptions and expected position trend
   let missingColumns = [];

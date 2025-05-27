@@ -270,7 +270,6 @@ function useQueryPupring(paginationModel) {
           );
           const { pagination, lineOrders } = response.data;
 
-          console.log("lineOrders====================================>", lineOrders)
   
           setIsLoading(false);
           setRows(lineOrders || []);
@@ -309,3 +308,7 @@ function useQueryPupring(paginationModel) {
   }
 
   export default useQueryPupring
+
+
+
+
