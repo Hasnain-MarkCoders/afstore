@@ -49,6 +49,7 @@ const RawOrdersViewList = ({ setShowSideBar }) => {
   const DetailItem = ({ data }) => {
     // Define the keys that need date formatting
     const keysToFormat = ['date', 'consent_updated_at', 'updated_at'];
+    console.log(data)
   
     // Use JSON.stringify with the replacer function
     const formattedJson = data
@@ -76,28 +77,10 @@ const RawOrdersViewList = ({ setShowSideBar }) => {
         <div className="left" >
           <div className="item">
             <div className="details">
-
-              {/* <div className="detailItem">
-                <span ><pre className="itemValue">{data && JSON.stringify(data, null, 2)}</pre></span>
-              </div> */}
               <DetailItem
               data={data}
               />
-              {/* {data?.order_detail && Object?.entries(order_detail)?.map(([keys, values]) => {
-                return (typeof values === "string") ?
-                    <div className="detailItem" key={keys}>
-                    <span className="itemKey" >{keys}:</span>
-                  <span className="itemValue">{values}</span>
-                    </div>:(typeof values === "object" && values !== null) ?
-                    Object.entries(values)?.map(([key , val])=>{
-                      return (typeof val === "string") &&
-                      <div className="detailItem" key={key}>
-                      <span className="itemKey" >{key}:</span>
-                    <span className="itemValue">{val}</span>
-                      </div>
-                    })
-                    :<></>
-              })} */}
+              
             </div>
           </div>
         </div>

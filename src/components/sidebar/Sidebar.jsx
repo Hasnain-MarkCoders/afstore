@@ -66,14 +66,14 @@ const Sidebar = ({ logoutAction }) => {
                     <span>AfStore</span>
                   </li>
                 </NavLink>
-                {/* {( auth.type === "suadmin") &&
+                {( auth.type === "suadmin") &&
                   <NavLink to="/raw-orders" style={{ textDecoration: "none" }}>
                     <li>
                       <StoreIcon className="icon" />
                       <span>Raw Orders</span>
                     </li>
                   </NavLink>
-                } */}
+                }
               </ul>
             )}
           </div>

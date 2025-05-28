@@ -39,7 +39,8 @@ const columns = [
     minWidth: 190,
     flex: 1,
     renderCell: (params) => {
-      return (formattedDateTime(params.row.date));
+      console.log(params.row)
+      return (formattedDateTime(params.row.created_at));
     },
   },
 ];
