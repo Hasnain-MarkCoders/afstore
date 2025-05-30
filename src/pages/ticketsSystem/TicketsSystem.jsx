@@ -24,7 +24,7 @@ export const TicketsSystem = ({ setShowSideBar }) => {
     page: 0,
     pageSize: 10,
     _id: [],
-    po_number: [],
+    po: [],
   });
   const { isLoading, rows, pageInfo } = useQueryTicketSystem(paginationModel, setIsPaginationLoading);
   const [savedItem, setSavedItem] = useState(localStorage.getItem("savedId"));
@@ -53,7 +53,7 @@ export const TicketsSystem = ({ setShowSideBar }) => {
       order_status:
         pageInfo.order_status === "all" ? [] : pageInfo.order_status,
       multiple_order_status: [],
-      po_number: [],
+      po: [],
       first_date: "",
       last_date: "",
       name: [],

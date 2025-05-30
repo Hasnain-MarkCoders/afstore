@@ -8,7 +8,7 @@ export const filterFields = (props, boolRef) => {
     const { setPaginationModel, pageInfo } = props;
     return setPaginationModel({
         name: pageInfo.name || [],
-        po_number: pageInfo.po_number || [],
+        po: pageInfo.po || [],
         invoice_status: pageInfo.invoice_status || [],
         multiple_order_status: pageInfo.multiple_order_status || [],
         order_status: pageInfo.order_status || "",
@@ -124,9 +124,9 @@ export const selectedMarkAsInvoiced = async (id , props ,  checkboxValues , expo
     const {pageInfo} = props;
     const filters = [];
 
-    // Check for active po_number filter
-    if (pageInfo.po_number && pageInfo.po_number?.length > 0) {
-        filters.push({ type: "po_number", value: pageInfo.po_number });
+    // Check for active po filter
+    if (pageInfo.po && pageInfo.po?.length > 0) {
+        filters.push({ type: "po", value: pageInfo.po });
     }
 
     // Check for active order_status filter
@@ -228,7 +228,7 @@ export const selectedMarkAsInvoiced = async (id , props ,  checkboxValues , expo
         });
     }
 
-    // Check for active po_number filter
+    // Check for active po filter
     if (id.length > 0) {
         filters.push({ type: "order_ids", value: id });
     }

@@ -78,6 +78,8 @@ const TicketSystemFilter = (props) => {
 
   const handleFilterSubmit = () => {
     props.setPaginationModel({
+      po: query.split(/[ ,\n]+/),
+      po_ids: POIDS.split(/[, \n]+/),
       multiple_order_status: status,
       order_status: props.pageInfo.order_status,
       invoice_status: invoiceStatus,
@@ -117,21 +119,61 @@ const TicketSystemFilter = (props) => {
 
   const handleSubmit = () => {
     props.setPaginationModel({
-      order_status:
-        props.pageInfo.order_status === "all"
-          ? []
-          : props.pageInfo.order_status || [],
-      po_number: query.split(/[ ,\n]+/),
+    po: query.split(/[ ,\n]+/),
+      po_ids: POIDS.split(/[, \n]+/),
+      multiple_order_status: status,
+      order_status: props.pageInfo.order_status,
+      invoice_status: invoiceStatus,
+      selectedDateType: selectedDateType,
+      first_date: formattedDate(date?.first_date) || "",
+      last_date: formattedDate(date?.last_date) || "",
+      name: quickQuery?.length > 0 ? quickQuery?.split(",") : [],
+      color: color,
+      factory_color: factoryColor,
+      admin_remarks: adminRemarks,
+      remarks: remarks,
+      factory_note: factoryNote,
+      customer_note: customerNote,
+      all_admin_remarks: allAdminRemarks,
+      all_remarks: allRemarks,
+      all_factory_note: allFactoryNote,
+      all_customer_note: allCustomerNote,
+      all_tag_blue: allTagBlue,
+      all_tag_red: allTagRed,
+      all_tag: props?.getUpdatedData,
+      tag_blue: tagBlue,
+      tag_red: tagRed,
+      bool: boolRef.current,
     });
     handleModal();
   };
     const handleSubmitPOIDSFIlTER = () => {
     props.setPaginationModel({
-      order_status:
-        props.pageInfo.order_status === "all"
-          ? []
-          : props.pageInfo.order_status || [],
+    po: query.split(/[ ,\n]+/),
       po_ids: POIDS.split(/[, \n]+/),
+      multiple_order_status: status,
+      order_status: props.pageInfo.order_status,
+      invoice_status: invoiceStatus,
+      selectedDateType: selectedDateType,
+      first_date: formattedDate(date?.first_date) || "",
+      last_date: formattedDate(date?.last_date) || "",
+      name: quickQuery?.length > 0 ? quickQuery?.split(",") : [],
+      color: color,
+      factory_color: factoryColor,
+      admin_remarks: adminRemarks,
+      remarks: remarks,
+      factory_note: factoryNote,
+      customer_note: customerNote,
+      all_admin_remarks: allAdminRemarks,
+      all_remarks: allRemarks,
+      all_factory_note: allFactoryNote,
+      all_customer_note: allCustomerNote,
+      all_tag_blue: allTagBlue,
+      all_tag_red: allTagRed,
+      all_tag: props?.getUpdatedData,
+      tag_blue: tagBlue,
+      tag_red: tagRed,
+      bool: boolRef.current,
     });
     handlePOIDSModal();
   };
@@ -170,7 +212,7 @@ const TicketSystemFilter = (props) => {
           ? []
           : props.pageInfo.order_status,
       multiple_order_status: [],
-      po_number: [],
+      po: [],
       first_date: "",
       last_date: "",
       name: [],
@@ -328,7 +370,7 @@ const TicketSystemFilter = (props) => {
                     onClick={() => {
                       setQuery("");
                       handleModal();
-                      props.setPaginationModel({ po_number: [] });
+                      props.setPaginationModel({ po: [] });
                     }}
                   >
                     All Clear

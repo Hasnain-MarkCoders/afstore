@@ -313,9 +313,9 @@ useEffect(() => {
   // State for storing the selected generateInvoiceModal
 
 
-  // Check for active po_number filter
-  if (pageInfo.po_number && pageInfo.po_number?.length > 0) {
-    filters.push({ type: "po_number", value: pageInfo.po_number });
+  // Check for active po filter
+  if (pageInfo.po && pageInfo.po?.length > 0) {
+    filters.push({ type: "po", value: pageInfo.po });
   }
 
   // Check for active order_status filter
@@ -446,7 +446,7 @@ useEffect(() => {
   // Function to Generate Invoice for selected rows
   const selectedMarkAsInvoiced = async (id) => {
     const formData = new FormData();
-    // Check for active po_number filter
+    // Check for active po filter
     if (id.length > 0) {
       filters.push({ type: "order_ids", value: id });
     }
@@ -533,7 +533,7 @@ useEffect(() => {
       order_status: status,
       multiple_order_status: pageInfo?.multiple_order_status || [],
       color: pageInfo?.color || [],
-      po_number: pageInfo?.po_number || [],
+      po: pageInfo?.po || [],
       first_date: pageInfo?.first_date || "",
       last_date: pageInfo?.last_date || "",
       name: pageInfo?.name || "",
@@ -561,7 +561,7 @@ useEffect(() => {
     // Make API call to get the Excel file
     setProgressExport(true);
 
-    // Check for active po_number filter
+    // Check for active po filter
     if (selectedRow.length > 0) {
       filters.push({ type: "id", value: selectedRow });
     }

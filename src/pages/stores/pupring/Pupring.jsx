@@ -13,7 +13,7 @@ const Pupring = ({ setShowSideBar }) => {
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10,
-    po_number: [],
+    po: [],
     po_ids:[]
   });
   const { isLoading, rows, pageInfo } = useQueryPupring(paginationModel);

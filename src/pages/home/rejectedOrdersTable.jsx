@@ -59,7 +59,7 @@ const RejectedOrdersTable = () => {
       minWidth: 100,
       renderCell: (params) => {
         const handleSubmit = () => {
-          setPaginationModel({ po_number: [params.row.po] });
+          setPaginationModel({ po: [params.row.po] });
         }
         return (
           <div className="cellAction">

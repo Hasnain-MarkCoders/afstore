@@ -161,7 +161,7 @@ export const editFieldConfigs = [
   export const filterFields=(pageInfo={}, setPaginationModel=()=>{}, boolRef=false, pageSizeCustomLimit=0)=> {
     return setPaginationModel({
       name: pageInfo?.name || [],
-      po_number: pageInfo?.po_number || [],
+      po: pageInfo?.po || [],
       invoice_status: pageInfo?.invoice_status || [],
       multiple_order_status: pageInfo?.multiple_order_status || [],
       order_status: pageInfo?.order_status || '',
@@ -192,7 +192,7 @@ export const tabsFilterFields = (props, boolRef) => {
   const { setPaginationModel, pageInfo } = props;
   return setPaginationModel({
     name: pageInfo.name || [],
-    po_number: pageInfo.po_number || [],
+    po: pageInfo.po || [],
     invoice_status: pageInfo.invoice_status || [],
     multiple_order_status: pageInfo.multiple_order_status || [],
     order_status: pageInfo.order_status || "",

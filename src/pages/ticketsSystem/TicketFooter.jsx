@@ -19,7 +19,7 @@ export default function TicketFooter({ data, setPaginationModel, isLoading, disp
   const filterFields = () => {
     return setPaginationModel({
       name: pageInfo.name || [],
-      po_number: pageInfo.po_number || [],
+      po: pageInfo.po || [],
       invoice_status: pageInfo.invoice_status || [],
       multiple_order_status: pageInfo.multiple_order_status || [],
       order_status: pageInfo.order_status || "",

@@ -220,7 +220,7 @@ const PupringTable = ({
       minWidth: 100,
       renderCell: (params) => {
         const handleSubmit = () => {
-          setPaginationModel({ po_number: [params.row.po] });
+          setPaginationModel({ po: [params.row.po] });
         };
         return (
           <div className="cellAction">
@@ -766,7 +766,7 @@ const PupringTable = ({
                   cb={() => handleFactoryNoteModal(params.row)}
                 />
                 <CustomListItem
-                  isVisible={auth.type === "customer" || auth.type === "suadmin" || auth.type === "admin"}
+                  isVisible={auth.type === "customer"}
                   title={auth.type === "customer"
                     ? "Add Note"
                     : "Add Customer Note"}

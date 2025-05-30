@@ -11,7 +11,7 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
       page: 0,
       pageSize: 10,
       _id: [],
-      po_number: [],
+      po: [],
       po_ids:[],
       first_date: "",
       last_date: "",
@@ -39,9 +39,9 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
   
     const obj = {
       _id: pageInfo._id,
-      page: pageInfo.po_number.length < 0 ? pageInfo.page : 0,
+      page: pageInfo.po.length < 0 ? pageInfo.page : 0,
       limit: pageInfo.pageSize,
-      po_number: pageInfo.po_number,
+      po: pageInfo.po,
       first_date: pageInfo.first_date,
       last_date: pageInfo.last_date,
       name: pageInfo.name,
@@ -80,14 +80,14 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
       filters.push({ type: "po_id", value: paginationModel.po_ids });
     }
     // console.log(paginationModel._id);
-    // Check for active po_number filter
+    // Check for active po filter
     if (paginationModel._id && paginationModel._id?.length > 0) {
       filters.push({ type: "_id", value: paginationModel._id });
     }
   
-    // Check for active po_number filter
-    if (paginationModel.po_number && paginationModel.po_number?.length > 0) {
-      filters.push({ type: "po_number", value: paginationModel.po_number });
+    // Check for active po filter
+    if (paginationModel.po && paginationModel.po?.length > 0) {
+      filters.push({ type: "po", value: paginationModel.po });
     }
   
     // Check for active order_status filter
@@ -284,7 +284,7 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
             order_status: paginationModel.order_status || [],
             color: paginationModel.color || [],
             factory_color: paginationModel.factory_color || [],
-            po_number: paginationModel.po_number || [],
+            po: paginationModel.po || [],
             first_date: paginationModel.first_date || "",
             last_date: paginationModel.last_date || "",
             name: paginationModel.name || "",

@@ -28,7 +28,7 @@ function useQueryInvoices(paginationModel) {
             params: {
               page: (paginationModel.page || 0) + 1,
               limit: (paginationModel.pageSize || obj.pageSize),
-              po_number: (paginationModel.po_number || obj.po_number),
+              po: (paginationModel.po || obj.po),
             },
             signal:controller.signal
           });
