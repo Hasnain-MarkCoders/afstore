@@ -27,31 +27,31 @@ const Login = ({ loginHandle }) => {
   const [notificationToken, setNotificationToken] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
-  //   const saveToken =async (token)=>{
-  //     const response = await API.post(`/update-token`, {
-  //      token,
-  //      email
-  //     });
-  //   }
-  //   const requestForToken =async () => {
-  //     if ('serviceWorker' in navigator) {
-  //       await navigator.serviceWorker.register('firebase-messaging-sw.js', {
-  //         scope: '/',
-  //       });
-  //     }
-  //       try {
-  //         const newToken = await getToken(messaging, { vapidKey: 'BAtDdy_r_vQ8eyuu3ATFOR0zXgZ8ibiK5mj2aUAmyfB-ZrRk1agsXDhMB3nKPdQWswbdCQUSuLFZFA05GBi5HNU' });
-  //         if(newToken){
-  //           setNotificationToken(newToken);
-  //         }
-  //       } catch (error) {
-  //         console.error("Failed to refresh token:", error);
-  //       }
+    const saveToken =async (token)=>{
+      const response = await API.post(`/update-token`, {
+       token,
+       email
+      });
+    }
+    const requestForToken =async () => {
+      if ('serviceWorker' in navigator) {
+        await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
+          scope: '/',
+        });
+      }
+        try {
+          const newToken = await getToken(messaging, { vapidKey: 'BAtDdy_r_vQ8eyuu3ATFOR0zXgZ8ibiK5mj2aUAmyfB-ZrRk1agsXDhMB3nKPdQWswbdCQUSuLFZFA05GBi5HNU' });
+          if(newToken){
+            setNotificationToken(newToken);
+          }
+        } catch (error) {
+          console.error("Failed to refresh token:", error);
+        }
 
-  //   };
-  // React.useEffect(()=>{
-  //   requestForToken()
-  // },[])
+    };
+  React.useEffect(()=>{
+    requestForToken()
+  },[])
 
   const handleLogin = async (e) => {
     try {
@@ -60,7 +60,7 @@ const Login = ({ loginHandle }) => {
       e.preventDefault();
       const { data, error } = await loginHandle(email, password, remember);
       if (data) {
-        // await saveToken(notificationToken)
+        await saveToken(notificationToken)
         navigate("/");
       }
       setMsg(error?.response?.data?.message);

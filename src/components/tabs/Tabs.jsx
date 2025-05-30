@@ -101,52 +101,8 @@ const NavTabs = (props) => {
   const filters = [];
 
 
-// Expected headers (excluding po_id which is always required)
-const requiredHeaders = ["po_id", "invoice_status", "order_status", "tracking_number"];
 
-// Function to validate the file
-// const validateFile = (jsonData) => {
-//   if (!jsonData || jsonData.length === 0) {
-//     setError("Invalid file structure.");
-//     return false;
-//   }
 
-//   // Extract headers from the file
-//   const fileHeaders = jsonData[0];
-
-//   // Ensure the file has the required headers
-//   if (!requiredHeaders.every((col, index) => fileHeaders[index] === col)) {
-//     setError(`File must contain exactly these columns: ${requiredHeaders.join(", ")}`);
-//     return false;
-//   }
-
-//   // Convert importOptions to a Set for fast lookup
-//   const requiredColumns = new Set(importOptions.map(opt => opt.key));
-
-//   // Validate rows
-//   for (let i = 1; i < jsonData.length; i++) {
-//     const row = jsonData[i];
-
-//     // Ensure `po_id` always has a value
-//     if (!row[0]) {
-//       setError(`Row ${i + 1}: 'po_id' is required.`);
-//       return false;
-//     }
-
-//     // Validate only selected columns
-//     for (let j = 1; j < requiredHeaders.length; j++) {
-//       const columnKey = requiredHeaders[j];
-
-//       if (requiredColumns.has(columnKey) && !row[j]) {
-//         setError(`Row ${i + 1}: '${columnKey}' cannot be empty.`);
-//         return false;
-//       }
-//     }
-//   }
-
-//   setError(""); // Clear error if validation passes
-//   return true;
-// };
 
 const validateLargeFile = (jsonData, importOptions, setError, callback) => {
 
@@ -706,7 +662,7 @@ useEffect(() => {
 
   const handleForceAccept = () => {
     setLoadingForceAccept(true);
-    API.post(`/admin/force-accept`, {
+    API.post(`/${auth.type}/force-accept`, {
       order_ids: forceAccept
     })
       .then((response) => {
@@ -931,7 +887,7 @@ useEffect(() => {
 
       {/* Order List All */}
       <TabPanel className="" value={value} index={0}>
-        {/* {importExportFile} */}
+        {importExportFile}
         {value === 0 && (
           <PupringTable
             key="all"
@@ -958,7 +914,7 @@ useEffect(() => {
             </Button>
           </div>
         )}
-        {/* {importExportFile} */}
+        {importExportFile}
         {value === 1 && (
           <PupringTable
             key="submitted"
@@ -975,7 +931,7 @@ useEffect(() => {
 
       {/* Order List Accepted */}
       <TabPanel value={value} index={2}>
-        {/* {importExportFile} */}
+        {importExportFile}
         {auth.type !== "customer" && selectedRow.length > 0 && (
           <div className="extra-buttons">
             <Button
@@ -1002,7 +958,7 @@ useEffect(() => {
 
       {/* Order List In-Production */}
       <TabPanel value={value} index={3}>
-        {/* {importExportFile} */}
+        {importExportFile}
         {auth.type !== "customer" && selectedRow.length > 0 && (
           <div className="extra-buttons">
             <Button
@@ -1028,7 +984,7 @@ useEffect(() => {
 
       {/* Order List Shipped-Out */}
       <TabPanel value={value} index={4}>
-        {/* {importExportFile} */}
+        {importExportFile}
         {value === 4 && (
           <PupringTable
             tabName="shipped-out"
@@ -1275,9 +1231,8 @@ label="mark_as_invoiced"
                         justifyContent: "start",
                         gap: "10px",
                       }}>
-                        {/* <DownloadButton onClick={() => { window.location.href = "https://xdtc-media.s3.us-east-2.amazonaws.com/orders.xlsx" }} title="Download mark as Invoice sample file" /> */}
-                        {/* <a href="https://xdtc-media.s3.us-east-2.amazonaws.com/orders.xlsx" download> */}
-                        <a href="https://xdtc-media.s3.us-east-2.amazonaws.com/sample.xlsx" download>
+                       
+                        <a href="https://afsaana-media.s3.us-east-2.amazonaws.com/sample.xlsx" download>
 
                         Download Sample File.
                         </a>
@@ -1942,7 +1897,7 @@ label="mark_as_invoiced"
                           gap: "10px",
                         }}>
                           <UploadButton error={error} file={file} onChange={handleExportFileChange} />
-                          <DownloadButton onClick={() => { window.location.href = "https://xdtc-media.s3.us-east-2.amazonaws.com/orders.xlsx" }} title="Download mark as Invoice sample file" />
+                          <DownloadButton onClick={() => { window.location.href = "https://afsaana-media.s3.us-east-2.amazonaws.com/orders.xlsx" }} title="Download mark as Invoice sample file" />
 
                         </Box>
                         {/* <input type="file" accept=".xlsx" onChange={handleExportFileChange} /> */}

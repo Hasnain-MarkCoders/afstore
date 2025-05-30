@@ -87,7 +87,7 @@ const Sidebar = ({ logoutAction }) => {
                   <span>SKU</span>
                 </li>
               </NavLink>
-               {/* <div
+               <div
                 className={`dropdown ${(pathname === "invoices" || pathname === "invoices-items") ? "active" : ""}`}
                 style={{ textDecoration: "none" }}
               >
@@ -121,7 +121,7 @@ const Sidebar = ({ logoutAction }) => {
                     </NavLink>
                   </ul>
                 )}
-              </div> */}
+              </div>
 
               <NavLink to="/exchange-rate" style={{ textDecoration: "none" }}>
                 <li>
@@ -169,14 +169,14 @@ const Sidebar = ({ logoutAction }) => {
               </NavLink>
             </>
           )}
-             {/* <>
+             <>
               <NavLink to="/download-center" style={{ textDecoration: "none" }}>
                 <li>
                   <GetAppIcon className="icon" />
                   <span>Download Center</span>
                 </li>
               </NavLink>
-            </> */}
+            </>
             {( auth.type === "suadmin") && (
             <>
               <NavLink to="/settings" style={{ textDecoration: "none" }}>

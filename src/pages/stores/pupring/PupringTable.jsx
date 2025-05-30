@@ -29,7 +29,6 @@ import { Toolbar } from "../../../components/pagination/paginationDataGrid";
 import CircularProgress from "@mui/material/CircularProgress";
 import AdsClickIcon from "@mui/icons-material/AdsClick";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import EditIcon from "@mui/icons-material/Edit";
 import ErrorModal from "../../../components/Modals/ErrorModal";
 import {
   editFieldConfigs,
@@ -40,7 +39,6 @@ import {
   ORDER_STATUS,
 } from "../../../Utils/Utils";
 import PupringNote from "../../../components/Modals/PupringTableModals/PupringNote";
-import CustomChip from "../../../components/CustomChip/CustomChip";
 import CustomListItem from "../../../components/CustomListItem/CustomListItem";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AutohideSnackbar from "../../../components/snackbar/Snackbar";
@@ -65,10 +63,10 @@ const PupringTable = ({
   const [remarksNoteField, setRemarksNoteField] = useState("");
   const [customerNote, setCustomerNote] = useState(null);
   const [customerNoteField, setCustomerNoteField] = useState("");
-  const [isLineOrderUpdating, setIsLineOrderUpdating]= useState(false)
+  const [isLineOrderUpdating, setIsLineOrderUpdating] = useState(false)
   const [snackbar, setSnackbar] = useState({
-    open:false,
-    message:""
+    open: false,
+    message: ""
   })
   // Helper function to format date and time
 
@@ -82,7 +80,7 @@ const PupringTable = ({
 
   // Handle form submission for updating line order
   const handleSubmitUpdateLineOrder = async (e) => {
-      setIsLineOrderUpdating(true)
+    setIsLineOrderUpdating(true)
     e.preventDefault();
     return API.post(`/${auth?.type}/edit-line-order`, {
       id: fields._id,
@@ -117,9 +115,9 @@ const PupringTable = ({
       handleEditModal(null);
       filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
-    }).catch(error=>{
+    }).catch(error => {
       setIsLineOrderUpdating(false)
-        alert(error?.response?.data?.message??error.message??"Error Editing Line Order!")
+      alert(error?.response?.data?.message ?? error.message ?? "Error Editing Line Order!")
 
     })
   };
@@ -139,10 +137,10 @@ const PupringTable = ({
       handleFactoryNoteModal(null);
       filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
-    }).catch(error=>{
-        alert(error?.response?.data?.message??error.message??"Error adding note!")
+    }).catch(error => {
+      alert(error?.response?.data?.message ?? error.message ?? "Error adding note!")
     })
-    ;
+      ;
   };
 
   const handleCustomerNoteModal = (data) => {
@@ -154,7 +152,7 @@ const PupringTable = ({
   const handleSubmitcustomerNote = async (e) => {
     e.preventDefault();
 
-   return API.post(`/customer/add-note`, {
+    return API.post(`/customer/add-note`, {
       id: customerNote?._id,
       note: customerNoteField,
     }).then((response) => {
@@ -173,7 +171,7 @@ const PupringTable = ({
   const handleSubmitremarksNote = async (e) => {
     e.preventDefault();
 
-  return  API.post(`/${auth.type}/add-note`, {
+    return API.post(`/${auth.type}/add-note`, {
       order_id: remarksNote?._id,
       note: remarksNoteField,
     }).then((response) => {
@@ -183,11 +181,11 @@ const PupringTable = ({
     });
   };
 
-  const handleCopy=(field,text)=>{
+  const handleCopy = (field, text) => {
     navigator.clipboard.writeText(text)
     setSnackbar({
-      open:true,
-      message:`${field} Copied to clipboad.`
+      open: true,
+      message: `${field} Copied to clipboad.`
     })
   }
 
@@ -197,20 +195,20 @@ const PupringTable = ({
       headerName: "Po Id",
       minWidth: 240,
       flex: 1,
-      renderCell:params=>{
+      renderCell: params => {
         return (<Box sx={{
-          display:"flex",
-          alignItems:"center",
-          gap:"10px"
+          display: "flex",
+          alignItems: "center",
+          gap: "10px"
         }}>
-          <Tooltip onClick={()=>handleCopy("PO number",params.row.po_id)} sx={{
-            cursor:"pointer"
+          <Tooltip onClick={() => handleCopy("PO number", params.row.po_id)} sx={{
+            cursor: "pointer"
           }} title="Copy PO number">
-          <ContentCopyIcon />
+            <ContentCopyIcon />
           </Tooltip>
           <Typography>
 
-        {params.row.po_id}
+            {params.row.po_id}
           </Typography>
         </Box>)
       }
@@ -234,7 +232,7 @@ const PupringTable = ({
               }}
             >
 
-              
+
               {/* {params.row.multiple ? "Yes" : "No"} {params.row.multiple} */}
               {params.row.multiple ? "Yes" : "No"}
             </Button>
@@ -247,263 +245,263 @@ const PupringTable = ({
       headerName: "Name",
       flex: 1,
       minWidth: 200,
-      renderCell:params=>{
+      renderCell: params => {
         // console.log(params.row)
         return (<Box sx={{
-          display:"flex",
-          alignItems:"center",
-          gap:"10px"
+          display: "flex",
+          alignItems: "center",
+          gap: "10px"
         }}>
-          <Tooltip onClick={()=>handleCopy("Name",params.row.name)} sx={{
-            cursor:"pointer"
+          <Tooltip onClick={() => handleCopy("Name", params.row.name)} sx={{
+            cursor: "pointer"
           }} title="Copy Title">
-          <ContentCopyIcon />
+            <ContentCopyIcon />
           </Tooltip>
           <Typography>
 
-        {params.row.name}
+            {params.row.name}
           </Typography>
         </Box>)
       }
     },
-    ...(auth.type === "admin" ||auth.type === "suadmin"
+    ...(auth.type === "admin" || auth.type === "suadmin"
       ? [
-          {
-            field: "color",
-            headerName: "Color",
-            flex: 1,
-            minWidth: 200,
-            renderCell: (params) => {
-              return (
+        {
+          field: "color",
+          headerName: "Color",
+          flex: 1,
+          minWidth: 200,
+          renderCell: (params) => {
+            return (
+              <div
+                className="color-box"
+                style={{
+                  display: "flex",
+                  borderRadius: "50px",
+                  overflow: "hidden",
+                  boxShadow: "0 0 10px lightgray",
+                }}
+              >
                 <div
-                  className="color-box"
-                  style={{
-                    display: "flex",
-                    borderRadius: "50px",
-                    overflow: "hidden",
-                    boxShadow: "0 0 10px lightgray",
-                  }}
+                  className={params?.row?.factory_color}
+                  style={{ flexGrow: 1, padding: "7px 10px" }}
                 >
-                  <div
-                    className={params?.row?.factory_color}
-                    style={{ flexGrow: 1, padding: "7px 10px" }}
-                  >
-                    Factory
-                  </div>
-                  <div
-                    className={params?.row?.color}
-                    style={{ flexGrow: 1, padding: "7px 10px" }}
-                  >
-                    Customer
-                  </div>
+                  Factory
                 </div>
-              );
-            },
+                <div
+                  className={params?.row?.color}
+                  style={{ flexGrow: 1, padding: "7px 10px" }}
+                >
+                  Customer
+                </div>
+              </div>
+            );
           },
-        ]
+        },
+      ]
       : []),
-    ...(auth.type === "admin" ||auth.type === "suadmin"
+    ...(auth.type === "admin" || auth.type === "suadmin"
       ? [
-          {
-            field: "admin_remarks",
-            headerName: "Admin Remarks",
-            flex: 1,
-            minWidth: 200,
-            renderCell: (params) => {
-              return (
-                <div>
-                  <Tooltip title={params?.row?.admin_remarks}>
-                    <p>{params?.row?.admin_remarks}</p>
-                  </Tooltip>
-                </div>
-              );
-            },
+        {
+          field: "admin_remarks",
+          headerName: "Admin Remarks",
+          flex: 1,
+          minWidth: 200,
+          renderCell: (params) => {
+            return (
+              <div>
+                <Tooltip title={params?.row?.admin_remarks}>
+                  <p>{params?.row?.admin_remarks}</p>
+                </Tooltip>
+              </div>
+            );
           },
-        ]
+        },
+      ]
       : []),
-    ...(auth.type === "admin" ||auth.type === "suadmin"
+    ...(auth.type === "admin" || auth.type === "suadmin"
       ? [
-          {
-            field: "remarks",
-            headerName: "Remarks",
-            flex: 1,
-            minWidth: 200,
-            renderCell: (params) => {
-              return (
-                <div>
-                  <Tooltip title={params?.row?.remarks}>
-                    <p>{params?.row?.remarks}</p>
-                  </Tooltip>
-                </div>
-              );
-            },
+        {
+          field: "remarks",
+          headerName: "Remarks",
+          flex: 1,
+          minWidth: 200,
+          renderCell: (params) => {
+            return (
+              <div>
+                <Tooltip title={params?.row?.remarks}>
+                  <p>{params?.row?.remarks}</p>
+                </Tooltip>
+              </div>
+            );
           },
-        ]
+        },
+      ]
       : []),
-    ...(auth.type === "customer" || auth.type === "admin" ||auth.type === "suadmin"
+    ...(auth.type === "customer" || auth.type === "admin" || auth.type === "suadmin"
       ? [
-          {
-            field: "tag_red",
-            headerName: "Tag Red",
-            flex: 1,
-            minWidth: 200,
-            renderCell: (params) => {
-              return (
-                <div>
-                  <Tooltip title={params?.row?.tag_red}>
-                    <p>{params?.row?.tag_red}</p>
-                  </Tooltip>
-                </div>
-              );
-            },
+        {
+          field: "tag_red",
+          headerName: "Tag Red",
+          flex: 1,
+          minWidth: 200,
+          renderCell: (params) => {
+            return (
+              <div>
+                <Tooltip title={params?.row?.tag_red}>
+                  <p>{params?.row?.tag_red}</p>
+                </Tooltip>
+              </div>
+            );
           },
-          {
-            field: "tag_blue",
-            headerName: "Tag Blue",
-            flex: 1,
-            minWidth: 200,
-            renderCell: (params) => {
-              return (
-                <div>
-                  <Tooltip title={params?.row?.tag_blue}>
-                    <p>{params?.row?.tag_blue}</p>
-                  </Tooltip>
-                </div>
-              );
-            },
+        },
+        {
+          field: "tag_blue",
+          headerName: "Tag Blue",
+          flex: 1,
+          minWidth: 200,
+          renderCell: (params) => {
+            return (
+              <div>
+                <Tooltip title={params?.row?.tag_blue}>
+                  <p>{params?.row?.tag_blue}</p>
+                </Tooltip>
+              </div>
+            );
           },
-          {
-            field: "customer_note",
-            headerName: "Customer Note",
-            flex: 1,
-            minWidth: 200,
-            renderCell: (params) => {
-              return (
-                <div>
-                  <Tooltip title={params?.row?.customer_note[0]?.message}>
-                    <p>{params?.row?.customer_note[0]?.message}</p>
-                  </Tooltip>
-                </div>
-              );
-            },
+        },
+        {
+          field: "customer_note",
+          headerName: "Customer Note",
+          flex: 1,
+          minWidth: 200,
+          renderCell: (params) => {
+            return (
+              <div>
+                <Tooltip title={params?.row?.customer_note[0]?.message}>
+                  <p>{params?.row?.customer_note[0]?.message}</p>
+                </Tooltip>
+              </div>
+            );
           },
-        ]
+        },
+      ]
       : []),
-    ...(auth.type === "factory" || auth.type === "admin" ||auth.type === "suadmin"
+    ...(auth.type === "factory" || auth.type === "admin" || auth.type === "suadmin"
       ? [
-          {
-            field: "factory_note",
-            headerName: "Factory Note",
-            flex: 1,
-            minWidth: 200,
-            renderCell: (params) => {
-              return (
-                <div>
-                  <Tooltip title={params?.row?.factory_note?.join(" , ")}>
-                    <p>{params?.row?.factory_note?.join(" , ")}</p>
-                  </Tooltip>
-                </div>
-              );
-            },
+        {
+          field: "factory_note",
+          headerName: "Factory Note",
+          flex: 1,
+          minWidth: 200,
+          renderCell: (params) => {
+            return (
+              <div>
+                <Tooltip title={params?.row?.factory_note?.join(" , ")}>
+                  <p>{params?.row?.factory_note?.join(" , ")}</p>
+                </Tooltip>
+              </div>
+            );
           },
-        ]
+        },
+      ]
       : []),
     ...(auth.type !== "customer"
       ? [
-          {
-            field: "shipping_label",
-            headerName: "Shipping Label",
-            flex: 1,
-            minWidth: 120,
-            renderCell: (params) => {
-              return (
-                params.row.shipping_label !== null && (
-                  <Link
-                    to={params.row.shipping_label}
-                    className="cellWithStatus"
-                    target="blank"
-                  >
-                    Label URL
-                  </Link>
-                )
-              );
-            },
+        {
+          field: "shipping_label",
+          headerName: "Shipping Label",
+          flex: 1,
+          minWidth: 120,
+          renderCell: (params) => {
+            return (
+              params.row.shipping_label !== null && (
+                <Link
+                  to={params.row.shipping_label}
+                  className="cellWithStatus"
+                  target="blank"
+                >
+                  Label URL
+                </Link>
+              )
+            );
           },
-        ]
+        },
+      ]
       : []),
-    ...(auth.type === "admin" ||auth.type === "suadmin"
+    ...(auth.type === "admin" || auth.type === "suadmin"
       ? [
-          {
-            field: "shipment_customer_price",
-            headerName: "Shiptment Price",
-            flex: 1,
-            minWidth: 120,
-            renderCell: (params) => {
-              return !!params.row.shipment_customer_price
-                ? `$${params.row.shipment_customer_price}`
-                : "";
-            },
+        {
+          field: "shipment_customer_price",
+          headerName: "Shiptment Price",
+          flex: 1,
+          minWidth: 120,
+          renderCell: (params) => {
+            return !!params.row.shipment_customer_price
+              ? `$${params.row.shipment_customer_price}`
+              : "";
           },
-          {
-            field: "customer_price",
-            headerName: "Customer Price",
-            flex: 1,
-            minWidth: 120,
-            renderCell: (params) => {
-              return !!params?.row?.customer_price
-                ? `$${params?.row?.customer_price}`
-                : "";
-            },
+        },
+        {
+          field: "customer_price",
+          headerName: "Customer Price",
+          flex: 1,
+          minWidth: 120,
+          renderCell: (params) => {
+            return !!params?.row?.customer_price
+              ? `$${params?.row?.customer_price}`
+              : "";
           },
-          {
-            field: "shipment_local_price_usd",
-            headerName: "YE Shipment USD",
-            flex: 1,
-            minWidth: 150,
-            renderCell: (params) => {
-              return !!params?.row?.shipment_local_price_usd
-                ? `$${params?.row?.shipment_local_price_usd}`
-                : "";
-            },
+        },
+        {
+          field: "shipment_local_price_usd",
+          headerName: "YE Shipment USD",
+          flex: 1,
+          minWidth: 150,
+          renderCell: (params) => {
+            return !!params?.row?.shipment_local_price_usd
+              ? `$${params?.row?.shipment_local_price_usd}`
+              : "";
           },
-          {
-            field: "shipment_local_price",
-            headerName: "YE Shipment RMB",
-            flex: 1,
-            minWidth: 150,
-            renderCell: (params) => {
-              return !!params?.row?.shipment_local_price
-                ? `¥${params?.row?.shipment_local_price}`
-                : "";
-            },
+        },
+        {
+          field: "shipment_local_price",
+          headerName: "YE Shipment RMB",
+          flex: 1,
+          minWidth: 150,
+          renderCell: (params) => {
+            return !!params?.row?.shipment_local_price
+              ? `¥${params?.row?.shipment_local_price}`
+              : "";
           },
-          {
-            field: "factory_price_usd",
-            headerName: "Factory Price USD",
-            flex: 1,
-            minWidth: 150,
-            renderCell: (params) => {
-              return !!params.row.factory_price_usd
-                ? `$${params.row.factory_price_usd}`
-                : "";
-            },
+        },
+        {
+          field: "factory_price_usd",
+          headerName: "Factory Price USD",
+          flex: 1,
+          minWidth: 150,
+          renderCell: (params) => {
+            return !!params.row.factory_price_usd
+              ? `$${params.row.factory_price_usd}`
+              : "";
           },
-        ]
+        },
+      ]
       : []),
     ...(auth.type !== "customer"
       ? [
-          {
-            field: "factory_price",
-            headerName: "Factory Price",
-            flex: 1,
-            minWidth: 120,
-            renderCell: (params) => {
-              return !!params.row.factory_price
-                ? `¥${params.row.factory_price}`
-                : "";
-            },
+        {
+          field: "factory_price",
+          headerName: "Factory Price",
+          flex: 1,
+          minWidth: 120,
+          renderCell: (params) => {
+            return !!params.row.factory_price
+              ? `¥${params.row.factory_price}`
+              : "";
           },
-        ]
+        },
+      ]
       : []),
     {
       field: "date",
@@ -516,125 +514,125 @@ const PupringTable = ({
     },
     ...(tabName === "submitted" || tabName === "all"
       ? [
-          {
-            field: "submitted",
-            headerName: "Submitted Date",
-            minWidth: 200,
-            flex: 1,
-            renderCell: (params) => {
-              return !!params.row.submitted
-                ? formattedDateTime(params.row.submitted)
-                : null;
-            },
+        {
+          field: "submitted",
+          headerName: "Submitted Date",
+          minWidth: 200,
+          flex: 1,
+          renderCell: (params) => {
+            return !!params.row.submitted
+              ? formattedDateTime(params.row.submitted)
+              : null;
           },
-        ]
+        },
+      ]
       : []),
-    ...(auth.type === "factory" || auth.type === "admin" ||auth.type === "suadmin"
+    ...(auth.type === "factory" || auth.type === "admin" || auth.type === "suadmin"
       ? [
-          {
-            field: "factory_response",
-            headerName: "Factory Response",
-            flex: 1,
-            minWidth: 200,
-            renderCell: (params) => {
-              return !!params.row.factory_response
-                ? params.row.factory_response
-                : "";
-            },
+        {
+          field: "factory_response",
+          headerName: "Factory Response",
+          flex: 1,
+          minWidth: 200,
+          renderCell: (params) => {
+            return !!params.row.factory_response
+              ? params.row.factory_response
+              : "";
           },
-        ]
+        },
+      ]
       : []),
     ...(tabName === "accepted" || tabName === "all"
       ? [
-          {
-            field: "accepted",
-            headerName: "Accepted Date",
-            minWidth: 200,
-            flex: 1,
-            renderCell: (params) => {
-              return !!params.row.accepted
-                ? formattedDateTime(params.row.accepted)
-                : null;
-            },
+        {
+          field: "accepted",
+          headerName: "Accepted Date",
+          minWidth: 200,
+          flex: 1,
+          renderCell: (params) => {
+            return !!params.row.accepted
+              ? formattedDateTime(params.row.accepted)
+              : null;
           },
-        ]
+        },
+      ]
       : []),
     ...(tabName === "in-production" || tabName === "all"
       ? [
-          {
-            field: "in_production",
-            headerName: "In-Production Date",
-            minWidth: 200,
-            flex: 1,
-            renderCell: (params) => {
-              return !!params.row.in_production
-                ? formattedDateTime(params.row.in_production)
-                : null;
-            },
+        {
+          field: "in_production",
+          headerName: "In-Production Date",
+          minWidth: 200,
+          flex: 1,
+          renderCell: (params) => {
+            return !!params.row.in_production
+              ? formattedDateTime(params.row.in_production)
+              : null;
           },
-        ]
+        },
+      ]
       : []),
     ...(tabName === "shipped-out" || tabName === "all"
       ? [
-          {
-            field: "shipped_out",
-            headerName: "Shipped Out Date",
-            minWidth: 200,
-            flex: 1,
-            renderCell: (params) => {
-              return !!params.row.shipped_out
-                ? formattedDateTime(params.row.shipped_out)
-                : null;
-            },
+        {
+          field: "shipped_out",
+          headerName: "Shipped Out Date",
+          minWidth: 200,
+          flex: 1,
+          renderCell: (params) => {
+            return !!params.row.shipped_out
+              ? formattedDateTime(params.row.shipped_out)
+              : null;
           },
-        ]
+        },
+      ]
       : []),
     ...(auth.type !== "customer"
       ? [
-          {
-            field: "waybill_number",
-            headerName: "WayBill Number",
-            flex: 1,
-            minWidth: 190,
-            renderCell:params=>{
-              return (<Box sx={{
-                display:"flex",
-                alignItems:"center",
-                gap:"10px"
-              }}>
-                <Tooltip onClick={()=>handleCopy("Waybill",params.row.waybill_number??"")} sx={{
-                  cursor:"pointer"
-                }} title="Copy waybill ">
+        {
+          field: "waybill_number",
+          headerName: "WayBill Number",
+          flex: 1,
+          minWidth: 190,
+          renderCell: params => {
+            return (<Box sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px"
+            }}>
+              <Tooltip onClick={() => handleCopy("Waybill", params.row.waybill_number ?? "")} sx={{
+                cursor: "pointer"
+              }} title="Copy waybill ">
                 <ContentCopyIcon />
-                </Tooltip>
-                <Typography>
-      
-              {params.row.waybill_number?? "N/A"}
-                </Typography>
-              </Box>)
-            }
-          },
-        ]
+              </Tooltip>
+              <Typography>
+
+                {params.row.waybill_number ?? "N/A"}
+              </Typography>
+            </Box>)
+          }
+        },
+      ]
       : []),
     {
       field: "tracking_number",
       headerName: "Tracking Number",
       flex: 1,
       minWidth: 150,
-      renderCell:params=>{
+      renderCell: params => {
         return (<Box sx={{
-          display:"flex",
-          alignItems:"center",
-          gap:"10px"
+          display: "flex",
+          alignItems: "center",
+          gap: "10px"
         }}>
-          <Tooltip onClick={()=>handleCopy("Tracking number",params.row.tracking_number??"")} sx={{
-            cursor:"pointer"
+          <Tooltip onClick={() => handleCopy("Tracking number", params.row.tracking_number ?? "")} sx={{
+            cursor: "pointer"
           }} title="Copy Tracking Number">
-          <ContentCopyIcon />
+            <ContentCopyIcon />
           </Tooltip>
           <Typography>
 
-        {params.row.tracking_number??"N/A"}
+            {params.row.tracking_number ?? "N/A"}
           </Typography>
         </Box>)
       }
@@ -647,35 +645,33 @@ const PupringTable = ({
       renderCell: (params) => {
         return (
           <div
-            className={`cellWithStatus status-btn ${
-              params.row.order_status ? "complete" : ""
-            }`}
+            className={`cellWithStatus status-btn ${params.row.order_status ? "complete" : ""
+              }`}
           >
             {params.row.order_status}
           </div>
         );
       },
     },
-    ...(auth.type === "admin" ||auth.type === "suadmin"
+    ...(auth.type === "admin" || auth.type === "suadmin"
       ? [
-          {
-            field: "invoice_status",
-            headerName: "Invoice Status",
-            minWidth: 200,
-            flex: 1,
-            renderCell: (params) => {
-              return (
-                <div
-                  className={`cellWithStatus status-btn ${
-                    params.row.invoice_status ? "complete" : ""
+        {
+          field: "invoice_status",
+          headerName: "Invoice Status",
+          minWidth: 200,
+          flex: 1,
+          renderCell: (params) => {
+            return (
+              <div
+                className={`cellWithStatus status-btn ${params.row.invoice_status ? "complete" : ""
                   }`}
-                >
-                  {params.row.invoice_status}
-                </div>
-              );
-            },
+              >
+                {params.row.invoice_status}
+              </div>
+            );
           },
-        ]
+        },
+      ]
       : []),
   ];
 
@@ -694,8 +690,8 @@ const PupringTable = ({
             filterFields(pageInfo, setPaginationModel, boolRef);
             boolRef.current = !boolRef.current;
           }).catch((error) => {
-        alert(error?.response?.data?.message??error.message??"Error Placing Order!")
-      });
+            alert(error?.response?.data?.message ?? error.message ?? "Error Placing Order!")
+          });
         };
 
         const generateLabel = (po_number) => {
@@ -704,8 +700,8 @@ const PupringTable = ({
             filterFields(pageInfo, setPaginationModel, boolRef);
             boolRef.current = !boolRef.current;
           }).catch((error) => {
-        alert(error?.response?.data?.message??error.message??"Error Generating WayBill!")
-      });
+            alert(error?.response?.data?.message ?? error.message ?? "Error Generating WayBill!")
+          });
         };
 
         const handleCancelOrder = (id) => {
@@ -716,44 +712,43 @@ const PupringTable = ({
             filterFields(pageInfo, setPaginationModel, boolRef);
             boolRef.current = !boolRef.current;
           }).catch((error) => {
-        alert(error?.response?.data?.message??error.message??"Error Cancelling Order!")
-      });
+            alert(error?.response?.data?.message ?? error.message ?? "Error Cancelling Order!")
+          });
 
 
-  
+
         };
-      const placeOrderOnHold = (row) => {
+        const placeOrderOnHold = (row) => {
           API.post(`/${auth.type}/hold-orders`, {
             order_id: row?._id,
           })
             .then((response) => {
-               filterFields(pageInfo, setPaginationModel, boolRef);
-            boolRef.current = !boolRef.current;
-              alert(response?.data?.message??"Order placed on hold!");
+              filterFields(pageInfo, setPaginationModel, boolRef);
+              boolRef.current = !boolRef.current;
+              alert(response?.data?.message ?? "Order placed on hold!");
             })
-            .catch(error=>{
-              alert(error?.response?.data?.message??error.message??"Error Placing Order ON Hold!")
-      
-          })
+            .catch(error => {
+              alert(error?.response?.data?.message ?? error.message ?? "Error Placing Order ON Hold!")
+
+            })
         };
-        
+
         return (
           <div className="cellAction">
             <div
-              className={`dropdown ${
-                auth.type === "customer"
+              className={`dropdown ${auth.type === "customer"
                   ? params?.row?.color
                   : auth.type === "factory"
-                  ? params?.row?.factory_color
-                  : "gray"
-              }`}
+                    ? params?.row?.factory_color
+                    : "gray"
+                }`}
             >
               <MoreVertIcon />
               <ul className="dropdown-content ">
                 <CustomListItem
                   title="View"
                   style={{ fontWeight: 600 }}
-                  
+
                   cb={() => window.open(`/afstore/${params.row._id}`, '_blank', 'noopener,noreferrer')}
                 />
 
@@ -763,59 +758,59 @@ const PupringTable = ({
                   style={{ fontWeight: 600 }}
                   cb={() => handleRemarksNoteModal(params.row)}
                 />
-                  <CustomListItem
+                <CustomListItem
                   isVisible={auth.type === "suadmin" || auth.type === "admin" || auth.type === "factory"}
                   title={auth.type === "factory"
-                  ? "Add Note"
-                  : "Add Factory Note"}
+                    ? "Add Note"
+                    : "Add Factory Note"}
                   style={{ fontWeight: 600 }}
                   cb={() => handleFactoryNoteModal(params.row)}
                 />
-                  <CustomListItem
+                <CustomListItem
                   isVisible={auth.type === "customer" || auth.type === "suadmin" || auth.type === "admin"}
                   title={auth.type === "customer"
-                  ? "Add Note"
-                  : "Add Customer Note"}
+                    ? "Add Note"
+                    : "Add Customer Note"}
                   style={{ fontWeight: 600 }}
                   cb={() => handleCustomerNoteModal(params.row)}
                 />
-                    <CustomListItem
+                <CustomListItem
                   isVisible={auth.type != "customer"}
                   title={"Put On Hold"}
                   style={{ fontWeight: 600 }}
                   cb={() => placeOrderOnHold(params.row)}
                 />
 
-                  <CustomListItem
+                <CustomListItem
                   isVisible={auth.type === "suadmin" || auth.type === "admin" || auth.type === "customer"}
                   title={"Edit"}
                   style={{ fontWeight: 600 }}
                   cb={() => handleEditModal(params.row)}
                 />
 
-                  <CustomListItem
-                  isVisible={auth.type !== "customer" }
-                  title={ "Place Order"}
+                <CustomListItem
+                  isVisible={auth.type !== "customer"}
+                  title={"Place Order"}
                   style={{ fontWeight: 600 }}
                   cb={() => placeOrder(params.row._id)}
                 />
-                
+
                 <CustomListItem
-                  isVisible={auth.type !== "customer" }
-                  title={ " Get Label"}
+                  isVisible={auth.type !== "customer"}
+                  title={" Get Label"}
                   style={{ fontWeight: 600 }}
-                  cb={() =>generateLabel(params.row.po)}
+                  cb={() => generateLabel(params.row.po)}
                 />
 
-                  <CustomListItem
-                  isVisible={(auth.type === "suadmin" || auth.type === "admin") }
-                  title={ "Cancel Order"}
+                <CustomListItem
+                  isVisible={(auth.type === "suadmin" || auth.type === "admin")}
+                  title={"Cancel Order"}
                   style={{ fontWeight: 600 }}
                   cb={() => handleCancelOrder(params.row?._id)}
                 />
-                  <CustomListItem
+                <CustomListItem
                   isVisible={auth.type === "suadmin" || auth.type === "admin" || auth.type === "customer"}
-                  title={ "Ticket"}
+                  title={"Ticket"}
                   style={{ fontWeight: 600 }}
                   cb={() => handleLocalStorage(params.row?._id)}
                 />
@@ -833,10 +828,6 @@ const PupringTable = ({
   const [forceAcceptSuccess, setForceAcceptSuccess] = useState(null);
   const [forceAcceptError, setForceAcceptError] = useState(null);
   const [approveOrderError, setApproveOrderError] = useState(null);
-  const [propertyAddModal, setPropertyAddModal] = useState(false);
-  const [dynamicFormFields, setDynamicFormFields] = useState([]);
-  const [pair, setPair] = useState(null);
-
   // Handle edit modal for line orders
   const handleEditModal = async (data) => {
     try {
@@ -846,7 +837,6 @@ const PupringTable = ({
           name: [data?.name],
         },
       });
-      setPair(response.data.skus[0].properties.pair);
     } catch (error) {
       if (error?.response?.status === 480) {
         navigate("/login");
@@ -860,21 +850,7 @@ const PupringTable = ({
     setFields((p) => ({ ...p, [name]: value }));
   };
 
-  useEffect(() => {
-    setDynamicFormFields(
-      Array.from({ length: pair }, () => ({ name: "", value: "" }))
-    );
-  }, [pair]);
 
-  const handleFieldChange = (index, field, value) => {
-    const updatedFields = dynamicFormFields.map((item, i) => {
-      if (i === index) {
-        return { ...item, [field]: value };
-      }
-      return item;
-    });
-    setDynamicFormFields(updatedFields);
-  };
 
   // force accept
   const handleForceAcceptModal = (data) => {
@@ -882,7 +858,7 @@ const PupringTable = ({
   };
   const handleForceAccept = () => {
     setLoadingForceAccept(true);
-    API.post(`/admin/force-accept`, {
+    API.post(`/${auth.type}/force-accept`, {
       order_ids: [forceAccept._id],
     })
       .then((response) => {
@@ -902,7 +878,7 @@ const PupringTable = ({
   // Approve
   const handleApproveModal = async (data) => {
     console.log("edit wala ha");
-    await API.post(`/admin/direct-approve`, {
+    await API.post(`/${auth.type}/direct-approve`, {
       id: data._id,
     })
       .then((response) => {
@@ -917,54 +893,6 @@ const PupringTable = ({
 
   // get Skus pair
 
-  const renderDynamicFormFields = () => {
-    return dynamicFormFields.map((field, index) => (
-      // <div key={index}>
-      //   <TextField
-      //     label="Name"
-      //     fullWidth
-      //     variant="outlined"
-      //     value={field.name}
-      //     onChange={(e) => handleFieldChange(index, 'name', e.target.value)}
-      //     style={{ marginBottom: "10px" }}
-      //   />
-      //   <TextField
-      //     label="Value"
-      //     fullWidth
-      //     variant="outlined"
-      //     value={field.value}
-      //     onChange={(e) => handleFieldChange(index, 'value', e.target.value)}
-      //     style={{ marginBottom: "10px" }}
-      //   />
-      // </div>
-      <>hello</>
-    ));
-  };
-
-  const handlePropertyAdd = async (e) => {
-    e.preventDefault();
-
-    // Map dynamicFormFields to the desired format for the API request
-    const propertiesToAdd = dynamicFormFields.map((field) => ({
-      customizedContent: field.name,
-      url: field.value,
-    }));
-
-    try {
-      const response = await API.post("/customer/add-missing-name", {
-        order_id: fields._id,
-        properties: propertiesToAdd,
-      });
-      // Reset states and close the modal after successful addition
-      setPropertyAddModal(false);
-      setDynamicFormFields([]);
-      filterFields(pageInfo, setPaginationModel, boolRef);
-      boolRef.current = !boolRef.current;
-    } catch (error) {
-      // Handle any errors here
-    }
-  };
-
   // Handle selection model change
   const handleSelectionModelChange = (newSelectionModel) => {
     setSelectedRow(newSelectionModel);
@@ -978,111 +906,12 @@ const PupringTable = ({
     }));
   };
 
-  // Handle row click to prevent row selection
   const handleRowClick = (params) => {
     if (params.row) {
       params?.api?.clearSelectedRows();
     }
   };
 
-  // properties modify
-
-  const [propertyFields, setPropertyFields] = useState(null);
-  const handleInputProperties = (e) => {
-    const { name, value } = e?.target;
-    setPropertyFields((p) => ({ ...p, [name]: value }));
-  };
-  const handleSubmitUpdateProperties = async (e) => {
-    e.preventDefault();
-
-    API.post("/customer/add-missing-name", {
-      order_id: fields?._id,
-      properties: [propertyFields],
-    }).then((response) => {
-      setPropertyFields(null);
-      handleEditModal(null);
-      filterFields(pageInfo, setPaginationModel, boolRef);
-      boolRef.current = !boolRef.current;
-    });
-  };
-
-  let propertiesColumns = [];
-  if (
-    fields?.properties &&
-    (fields?.properties[0]?.name || fields?.properties[0]?.value)
-  ) {
-    propertiesColumns = [
-      {
-        field: "name",
-        headerName: "Name",
-        minWidth: 100,
-        flex: 1,
-        renderCell: (params) => {
-          return params.row?.name && <div className="">{params.row?.name}</div>;
-        },
-      },
-      {
-        field: "value",
-        headerName: "Value",
-        flex: 1,
-        minWidth: 200,
-        renderCell: (params) => {
-          return  (
-            params.row?.value
-          );
-        },
-      },
-    ];
-  } 
-else {
-    propertiesColumns = [];
-  }
-
-  // Column definition for the action column in the data grid
-  const propertiesActionColumn = [
-    {
-      field: "action",
-      headerName: "Action",
-      flex: 1,
-      minWidth: 70,
-      renderCell: (params) => {
-        return (
-          <div className="cellAction">
-            <div
-              className="action-icon-btn editBtn"
-              disabled={
-                params.row.name === "" ||
-                params.row.customizedContent === "" ||
-                params.row.value === "" ||
-                params.row.url === ""
-                  ? false
-                  : true
-              }
-            >
-              <Tooltip title="Edit">
-                <IconButton
-                  disabled={
-                    params.row.name === "" ||
-                    params.row.customizedContent === "" ||
-                    params.row.value === "" ||
-                    params.row.url === ""
-                      ? false
-                      : true
-                  }
-                  onClick={() => setPropertyFields(params.row)}
-                  id="edit-field"
-                >
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-            </div>
-          </div>
-        );
-      },
-    },
-  ];
-
-  // Render the data grid component
   return (
     <>
       <div className="datatable">
@@ -1111,7 +940,7 @@ else {
           components={{
             Toolbar,
           }}
-          // headerTooltip: column.headerName
+        // headerTooltip: column.headerName
         />
 
         {/* Modal for editing line orders */}
@@ -1145,16 +974,16 @@ else {
                     </Typography>
                     <Grid container spacing={2}>
                       <Box sx={{
-                        padding:"20px"
+                        padding: "20px"
                       }}>
 
-                     <LineOrderPropertiesComponent
-          isDisabeld={true}
-          fields={fields}
-          setFields={setFields}
-          />
+                        <LineOrderPropertiesComponent
+                          isDisabeld={true}
+                          fields={fields}
+                          setFields={setFields}
+                        />
                       </Box>
-                      <Grid item  xs={12}>
+                      <Grid item xs={12}>
                         <div className="tool-bar">
                           <FormControl>
                             <RadioGroup
@@ -1202,7 +1031,7 @@ else {
                           </FormControl>
 
                           <div style={{ display: "flex", gap: 15 }}>
-                            {auth?.type === "admin" &&
+                            {auth.type === "admin" || auth.type === "suadmin"&&
                               fields.order_status === ORDER_STATUS.HOLD && (
                                 <>
                                   <div
@@ -1233,7 +1062,7 @@ else {
                           </div>
                         </div>
                       </Grid>
-                      {(auth.type === "admin"||auth.type === "suadmin") &&
+                      {(auth.type === "admin" || auth.type === "suadmin") &&
                         fields.order_status === ORDER_STATUS.HOLD &&
                         editFieldConfigs.map(
                           (
@@ -1263,7 +1092,7 @@ else {
                                     {options?.map((name) => {
                                       return (
                                         <MenuItem
-                                        key={name}
+                                          key={name}
                                           value={name}
                                           style={{ padding: "4px" }}
                                         >
@@ -1289,7 +1118,7 @@ else {
                             </Grid>
                           )
                         )}
-                      {(auth.type === "admin"||auth.type === "suadmin") &&
+                      {(auth.type === "admin" || auth.type === "suadmin") &&
                         fields.order_status !== ORDER_STATUS.HOLD &&
                         editNonHoldFieldConfigs.map(
                           (
@@ -1309,7 +1138,7 @@ else {
                                     {label || ""}
                                   </InputLabel>
                                   <Select
-                                  disabled={(auth.type=="admin" && label=="Invoice Status")}
+                                    disabled={(auth.type == "admin" && label == "Invoice Status")}
                                     labelId={valueKey}
                                     name={valueKey}
                                     label={valueKey}
@@ -1375,7 +1204,7 @@ else {
                                     {options?.map((name) => {
                                       return (
                                         <MenuItem
-                                        key={name}
+                                          key={name}
                                           value={name}
                                           style={{ padding: "4px" }}
                                         >
@@ -1413,98 +1242,7 @@ else {
                         Cancel
                       </Button>
                       <Button className="btn btn-primary" type="submit">
-                        {isLineOrderUpdating?"Updating...":"Update"}
-                      </Button>
-                    </Box>
-                  </Box>
-                </form>
-              </Box>
-            </Fade>
-          </Modal>
-        )}
-
-        {propertyFields && (
-          <Modal
-            aria-labelledby="transition-modal-title"
-            aria-describedby="transition-modal-description"
-            open={true}
-            onClose={() => setPropertyFields(null)}
-            closeAfterTransition
-            slots={{ backdrop: Backdrop }}
-            slotProps={{
-              backdrop: {
-                timeout: 500,
-              },
-            }}
-            className="custom-modal"
-          >
-            <Fade in={!!propertyFields}>
-              <Box>
-                <form onSubmit={handleSubmitUpdateProperties}>
-                  <Box className="modal-body">
-                    <a
-                      onClick={() => setPropertyFields(null)}
-                      className="close-btn"
-                    >
-                      <CloseIcon className="icon" />
-                    </a>
-                    <Typography className="main-title" component="h2">
-                      Edit Properties
-                    </Typography>
-                    <TextField
-                      type="text"
-                      label={
-                        propertyFields.name || propertyFields.name === ""
-                          ? "Name"
-                          : "Customized Content"
-                      }
-                      fullWidth
-                      variant="outlined"
-                      style={{ marginBottom: "10px" }}
-                      value={
-                        propertyFields.name || propertyFields.name === ""
-                          ? propertyFields.name
-                          : propertyFields.customizedContent
-                      }
-                      onChange={handleInputProperties}
-                      name={
-                        propertyFields.name || propertyFields.name === ""
-                          ? "name"
-                          : "customizedContent"
-                      }
-                    />
-                    <TextField
-                      type="text"
-                      label={
-                        propertyFields.value || propertyFields.value === ""
-                          ? "Value"
-                          : "URL"
-                      }
-                      fullWidth
-                      variant="outlined"
-                      style={{ marginBottom: "10px" }}
-                      value={
-                        propertyFields.value || propertyFields.value === ""
-                          ? propertyFields.value
-                          : propertyFields.url
-                      }
-                      onChange={handleInputProperties}
-                      name={
-                        propertyFields.value || propertyFields.value === ""
-                          ? "value"
-                          : "url"
-                      }
-                    />
-
-                    <Box className="modal-footer">
-                      <Button
-                        className="btn btn-outline-primary"
-                        onClick={() => setPropertyFields(null)}
-                      >
-                        Cancel
-                      </Button>
-                      <Button className="btn btn-primary" type="submit">
-                        Update
+                        {isLineOrderUpdating ? "Updating..." : "Update"}
                       </Button>
                     </Box>
                   </Box>
@@ -1526,7 +1264,7 @@ else {
           />
         )}
 
-         {/*Remarks Add Note */}
+        {/*Remarks Add Note */}
         {remarksNote && (
           <PupringNote
             submitNote={(e) => handleSubmitremarksNote(e)}
@@ -1551,7 +1289,7 @@ else {
           />
         )}
 
-       
+
 
         {forceAccept && (
           <Modal
@@ -1677,56 +1415,8 @@ else {
             handleErrorModal={() => setApproveOrderError(null)}
           />
         )}
-        {/* add properties */}
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          open={propertyAddModal}
-          onClose={() => setPropertyAddModal((e) => !e)}
-          closeAfterTransition
-          slots={{ backdrop: Backdrop }}
-          slotProps={{
-            backdrop: {
-              timeout: 500,
-            },
-          }}
-          className="custom-modal"
-        >
-          <Fade in={!!propertyAddModal}>
-            <Box>
-              <form onSubmit={handlePropertyAdd}>
-                <Box className="modal-body">
-                  <a
-                    onClick={() => setPropertyAddModal((e) => !e)}
-                    className="close-btn"
-                  >
-                    <CloseIcon className="icon" />
-                  </a>
-                  <Typography className="main-title" component="h2">
-                    Add Properties
-                  </Typography>
-                  {renderDynamicFormFields()}
-
-                  <Box className="modal-footer">
-                    <Button
-                      className="btn btn-outline-primary"
-                      onClick={() => setPropertyAddModal((e) => !e)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button className="btn btn-primary" type="submit">
-                      Add
-                    </Button>
-                  </Box>
-                </Box>
-              </form>
-            </Box>
-          </Fade>
-        </Modal>
-        {/*  */}
-      
       </div>
-      <AutohideSnackbar  open = {snackbar.open} message = {snackbar.message} onClose={()=>setSnackbar({open:false, message:""})}/>
+      <AutohideSnackbar open={snackbar.open} message={snackbar.message} onClose={() => setSnackbar({ open: false, message: "" })} />
     </>
   );
 };

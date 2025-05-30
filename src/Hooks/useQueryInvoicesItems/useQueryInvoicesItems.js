@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../api/api";
-
+import { useSelector } from "react-redux";
+import {INVOICE_STATUS } from "./../../Utils/Utils"
 
 function useQueryInvoicesItems(paginationModel) {
+    const auth  = useSelector(state=>state.user)
+  
     const [isLoading, setIsLoading] = useState(true);
     const [rows, setRows] = useState([]);
     const [pageInfo, setPageInfo] = useState({
@@ -22,10 +25,10 @@ function useQueryInvoicesItems(paginationModel) {
       const controller = new AbortController()
       const fetchData = async () => {
         try {
-          const response = await API.post(`/admin/line-orders`, 
+          const response = await API.post(`/${auth.type}/line-orders`, 
              {
 
-              filter:[{type:"invoice_status" , value:"Invoiced"}]
+              filter:[{type:"invoice_status" , value:INVOICE_STATUS.INVOICED }]
             },
             {
               params: {

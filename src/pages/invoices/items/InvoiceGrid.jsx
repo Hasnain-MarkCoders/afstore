@@ -10,10 +10,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import API from "../../../api/api";
 import "./../style.scss";
 import CustomIcon from "../../../components/CustomIcon/CustomIcon";
+import { useSelector } from "react-redux";
 
 export default function DataGridDemo() {
   const [gridData, setGridData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const auth  = useSelector(state=>state.user)
   useEffect(() => {
     getInvoices().then((data) => {
       const sortedInvoices = data.date.map((date, index) => ({
@@ -29,7 +31,7 @@ export default function DataGridDemo() {
   }, []);
 
   function getInvoices() {
-    return API.get("/admin/invoice/get-invoice")
+    return API.get(`/${auth.type}/invoice/get-invoice`)
       .then((res) => {
         const invoices = res.data.invoices;
         const pagination = res.data.pagination;

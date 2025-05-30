@@ -109,7 +109,7 @@ const navigate = useNavigate()
           style={ {color: "#1fc600"} }
           title={"View"}
           className="action-icon-btn viewBtn"
-          cb={()=>navigate(`/pupring/${params.row._id}`)}
+          cb={()=>navigate(`/afstore/${params.row._id}`)}
           icon={ <RemoveRedEyeIcon />}
          />
             {/* <Tooltip title="View">

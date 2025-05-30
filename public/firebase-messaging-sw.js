@@ -25,10 +25,10 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(notificationTitle, notificationOptions);
 
   self.addEventListener('notificationclick', function(event) {
-    console.log("Notification clicked, opening:", "https://linton-group.netlify.app/download-center");
+    console.log("Notification clicked, opening:", "https://linton-afsaana.netlify.app/download-center");
     event.notification.close();
     event.waitUntil(
-      clients.openWindow("https://linton-group.netlify.app/download-center/")
+      clients.openWindow("https://linton-afsaana.netlify.app/download-center/")
     );
   });
 });

@@ -36,7 +36,9 @@ export default function DataGridDemo({ rows, isLoading, pageInfo, setPaginationM
       minWidth: 100,
       renderCell: (params) => {
         const handleViewInvoice = () => {
-          window.open(params.value, "_blank");
+          console.log(params.value)
+
+          // window.open(params.value, "_blank");
         };
 
         return (
@@ -57,7 +59,8 @@ export default function DataGridDemo({ rows, isLoading, pageInfo, setPaginationM
       minWidth: 100,
       renderCell: (params) => {
         const handleViewItemsSheet = () => {
-          window.open(params.value, "_blank");
+          console.log(params.value)
+          // window.open(params.value, "_blank");
         };
 
         return (

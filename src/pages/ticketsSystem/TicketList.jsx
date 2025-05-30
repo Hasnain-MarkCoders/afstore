@@ -5,7 +5,6 @@ import {
   Modal,
   TextField,
   Typography,
-  TextareaAutosize,
   Backdrop,
   Grid,
   Tooltip,
@@ -20,7 +19,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import * as React from "react";
-import { useEffect } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import API from "../../api/api";
 import CloseIcon from "@mui/icons-material/Close";
@@ -28,13 +26,10 @@ import { useRef } from "react";
 import { useSelector } from "react-redux";
 import AutohideSnackbar from "../../components/snackbar/Snackbar";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import EditIcon from "@mui/icons-material/Edit";
-import { GridCloseIcon } from "@mui/x-data-grid";
-import { DataGridPro } from "@mui/x-data-grid-pro";
+import { useNavigate } from "react-router-dom";
 import AdsClickIcon from "@mui/icons-material/AdsClick";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { TicketListEditFieldConfigs , TicketListEditNonHoldFieldConfigs, TicketListEditCustomerFieldsConfigs, filterFields, getColor, ORDER_STATUS} from "../../Utils/Utils";
+import { TicketListEditFieldConfigs, TicketListEditNonHoldFieldConfigs, TicketListEditCustomerFieldsConfigs, filterFields, getColor, ORDER_STATUS } from "../../Utils/Utils";
 import CustomPagination from "../../components/CustomPagination/CustomPagination";
 import PupringNote from "../../components/Modals/PupringTableModals/PupringNote";
 import LineOrderPropertiesComponent from "../../components/LineOrderPropertiesComponent/LineOrderPropertiesComponent";
@@ -76,7 +71,7 @@ export default function TicketList({
   setPaginationModel,
   isLoading,
   setSelectedTag,
-  isPaginationLoading=false
+  isPaginationLoading = false
 }) {
   const boolRef = useRef(false);
   const auth = useSelector((state) => state.user);
@@ -86,18 +81,15 @@ export default function TicketList({
   const [fields, setFields] = useState(null);
   const [remarksNote, setRemarksNote] = useState("");
   const [remarksNoteField, setRemarksNoteField] = useState("");
-  const [dynamicFormFields, setDynamicFormFields] = useState([]);
-  const [propertyAddModal, setPropertyAddModal] = useState(false);
   const [forceAcceptSuccess, setForceAcceptSuccess] = useState(null);
   const [loadingForceAccept, setLoadingForceAccept] = useState(false);
   const [approveOrderError, setApproveOrderError] = useState(null);
   const [forceAcceptError, setForceAcceptError] = useState(null);
   const [forceAccept, setForceAccept] = useState(null);
-  const [pair, setPair] = useState(null);
   const [factoryNote, setFactoryNote] = useState(null);
   const [factoryNoteField, setFactoryNoteField] = useState("");
-  const [isLineOrderUpdating, setIsLineOrderUpdating]= useState(false)
-  
+  const [isLineOrderUpdating, setIsLineOrderUpdating] = useState(false)
+
   const [limit, setLimit] = useState(10);
   const handleSelect = React.useCallback(
     (value) => {
@@ -111,18 +103,18 @@ export default function TicketList({
     [pupringId, setData, setPupringId]
   );
 
-  const handleLimitChange = (limit)=>{
+  const handleLimitChange = (limit) => {
     setPaginationModel(prev => {
       return {
         ...prev, // Spread the previous state
-        ...{ 
-          page:0,// Update the page property with the new page value
+        ...{
+          page: 0,// Update the page property with the new page value
           pageSize: limit // Update the pageSize property with the new limit value
         }
       };
     });
   }
-  const handleNextPage = (limit)=>{
+  const handleNextPage = (limit) => {
     setPaginationModel(prev => {
       return {
         ...prev, // Spread the previous state
@@ -134,7 +126,7 @@ export default function TicketList({
     });
   }
 
-  const handleBackpage = (limit)=>{
+  const handleBackpage = (limit) => {
     setPaginationModel(prev => {
       return {
         ...prev, // Spread the previous state
@@ -149,7 +141,7 @@ export default function TicketList({
   const handleApiResponse = (message) => {
     setSnackbarMessage(message);
     setSnackbarOpen(true);
-     filterFields(pageInfo, setPaginationModel, boolRef);
+    filterFields(pageInfo, setPaginationModel, boolRef);
     boolRef.current = !boolRef.current;
   };
 
@@ -164,7 +156,7 @@ export default function TicketList({
     return () => clearTimeout(timeout);
   }, [rows, pupringId, handleSelect]);
 
-  
+
 
   const getWaybill = (id) => {
     API.post(`/factory/place-order-to-yun-express`, {
@@ -173,10 +165,10 @@ export default function TicketList({
       .then((response) => {
         handleApiResponse("Waybill generated successfully!");
       })
-    .catch(error=>{
-        alert(error?.response?.data?.message??error.message??"Error Generating Waybill!")
+      .catch(error => {
+        alert(error?.response?.data?.message ?? error.message ?? "Error Generating Waybill!")
 
-    })
+      })
   };
   const generateLabel = (po_number) => {
     const po = [po_number];
@@ -184,10 +176,10 @@ export default function TicketList({
       .then((response) => {
         handleApiResponse("Label generated successfully!");
       })
-      .catch(error=>{
-        alert(error?.response?.data?.message??error.message??"Error Generating Label!")
+      .catch(error => {
+        alert(error?.response?.data?.message ?? error.message ?? "Error Generating Label!")
 
-    })
+      })
   };
   const handleCancelOrder = (id) => {
     const orderId = [id];
@@ -195,8 +187,8 @@ export default function TicketList({
       (response) => {
         handleApiResponse("Order cancelled successfully!");
       }
-    ).catch(error=>{
-        alert(error?.response?.data?.message??error.message??"Error Cancelling the Order!")
+    ).catch(error => {
+      alert(error?.response?.data?.message ?? error.message ?? "Error Cancelling the Order!")
 
     });
   };
@@ -208,10 +200,10 @@ export default function TicketList({
       .then((response) => {
         handleApiResponse("Order placed on hold!");
       })
-      .catch(error=>{
-        alert(error?.response?.data?.message??error.message??"Error Placing Order ON Hold!")
+      .catch(error => {
+        alert(error?.response?.data?.message ?? error.message ?? "Error Placing Order ON Hold!")
 
-    })
+      })
   };
 
   const handlePlaceOrder = (id) => {
@@ -223,7 +215,7 @@ export default function TicketList({
       })
       .catch((error) => {
         handleApiResponse("Error placing order!");
-        alert(error?.response?.data?.message??error.message??"Error Placing Order!")
+        alert(error?.response?.data?.message ?? error.message ?? "Error Placing Order!")
       });
   };
 
@@ -232,14 +224,15 @@ export default function TicketList({
       order_id: id,
     }).then((response) => {
       handleApiResponse("Ticket closed successfully!");
-    }).catch(error=>{
-        alert(error?.response?.data?.message??error.message??"Error Closing Ticket!")
+    }).catch(error => {
+      alert(error?.response?.data?.message ?? error.message ?? "Error Closing Ticket!")
 
     })
   };
   const handleSubmitUpdateLineOrder = async (e) => {
     e.preventDefault();
-    API.post(`/${auth?.type}/edit-line-order`, {
+    setIsLineOrderUpdating(true)
+    return API.post(`/${auth?.type}/edit-line-order`, {
       id: fields._id,
       shipping_address: fields.shipping_address,
       name: fields.name,
@@ -269,11 +262,13 @@ export default function TicketList({
       color: fields.color,
     }).then((response) => {
       handleEditModal(null);
-       filterFields(pageInfo, setPaginationModel, boolRef);
+      filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
-    }).catch(error=>{
-        alert(error?.response?.data?.message??error.message??"Error Editing Order!")
+    }).catch(error => {
+      alert(error?.response?.data?.message ?? error.message ?? "Error Editing Order!")
 
+    }).finally(() => {
+      setIsLineOrderUpdating(false)
     })
   };
 
@@ -290,7 +285,7 @@ export default function TicketList({
       note: remarksNoteField,
     }).then((response) => {
       handleRemarksNoteModal(null);
-       filterFields(pageInfo, setPaginationModel, boolRef);
+      filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
     });
   };
@@ -304,10 +299,10 @@ export default function TicketList({
       note: factoryNoteField,
     }).then((response) => {
       handleFactoryNoteModal(null);
-       filterFields(pageInfo, setPaginationModel, boolRef);
+      filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
-    }).catch(error=>{
-        alert(error?.response?.data?.message??error.message??"Error Adding Note!")
+    }).catch(error => {
+      alert(error?.response?.data?.message ?? error.message ?? "Error Adding Note!")
 
     })
   };
@@ -320,15 +315,14 @@ export default function TicketList({
   // Handle edit modal for line orders
   const handleEditModal = async (data) => {
     try {
-    setFields(data);
+      setFields(data);
       const response = await API.get(`${auth.type}/sku/get`, {
         params: {
           name: [data?.name],
         },
       });
-      setPair(response?.data?.skus?.[0]?.properties?.pair);
     } catch (error) {
-        alert(error?.response?.data?.message??error.message??"Error Editing SKU!")
+      alert(error?.response?.data?.message ?? error.message ?? "Error Editing SKU!")
 
       if (error?.response?.status === 480) {
         navigate("/login");
@@ -342,42 +336,26 @@ export default function TicketList({
     setFields((p) => ({ ...p, [name]: value }));
   };
 
-  useEffect(() => {
-    setDynamicFormFields(
-      Array.from({ length: pair }, () => ({ name: "", value: "" }))
-    );
-  }, [pair]);
-
-  const handleFieldChange = (index, field, value) => {
-    const updatedFields = dynamicFormFields.map((item, i) => {
-      if (i === index) {
-        return { ...item, [field]: value };
-      }
-      return item;
-    });
-    setDynamicFormFields(updatedFields);
-  };
-
   // force accept
   const handleForceAcceptModal = (data) => {
     setForceAccept(data);
   };
   const handleForceAccept = () => {
     setLoadingForceAccept(true);
-    API.post(`/admin/force-accept`, {
+    API.post(`/${auth.type}/force-accept`, {
       order_ids: [forceAccept._id],
     })
       .then((response) => {
         setForceAcceptSuccess(response?.data?.message);
         handleForceAcceptModal(null);
-         filterFields(pageInfo, setPaginationModel, boolRef);
+        filterFields(pageInfo, setPaginationModel, boolRef);
         boolRef.current = !boolRef.current;
       })
       .catch((error) => {
         setForceAcceptError(error?.response?.data?.message);
-       alert(error?.response?.data?.message??error.message??"Error Force Accepting Order!")
+        alert(error?.response?.data?.message ?? error.message ?? "Error Force Accepting Order!")
       })
-      
+
       .finally(() => {
         setLoadingForceAccept(false);
       });
@@ -386,299 +364,134 @@ export default function TicketList({
   // Approve
   const handleApproveModal = async (data) => {
     console.log("edit btn from ticketlist")
-    await API.post(`/admin/direct-approve`, {
+    await API.post(`/${auth.type}/direct-approve`, {
       id: data._id,
     })
       .then((response) => {
         setForceAcceptSuccess(response?.data?.message);
-         filterFields(pageInfo, setPaginationModel, boolRef);
+        filterFields(pageInfo, setPaginationModel, boolRef);
         boolRef.current = !boolRef.current;
       })
       .catch((error) => {
         setApproveOrderError(error?.response?.data?.message);
-       alert(error?.response?.data?.message??error.message??"Error Direct Approving the Order!")
+        alert(error?.response?.data?.message ?? error.message ?? "Error Direct Approving the Order!")
 
       });
   };
 
-  // get Skus pair
 
-  const renderDynamicFormFields = () => {
-    return dynamicFormFields.map((field, index) => (
-      <div key={index}>
-        <TextField
-          label="Name"
-          fullWidth
-          variant="outlined"
-          value={field.name}
-          onChange={(e) => handleFieldChange(index, "name", e.target.value)}
-          style={{ marginBottom: "10px" }}
-        />
-        <TextField
-          label="Value"
-          fullWidth
-          variant="outlined"
-          value={field.value}
-          onChange={(e) => handleFieldChange(index, "value", e.target.value)}
-          style={{ marginBottom: "10px" }}
-        />
-      </div>
-    ));
-  };
-
-  const handlePropertyAdd = async (e) => {
-    e.preventDefault();
-
-    // Map dynamicFormFields to the desired format for the API request
-    const propertiesToAdd = dynamicFormFields.map((field) => ({
-      customizedContent: field.name,
-      url: field.value,
-    }));
-
-    try {
-      const response = await API.post("/customer/add-missing-name", {
-        order_id: fields._id,
-        properties: propertiesToAdd,
-      });
-      // Reset states and close the modal after successful addition
-      setPropertyAddModal(false);
-      setDynamicFormFields([]);
-       filterFields(pageInfo, setPaginationModel, boolRef);
-      boolRef.current = !boolRef.current;
-    } catch (error) {
-    }
-  };
-
-
-
-  const [propertyFields, setPropertyFields] = useState(null);
-  const handleInputProperties = (e) => {
-    const { name, value } = e?.target;
-    setPropertyFields((p) => ({ ...p, [name]: value }));
-  };
-  const handleSubmitUpdateProperties = async (e) => {
-    setIsLineOrderUpdating(true)
-    e.preventDefault();
-
-    API.post("/customer/add-missing-name", {
-      order_id: fields?._id,
-      properties: [propertyFields],
-    }).then((response) => {
-    setIsLineOrderUpdating(false)
-      setPropertyFields(null);
-      handleEditModal(null);
-       filterFields(pageInfo, setPaginationModel, boolRef);
-      boolRef.current = !boolRef.current;
-    }).catch(error=>{
-    setIsLineOrderUpdating(false)
-        alert(error?.response?.data?.message??error.message??"Error Editing Line Order!")
-
-    })
-  };
-
-  let propertiesColumns = [];
-  if (
-    fields?.properties &&
-    (fields?.properties[0]?.name || fields?.properties[0]?.value)
-  ) {
-    propertiesColumns = [
-      {
-        field: "name",
-        headerName: "Name",
-        minWidth: 100,
-        flex: 1,
-        renderCell: (params) => {
-          return params.row?.name && <div className="">{params.row?.name}</div>;
-        },
-      },
-      {
-        field: "value",
-        headerName: "Value",
-        flex: 1,
-        minWidth: 200,
-        renderCell: (params) => {
-
-          return (
-            params.row?.value
-          );
-        },
-      },
-    ];
-  } else {
-    propertiesColumns = [];
-  }
-
-  // Column definition for the action column in the data grid
-  const propertiesActionColumn = [
-    {
-      field: "action",
-      headerName: "Action",
-      flex: 1,
-      minWidth: 70,
-      renderCell: (params) => {
-        return (
-          <div className="cellAction">
-            <div
-              className="action-icon-btn editBtn"
-              disabled={
-                params.row.name === "" ||
-                params.row.customizedContent === "" ||
-                params.row.value === "" ||
-                params.row.url === ""
-                  ? false
-                  : true
-              }
-            >
-              <Tooltip title="Edit">
-                <IconButton
-                  disabled={
-                    params.row.name === "" ||
-                    params.row.customizedContent === "" ||
-                    params.row.value === "" ||
-                    params.row.url === ""
-                      ? false
-                      : true
-                  }
-                  onClick={() => setPropertyFields(params.row)}
-                  id="edit-field"
-                >
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-            </div>
-          </div>
-        );
-      },
-    },
-  ];
 
   return (
     <>{
-        isPaginationLoading?<Box sx={{width:"100%", height:"100%", display:"grid", placeContent:"center"}}><CircularProgress/></Box>:
+      isPaginationLoading ? <Box sx={{ width: "100%", height: "100%", display: "grid", placeContent: "center" }}><CircularProgress /></Box> :
         <>
-      {rows.map((value, index) => (
-        <div
-          className={`ticket-list-item ${
-            value._id === pupringId ? "active" : ""
-          }`}
-          key={index}
-          onClick={() => {
-            handleSelect(value);
-            setSelectedTag(null);
-          }}
-          style={{ background: getColor(value.tag_red, value.tag_blue) }}
-        >
-          <div>
-            <span title={value.po} className="name">
-              {customSubstring(value.po, 0, 15)}
-            </span>
-            <span
-              className={`selected-color ${value?.color}`}
-              //  style={{background: value?.color}}
-            ></span>
-          </div>
-          <div>
-            <span className="last-msg" title={value.name}>
-              {customSubstring(value.name, 0, 30)}
-            </span>
-          </div>
-          <div>
-            {/* <span className="">
-              {customSubstring(value?.customer_note[0]?.message, 0, 20)}
-            </span> */}
-            <span className="sub-values">
-              {customSubstring(value?.customer_note[0]?.message, 0, 20)}
-            </span>
-
-            {/* <span className="">{customSubstring(value?.customer_note[0]?.tag, 0, 20)}</span> */}
-            {/* <span>{formattedDateTime(value?.date)}</span>
-             */}
-            <span className="sub-values">{formattedDateTime(value?.date)}</span>
-          </div>
-          <div></div>
-          <div>
-            {/* <span
-              className={
-                value?.customer_note?.tag === "blue"
-                  ? "note-type-blue" : value?.customer_note?.tag === "red"
-                  ? "note-type-red" : "note-type-white"
-              }
+          {rows.map((value, index) => (
+            <div
+              className={`ticket-list-item ${value._id === pupringId ? "active" : ""
+                }`}
+              key={index}
+              onClick={() => {
+                handleSelect(value);
+                setSelectedTag(null);
+              }}
+              style={{ background: getColor(value.tag_red, value.tag_blue) }}
             >
-              {customSubstring(value?.customer_note[0]?.tag, 0, 20)}
-            </span> */}
-            <span className="sub-values">
-              {customSubstring(value?.customer_note[0]?.tag, 0, 20)}
-            </span>
-
-            <span>
-              <div className="cellAction">
-                <div className="ticket-dropdown">
-                  <div className="dropbtn">
-                    <MoreVertIcon />
-                  </div>
-                  <ul className="dropdown-contents">
-                    {(auth.type === "admin"||auth.type === "suadmin" || auth.type === "customer") && (
-                      <>
-                        <li>
-                          <Button onClick={() => handleEditModal(value)}>
-                            Edit Order 
-                          </Button>
-                        </li>
-                        <li>
-                          <Button onClick={() => handleCloseTicket(value?._id)}>
-                            Close Ticket
-                          </Button>
-                        </li>
-                        </>
-                        )}
-                        {(auth.type == "admin" ||auth.type == "suadmin")&& (
-                          <>
-                        <li>
-                          <Button onClick={() => handleRemarksNoteModal(value)}>
-                            Add Remarks
-                          </Button>
-                        </li>
-                        <li>
-                          <Button onClick={() => handleFactoryNoteModal(value)}>
-                            Add Factory Note
-                          </Button>
-                        </li>
-                        <li>
-                          <Button onClick={() => placeOrderOnHold(value?._id)}>
-                            Put On Hold
-                          </Button>
-                        </li>
-                        <li>
-                          <Button onClick={() => handleCancelOrder(value?._id)}>
-                            Cancel Order
-                          </Button>
-                        </li>
-                        <li>
-                          <Button onClick={() => getWaybill(value?._id)}>
-                            Get Waybill
-                          </Button>
-                        </li>
-                        <li>
-                          <Button onClick={() => generateLabel(value?.po)}>
-                            Get Label
-                          </Button>
-                        </li>
-                        <li>
-                          <Button onClick={() => handlePlaceOrder(value?._id)}>
-                            Place Order
-                          </Button>
-                        </li>
-                        
-                      </>
-                    )}
-                  </ul>
-            
-                </div>
+              <div>
+                <span title={value.po} className="name">
+                  {customSubstring(value.po, 0, 15)}
+                </span>
+                <span
+                  className={`selected-color ${value?.color}`}
+                ></span>
               </div>
-            </span>
-          </div>
-        </div>
-      ))}</>
+              <div>
+                <span className="last-msg" title={value.name}>
+                  {customSubstring(value.name, 0, 30)}
+                </span>
+              </div>
+              <div>
+
+                <span className="sub-values">
+                  {customSubstring(value?.customer_note[0]?.message, 0, 20)}
+                </span>
+                <span className="sub-values">{formattedDateTime(value?.date)}</span>
+              </div>
+              <div></div>
+              <div>
+
+                <span className="sub-values">
+                  {customSubstring(value?.customer_note[0]?.tag, 0, 20)}
+                </span>
+
+                <span>
+                  <div className="cellAction">
+                    <div className="ticket-dropdown">
+                      <div className="dropbtn">
+                        <MoreVertIcon />
+                      </div>
+                      <ul className="dropdown-contents">
+                        {(auth.type === "admin" || auth.type === "suadmin" || auth.type === "customer") && (
+                          <>
+                            <li>
+                              <Button onClick={() => handleEditModal(value)}>
+                                Edit Order
+                              </Button>
+                            </li>
+                            <li>
+                              <Button onClick={() => handleCloseTicket(value?._id)}>
+                                Close Ticket
+                              </Button>
+                            </li>
+                          </>
+                        )}
+                        {(auth.type == "admin" || auth.type == "suadmin") && (
+                          <>
+                            <li>
+                              <Button onClick={() => handleRemarksNoteModal(value)}>
+                                Add Remarks
+                              </Button>
+                            </li>
+                            <li>
+                              <Button onClick={() => handleFactoryNoteModal(value)}>
+                                Add Factory Note
+                              </Button>
+                            </li>
+                            <li>
+                              <Button onClick={() => placeOrderOnHold(value?._id)}>
+                                Put On Hold
+                              </Button>
+                            </li>
+                            <li>
+                              <Button onClick={() => handleCancelOrder(value?._id)}>
+                                Cancel Order
+                              </Button>
+                            </li>
+                            <li>
+                              <Button onClick={() => getWaybill(value?._id)}>
+                                Get Waybill
+                              </Button>
+                            </li>
+                            <li>
+                              <Button onClick={() => generateLabel(value?.po)}>
+                                Get Label
+                              </Button>
+                            </li>
+                            <li>
+                              <Button onClick={() => handlePlaceOrder(value?._id)}>
+                                Place Order
+                              </Button>
+                            </li>
+
+                          </>
+                        )}
+                      </ul>
+
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          ))}</>
     }
       {fields && (
         <Modal
@@ -709,56 +522,56 @@ export default function TicketList({
                     Update Line Order
                   </Typography>
                   <Grid container spacing={2}>
-                  <Box sx={{
-                        padding:"20px"
-                      }}>
+                    <Box sx={{
+                      padding: "20px"
+                    }}>
 
-                     <LineOrderPropertiesComponent
-          isDisabeld={true}
-          fields={fields}
-          setFields={setFields}
-          />
-                      </Box>
+                      <LineOrderPropertiesComponent
+                        isDisabeld={true}
+                        fields={fields}
+                        setFields={setFields}
+                      />
+                    </Box>
                     <Grid xs={12}>
                       <div className="tool-bar">
-                      <FormControl>
-                        <RadioGroup
-                          aria-labelledby="demo-radio-buttons-group-label"
-                          defaultValue={fields.color}
-                          className="colorPlate"
-                          style={{ display: 'flex', flexDirection: 'row' }}
-                          value={fields.color}
-                          onChange={handleInput}
-                          name="color"
-                        >
-                          {[
-                            { color: 'red', number: '1' },
-                            { color: 'yellow', number: '2' },
-                            { color: 'purple', number: '3' },
-                            { color: 'green', number: '4' },
-                            { color: 'black', number: '5' },
-                            { color: 'skyblue', number: '6' },
-                            { color: 'sceen', number: '7' },
-                            { color: 'darkpurple', number: '8' },
-                            { color: 'pink', number: '9' },
-                          ].map(({ color, number }) => {
-                            const isSelected = fields.color === color;
-                            return <FormControlLabel
-                              key={color}
-                              value={color}
-                              // control={<Radio />}
-                              label={number}
-                              className={`colorOption ${color}`}
-                              style={{ margin: 0, border: isSelected ? '2px solid black' : '2px solid transparent' }} // Override default margin
-                              labelPlacement="bottom"
-                              control={<Radio style={{ display: 'none' }} />} // Hide the actual radio button
-                            />
-                          })}
-                        </RadioGroup>
-                      </FormControl>
+                        <FormControl>
+                          <RadioGroup
+                            aria-labelledby="demo-radio-buttons-group-label"
+                            defaultValue={fields.color}
+                            className="colorPlate"
+                            style={{ display: 'flex', flexDirection: 'row' }}
+                            value={fields.color}
+                            onChange={handleInput}
+                            name="color"
+                          >
+                            {[
+                              { color: 'red', number: '1' },
+                              { color: 'yellow', number: '2' },
+                              { color: 'purple', number: '3' },
+                              { color: 'green', number: '4' },
+                              { color: 'black', number: '5' },
+                              { color: 'skyblue', number: '6' },
+                              { color: 'sceen', number: '7' },
+                              { color: 'darkpurple', number: '8' },
+                              { color: 'pink', number: '9' },
+                            ].map(({ color, number }) => {
+                              const isSelected = fields.color === color;
+                              return <FormControlLabel
+                                key={color}
+                                value={color}
+                                // control={<Radio />}
+                                label={number}
+                                className={`colorOption ${color}`}
+                                style={{ margin: 0, border: isSelected ? '2px solid black' : '2px solid transparent' }} // Override default margin
+                                labelPlacement="bottom"
+                                control={<Radio style={{ display: 'none' }} />} // Hide the actual radio button
+                              />
+                            })}
+                          </RadioGroup>
+                        </FormControl>
 
                         <div style={{ display: "flex", gap: 15 }}>
-                          {auth?.type === "admin" &&
+                          {auth.type === "admin" || auth.type === "suadmin"&&
                             fields.order_status === ORDER_STATUS.HOLD && (
                               <>
                                 <div
@@ -787,7 +600,7 @@ export default function TicketList({
                         </div>
                       </div>
                     </Grid>
-                    {(auth.type === "admin"||auth.type === "suadmin") &&
+                    {(auth.type === "admin" || auth.type === "suadmin") &&
                       fields.order_status === ORDER_STATUS.HOLD &&
                       TicketListEditFieldConfigs.map(
                         (
@@ -836,7 +649,7 @@ export default function TicketList({
                           </Grid>
                         )
                       )}
-                    {(auth.type === "admin"||auth.type === "suadmin") &&
+                    {(auth.type === "admin" || auth.type === "suadmin") &&
                       fields.order_status !== ORDER_STATUS.HOLD &&
                       TicketListEditNonHoldFieldConfigs.map(
                         (
@@ -850,7 +663,7 @@ export default function TicketList({
                                   {label || ""}
                                 </InputLabel>
                                 <Select
-                                  disabled={(auth.type=="admin" && label=="Invoice Status")}
+                                  disabled={(auth.type == "admin" && label == "Invoice Status")}
                                   labelId={valueKey}
                                   name={valueKey}
                                   label={valueKey}
@@ -947,98 +760,8 @@ export default function TicketList({
                       Cancel
                     </Button>
                     <Button className="btn btn-primary" type="submit">
-                      {isLineOrderUpdating?"Updating...":"Update"}
+                      {isLineOrderUpdating ? "Updating..." : "Update"}
 
-                    </Button>
-                  </Box>
-                </Box>
-              </form>
-            </Box>
-          </Fade>
-        </Modal>
-      )}
-      {propertyFields && (
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          open={true}
-          onClose={() => setPropertyFields(null)}
-          closeAfterTransition
-          slots={{ backdrop: Backdrop }}
-          slotProps={{
-            backdrop: {
-              timeout: 500,
-            },
-          }}
-          className="custom-modal"
-        >
-          <Fade in={!!propertyFields}>
-            <Box>
-              <form onSubmit={handleSubmitUpdateProperties}>
-                <Box className="modal-body">
-                  <a
-                    onClick={() => setPropertyFields(null)}
-                    className="close-btn"
-                  >
-                    <CloseIcon className="icon" />
-                  </a>
-                  <Typography className="main-title" component="h2">
-                    Edit Properties
-                  </Typography>
-                  <TextField
-                    type="text"
-                    label={
-                      propertyFields.name || propertyFields.name === ""
-                        ? "Name"
-                        : "Customized Content"
-                    }
-                    fullWidth
-                    variant="outlined"
-                    style={{ marginBottom: "10px" }}
-                    value={
-                      propertyFields.name || propertyFields.name === ""
-                        ? propertyFields.name
-                        : propertyFields.customizedContent
-                    }
-                    onChange={handleInputProperties}
-                    name={
-                      propertyFields.name || propertyFields.name === ""
-                        ? "name"
-                        : "customizedContent"
-                    }
-                  />
-                  <TextField
-                    type="text"
-                    label={
-                      propertyFields.value || propertyFields.value === ""
-                        ? "Value"
-                        : "URL"
-                    }
-                    fullWidth
-                    variant="outlined"
-                    style={{ marginBottom: "10px" }}
-                    value={
-                      propertyFields.value || propertyFields.value === ""
-                        ? propertyFields.value
-                        : propertyFields.url
-                    }
-                    onChange={handleInputProperties}
-                    name={
-                      propertyFields.value || propertyFields.value === ""
-                        ? "value"
-                        : "url"
-                    }
-                  />
-
-                  <Box className="modal-footer">
-                    <Button
-                      className="btn btn-outline-primary"
-                      onClick={() => setPropertyFields(null)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button className="btn btn-primary" type="submit">
-                      Update
                     </Button>
                   </Box>
                 </Box>
@@ -1049,28 +772,28 @@ export default function TicketList({
       )}
 
       {/*Factory Add Note */}
-              {factoryNote && (
-                <PupringNote
-                  submitNote={(e) => handleSubmitfactoryNote(e)}
-                  title={"Add Factory Note"}
-                  handleModal={() => handleFactoryNoteModal(null)}
-                  handleField={(e) => setFactoryNoteField(e.target.value)}
-                  field={factoryNoteField}
-                  isFade={factoryNote}
-                />
-              )}
-      
-               {/*Remarks Add Note */}
-              {remarksNote && (
-                <PupringNote
-                  submitNote={(e) => handleSubmitremarksNote(e)}
-                  title={"Add Remark Note"}
-                  handleModal={() => handleRemarksNoteModal(null)}
-                  handleField={(e) => setRemarksNoteField(e.target.value)}
-                  field={remarksNoteField}
-                  isFade={remarksNote}
-                />
-              )}
+      {factoryNote && (
+        <PupringNote
+          submitNote={(e) => handleSubmitfactoryNote(e)}
+          title={"Add Factory Note"}
+          handleModal={() => handleFactoryNoteModal(null)}
+          handleField={(e) => setFactoryNoteField(e.target.value)}
+          field={factoryNoteField}
+          isFade={factoryNote}
+        />
+      )}
+
+      {/*Remarks Add Note */}
+      {remarksNote && (
+        <PupringNote
+          submitNote={(e) => handleSubmitremarksNote(e)}
+          title={"Add Remark Note"}
+          handleModal={() => handleRemarksNoteModal(null)}
+          handleField={(e) => setRemarksNoteField(e.target.value)}
+          field={remarksNoteField}
+          isFade={remarksNote}
+        />
+      )}
       {forceAccept && (
         <Modal
           aria-labelledby="transition-modal-title"
@@ -1230,81 +953,37 @@ export default function TicketList({
           </Fade>
         </Modal>
       )}
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={propertyAddModal}
-        onClose={() => setPropertyAddModal((e) => !e)}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-        className="custom-modal"
-      >
-        <Fade in={!!propertyAddModal}>
-          <Box>
-            <form onSubmit={handlePropertyAdd}>
-              <Box className="modal-body">
-                <a
-                  onClick={() => setPropertyAddModal((e) => !e)}
-                  className="close-btn"
-                >
-                  <CloseIcon className="icon" />
-                </a>
-                <Typography className="main-title" component="h2">
-                  Add Properties
-                </Typography>
-                {renderDynamicFormFields()}
 
-                <Box className="modal-footer">
-                  <Button
-                    className="btn btn-outline-primary"
-                    onClick={() => setPropertyAddModal((e) => !e)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button className="btn btn-primary" type="submit">
-                    Add
-                  </Button>
-                </Box>
-              </Box>
-            </form>
-          </Box>
-        </Fade>
-      </Modal>
       <AutohideSnackbar
         open={snackbarOpen}
         message={snackbarMessage}
         onClose={() => setSnackbarOpen(false)}
       />
       {/* {rows && pageInfo?.totalRowCount > pageInfo?.pageSize && ( */}
-        <div className="data-load">
-          {/* <Button
+      <div className="data-load">
+        {/* <Button
             className="btn btn-primary"
             disabled={isLoading}
             onClick={() =>filterFields(pageInfo, setPaginationModel, boolRef, 10)}
           >
             See More{isLoading && "..."}
           </Button> */}
-          <Box sx={{position:"sticky", bottom:"0px"}}>
-          <CustomPagination 
-          isLoading={isPaginationLoading}
-          handleLimitChange={handleLimitChange}
-          setLimit={setLimit}
-          limit={limit}
-          total={pageInfo?.totalRowCount}
-          page={pageInfo.page+1}
-          pageSize={pageInfo?.pageSize}
-          isNext={rows && pageInfo?.totalRowCount > pageInfo?.pageSize ? false : true}
-          isBack={ pageInfo?.page<1}
-          handleNextPage={handleNextPage} 
-          handleBackpage={handleBackpage}
-           />
-          </Box>
-        </div>
+        <Box sx={{ position: "sticky", bottom: "0px" }}>
+          <CustomPagination
+            isLoading={isPaginationLoading}
+            handleLimitChange={handleLimitChange}
+            setLimit={setLimit}
+            limit={limit}
+            total={pageInfo?.totalRowCount}
+            page={pageInfo.page + 1}
+            pageSize={pageInfo?.pageSize}
+            isNext={rows && pageInfo?.totalRowCount > pageInfo?.pageSize ? false : true}
+            isBack={pageInfo?.page < 1}
+            handleNextPage={handleNextPage}
+            handleBackpage={handleBackpage}
+          />
+        </Box>
+      </div>
       {/* )} */}
     </>
   );
