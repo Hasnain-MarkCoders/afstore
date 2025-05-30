@@ -206,7 +206,6 @@ const Datatable = ({ data  ,isLoading , setPaginationModel }) => {
   </Alert>
 </Snackbar>
 
-      {data?.users &&
         <DataGridPro
           className="datagrid"
           getRowId={(rows) => rows?._id}
@@ -216,7 +215,6 @@ const Datatable = ({ data  ,isLoading , setPaginationModel }) => {
           pageSize={9}
           rowsPerPageOptions={[9]}
         />
-      }
     </div>
   );
 };

@@ -21,6 +21,7 @@ endpoint="",
           setIsLoading(false);
           setRows(response.data || []); 
         } catch (error) {
+          if (error.code === 'ERR_CANCELED') return
           if (error?.response?.status === 480) {
             navigate(redirect);
           }

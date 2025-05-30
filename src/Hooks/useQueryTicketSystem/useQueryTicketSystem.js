@@ -292,7 +292,7 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
             hasNextPage: pagination.hasNextPage,
           });
         } catch (error) {
-          console.log(error);
+                    if (error.code === 'ERR_CANCELED') return
           if (error?.response?.status === 480) {
             navigate("/login");
           }

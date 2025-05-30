@@ -144,7 +144,7 @@ export default function ExchangeRateGrid() {
   ];
 
   return (
-    <Box className="dataGrid" sx={{ height: 160.5, width: "100%" }}>
+    <Box className="dataGrid" sx={{ height: "calc(100vh - 180px)", width: "100%" }}>
       {fields && <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

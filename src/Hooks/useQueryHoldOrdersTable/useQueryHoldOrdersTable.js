@@ -48,6 +48,7 @@ function useQueryHoldOrdersTable(paginationModel) {
             hasNextPage: pagination.hasNextPage,
           });
         } catch (error) {
+          if (error.code === 'ERR_CANCELED') return
           if (error?.response?.status === 480) {
             navigate("/login");
           }

@@ -181,14 +181,9 @@ const Exports = ({ setShowSideBar }) => {
             onClick={fetchExports}
             variant="contained">Try Again</Button>
             </Box>
-          )  :(loading && data.length === 0) ? (
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="600px">
-            <CircularProgress />
-          </Box>
-          ) 
-          :(data.length === 0) ? (
-            <Typography variant="body1">No Exports Available</Typography>
-          ) : (
+          )  
+          
+          :(
             <Box sx={{  width: "100%", overflowX: "auto"  }}>
               {/* Set a minWidth to force the grid to be wider than its container */}
             <Box sx={{ minWidth: "1200px"}} className="datatable">

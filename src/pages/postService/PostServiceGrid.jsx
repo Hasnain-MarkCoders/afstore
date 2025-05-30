@@ -301,7 +301,7 @@ const columns = [
         rowsPerPageOptions={[12, 20, 30, 40, 50]}
 
         loading={isLoading}
-        autoHeight
+
         disableRowSelectionOnClick
         initialState={{
           pagination: {

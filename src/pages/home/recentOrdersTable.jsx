@@ -61,34 +61,42 @@ const userColumns = [
 const RecentOrdersTable = () => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false)
   const auth = useSelector(
     state => state.user
   )
 
   useEffect(() => {
-    API.post(`/${auth?.type}/line-orders`, {
-      filter: []
-    }).then((response) => {
-      setData(response?.data)
-    })
-      .catch((error) => {
-        if (error?.response?.status === 480) {
-          navigate("/login");
-        }
+    const fetchData =async ()=>{
+      return API.post(`/${auth?.type}/line-orders`, {
+        filter: []
+      }).then((response) => {
+        setData(response?.data)
       })
+        .catch((error) => {
+          if (error?.response?.status === 480) {
+            navigate("/login");
+          }
+        }).finally(()=>{
+          setIsLoading(false)
+        })
+
+    }
+    setIsLoading(true)
+    fetchData()
   }, [])
 
   return (
     <div className="datatable">
-      {data?.lineOrders &&
         <DataGridPro
           className="datagrid"
           getRowId={(rows) => rows?._id}
-          rows={data?.lineOrders}
+          rows={data?.lineOrders||[]}
+          loading={isLoading}
           columns={userColumns}
           pageSize={10}
           rowsPerPageOptions={[10]}
-        />}
+        />
     </div>
   );
 };

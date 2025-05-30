@@ -73,21 +73,29 @@ export default function   TicketUserInfo({ data }) {
     })
   }
   return (
-    <div className="user-details">
+    <div style={{
+      display:"flex",
+      flexDirection:"column",
+      gap:"20px",
+      padding:"20px"
+    }}>
       {data ? Object.entries(data)?.map(([key, value], index) => {
         if (shouldDisplayKey(key)) {
           return (
-            <div key={index}>
+            <div  key={index}>
             {key === "factory_color" && auth.type !== "admin" ? null :
             <>
             
-              <div className="detailItem" key={key}>
+              <div style={{
+                display:"flex",
+                gap:"10px"
+              }} key={key}>
                 <Box sx={{
                   display:"flex",
                   alignItems:"center",
                   gap:"10px"
                 }}>
-                {["po","name", "tracking_number", "waybill_number"].includes(key)?<Tooltip title={`Copy ${key}`}><ContentCopyIcon style={{cursor:"pointer"}} onClick={()=>handleCopy(key, value)}/></Tooltip>:null}
+                {["po", "po_id","name", "tracking_number", "waybill_number"].includes(key)?<Tooltip title={`Copy ${key}`}><ContentCopyIcon style={{cursor:"pointer"}} onClick={()=>handleCopy(key, value)}/></Tooltip>:null}
                 <p className="itemKey">{formatKey(key)}:</p>
                 </Box>
                 <p className="itemValue">

@@ -290,6 +290,7 @@ function useQueryPupring(paginationModel) {
             hasNextPage: pagination.hasNextPage,
           });
         } catch (error) {
+          if (error.code === 'ERR_CANCELED') return
           if (error?.response?.status === 480) {
             navigate("/login");
           }
@@ -299,11 +300,11 @@ function useQueryPupring(paginationModel) {
   
       setIsLoading(true);
       fetchData();
-      console.log(isLoading)
       return ()=>{
         controller.abort()
       }
     }, [paginationModel]);
+  
     return { isLoading, rows, pageInfo };
   }
 
