@@ -10,7 +10,6 @@ const OrderEditModal = ({
     loading
 }) => {
   title= loading?title+"ing":title 
-  console.log("propertyFields===========>", propertyFields)
   return (
     <Modal
         aria-labelledby="transition-modal-title"

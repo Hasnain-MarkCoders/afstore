@@ -251,7 +251,7 @@ const columns = [
          { auth.type =="suadmin" &&<CustomIcon
              title={"Edit"}
              className="action-icon-btn editBtn"
-             cb={()=>{handleEditModal({_id:params.row._id, states, loss_code:params.row.loss_code,service:params.row.service }); console.log(states)}}
+             cb={()=>{handleEditModal({_id:params.row._id, states, loss_code:params.row.loss_code,service:params.row.service })}}
              icon={<EditIcon/>}
             />}
              {/* <CustomIcon

@@ -87,9 +87,6 @@ const PupringProperties = (props) => {
     vertical: 'bottom',
     horizontal: 'left',})
   const handleColorPlate = (ids, color, key) => {
-    console.log("ids", ids)
-    console.log("key", key)
-    console.log("color", color)
     props.setUpdatedData(true)
     API.post(`/${auth?.type}/${key}`, {
       order_ids: ids,

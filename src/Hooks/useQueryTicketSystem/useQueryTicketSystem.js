@@ -82,7 +82,6 @@ function useQueryTicketSystem(paginationModel, setIsPaginationLoading=()=>{}) {
     // console.log(paginationModel._id);
     // Check for active po_number filter
     if (paginationModel._id && paginationModel._id?.length > 0) {
-      console.log(paginationModel._id);
       filters.push({ type: "_id", value: paginationModel._id });
     }
   

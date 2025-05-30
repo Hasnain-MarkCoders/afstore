@@ -33,7 +33,6 @@ function useQueryRejectedOrders(paginationModel) {
             signal:controller.signal
           });
           const { pagination, lineOrders, skus } = response.data;
-          console.log("ye ha rejected orders", skus) 
           setIsLoading(false);
           setRows(lineOrders || []);
           setSkusNames(skus || []);

@@ -156,7 +156,6 @@ const PupringViewList = ({ setShowSideBar }) => {
             <div className="details">
               <h1 className="itemTitle">Order Details</h1>
               {
-                console.log(data)
               }
               {data && Object?.entries(data)?.map(([keys, values]) => {
                 return (typeof values === "string") ?

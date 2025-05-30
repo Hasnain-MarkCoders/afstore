@@ -18,7 +18,6 @@ const SkuFilter = (props) => {
             // name: name?.length > 0 ? name?.split(/[ ,\n]+/) : [] ,
         });
         boolRef.current = !boolRef.current
-        console.log(name?.length > 0 ? name?.split(/[ ,\n]+/) : [])
     };
     const handleReset = async () => {
         setName("");

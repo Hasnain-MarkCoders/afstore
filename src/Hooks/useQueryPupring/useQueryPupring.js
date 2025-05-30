@@ -299,11 +299,11 @@ function useQueryPupring(paginationModel) {
   
       setIsLoading(true);
       fetchData();
+      console.log(isLoading)
       return ()=>{
         controller.abort()
       }
     }, [paginationModel]);
-  
     return { isLoading, rows, pageInfo };
   }
 

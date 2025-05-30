@@ -49,7 +49,6 @@ const RawOrdersViewList = ({ setShowSideBar }) => {
   const DetailItem = ({ data }) => {
     // Define the keys that need date formatting
     const keysToFormat = ['date', 'consent_updated_at', 'updated_at'];
-    console.log(data)
   
     // Use JSON.stringify with the replacer function
     const formattedJson = data

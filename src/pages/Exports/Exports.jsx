@@ -50,7 +50,6 @@ const Exports = ({ setShowSideBar }) => {
           invoicePdf: item.invoice_pdf,
           itemsSheet: item.items_sheet,
         }));
-        console.log(media)
         setData(media);
         setRowCount(response.data.pagination.totalDocuments);
       } else {

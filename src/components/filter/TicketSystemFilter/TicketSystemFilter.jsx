@@ -103,7 +103,6 @@ const TicketSystemFilter = (props) => {
       bool: boolRef.current,
     });
     boolRef.current = !boolRef.current;
-    console.log(quickQuery?.length > 0 ? quickQuery?.split(",") : []);
   };
 
   const auth = useSelector((state) => state.user);

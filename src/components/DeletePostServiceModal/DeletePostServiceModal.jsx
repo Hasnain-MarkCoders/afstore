@@ -29,7 +29,6 @@ const DeletePostServiceModal = ({ open, handleClose, postService, cb=()=>{} }) =
       const response = await API.delete(`/${auth.type}/delete-post-service`, {
         params: data,
       });
-      console.log('Response:', response.data);
       setSnackbar({
         open: true,
         message: 'Post service deleted successfully!',

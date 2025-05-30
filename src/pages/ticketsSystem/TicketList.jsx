@@ -363,7 +363,6 @@ export default function TicketList({
 
   // Approve
   const handleApproveModal = async (data) => {
-    console.log("edit btn from ticketlist")
     await API.post(`/${auth.type}/direct-approve`, {
       id: data._id,
     })

@@ -25,7 +25,6 @@ const MakePremiumPostServiceModal = ({ open, handleClose, postService, cb=()=>{}
   });
 
   useEffect(()=>{
-console.log("postService.states======================>", postService.states)
   },[])
   useEffect(() => {
     if (postService && postService.states) {
@@ -66,7 +65,6 @@ console.log("postService.states======================>", postService.states)
     try {
       setLoading(true)
       const response = await API.post('/admin/activate-premium', data);
-      console.log('Response:', response.data);
       setSnackbar({
         open: true,
         message: response?.data?.message,

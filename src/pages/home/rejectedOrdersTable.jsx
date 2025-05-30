@@ -292,7 +292,6 @@ const RejectedOrdersTable = () => {
   const changeName = async (id) => {
     setIsLoading(true);
     try {
-      console.log("ye hai sku ki id", skus)
       const response = await API.post(`/customer/change-name`, {
         order_id: id,
         sku_id: skus
@@ -313,8 +312,6 @@ const RejectedOrdersTable = () => {
       flex: 1,
       minWidth: 350,
       renderCell: (params) => {
-        console.log(params.row)
-      
         return (
           <div className="cellAction">
             <select

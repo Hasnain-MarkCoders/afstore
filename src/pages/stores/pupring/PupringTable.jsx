@@ -246,7 +246,6 @@ const PupringTable = ({
       flex: 1,
       minWidth: 200,
       renderCell: params => {
-        // console.log(params.row)
         return (<Box sx={{
           display: "flex",
           alignItems: "center",
@@ -877,7 +876,6 @@ const PupringTable = ({
 
   // Approve
   const handleApproveModal = async (data) => {
-    console.log("edit wala ha");
     await API.post(`/${auth.type}/direct-approve`, {
       id: data._id,
     })

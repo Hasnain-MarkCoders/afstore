@@ -123,7 +123,6 @@ const validateLargeFile = (jsonData, importOptions, setError, callback) => {
       setError(error);
     } else {
       setError(""); // Clear error if valid
-      console.log(valid)
       callback(valid);
     }
     worker.terminate(); // Stop worker after execution
@@ -163,8 +162,6 @@ const handleExportFileChange = (e) => {
       setFile(selectedFile);
     }
   };
-  console.log("yeah=================================================>")
-  console.log(selectedFile)
   setFile(selectedFile)
   reader.readAsArrayBuffer(selectedFile);
 };

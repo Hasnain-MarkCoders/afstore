@@ -75,7 +75,6 @@ export default function   TicketUserInfo({ data }) {
   return (
     <div className="user-details">
       {data ? Object.entries(data)?.map(([key, value], index) => {
-        console.log(data)
         if (shouldDisplayKey(key)) {
           return (
             <div key={index}>

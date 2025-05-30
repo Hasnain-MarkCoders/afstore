@@ -82,8 +82,6 @@ const Settings = ({ setShowSideBar }) => {
     fetchURLS();
   }, [fetchURLS]);
 
-  console.log("Data:", data);
-
   return (
    
     <>

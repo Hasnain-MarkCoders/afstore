@@ -349,7 +349,6 @@ export default function ({
     }))
   }
   function handleAddKey() {
-    console.log(fields.keys)
     const key = `key${Object.keys(fields.keys).length+1}`
     setFields(prev=>({
       ...prev,

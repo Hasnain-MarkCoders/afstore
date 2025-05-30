@@ -78,7 +78,7 @@ const AddPostServiceModal = ({ open, handleClose, cb=()=>{} }) => {
 
     try {
       setLoading(true)
-      const response = await  API.post(`${auth.type}/add-post-service`, data); console.log('Response:', response.data);
+      const response = await  API.post(`${auth.type}/add-post-service`, data); 
       setSnackbar({ open: true, message: 'Post Service added successfully!', severity: 'success' });
       // Reset form
       cb()
