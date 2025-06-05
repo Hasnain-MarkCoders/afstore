@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button, Container } from "@mui/material";
 import SKUTable from "../sku/SKUTable";
 import "./sku.scss";
@@ -20,12 +20,18 @@ export const SKU = ({ setShowSideBar }) => {
     state => state.user
   )
   const [isLoadingAddSKU, setIsLoadingAddSKU] = useState(false)
+
+const DEFAULT = { enabled: false, code: '7113.11.5000', scope: 'US' };
+  const [hscodeSettings, setHscodeSettings] = useState(DEFAULT);
   const [addData, setData] = useState({
     sku:"",
     sku_id:"",
-    unit_price:null,
-    keys: {} 
-
+    keys: {},
+    factory_price:"",
+    customer_price:"",
+    ename:"",
+    cname:"",
+    production_time:""
   })
   const [addSkuError, setAddSkuError] = useState(null)
   const handleAddSkuError = (data) => {
@@ -41,9 +47,10 @@ export const SKU = ({ setShowSideBar }) => {
   const handleSubmitAddSKU = async (e) => {
     setIsLoadingAddSKU(true)
     e.preventDefault();
-    API.post(`/${auth?.type}/sku/add`, {
+    return API.post(`/${auth?.type}/sku/add`, {
       ...addData,
-      keys: addData.keys
+      keys: addData.keys,
+      hscode:hscodeSettings
     })
       .then((responce) => {
         handleModal();
@@ -52,7 +59,13 @@ export const SKU = ({ setShowSideBar }) => {
         setData({
           sku:"",
           sku_id:"",
-          unit_price:null
+          keys: {},
+          factory_price:"",
+          customer_price:"",
+          ename:"",
+          cname:"",
+          hscodeSettings:DEFAULT,
+
         })
 
       }).catch((error) => {
@@ -103,7 +116,18 @@ export const SKU = ({ setShowSideBar }) => {
                 keys={addData.keys}
                 sku={addData.sku}
                 sku_id={addData.sku_id}
-                unit_price={addData.unit_price}
+                _p={addData._p}
+                customerPrice={addData.customer_price}
+                factoryPrice={addData.factory_price}
+                ename={addData.ename}
+                cname={addData.cname}
+                set_p={(e) => { setData({ ...addData, _p: e }) }}
+                setCustomerPrice={(e) => { setData({ ...addData, customer_price: e }) }}
+                productionTime = {addData.production_time}
+                setProductionTime={(e) => { setData({ ...addData, production_time: e }) }}
+                setFactoryPrice={(e) => { setData({ ...addData, factory_price: e }) }}
+                setEname={(e) => { setData({ ...addData, ename: e }) }}
+                setCname={(e) => { setData({ ...addData, cname: e }) }}
                 setSku={(e) => { setData({ ...addData, sku: e }) }}
                 setSkuId={(e) => { setData({ ...addData, sku_id: e }) }}
                 setUnitPrice={(e) => { setData({ ...addData, unit_price: e }) }}
@@ -113,6 +137,8 @@ export const SKU = ({ setShowSideBar }) => {
                 addNewKey={addNewKey}
                 updateKeyValue={updateKeyValue}
                 removeKey={removeKey}
+                hscodeSettings={hscodeSettings}
+                setHscodeSettings={setHscodeSettings}
           />
         </div>
         <div>

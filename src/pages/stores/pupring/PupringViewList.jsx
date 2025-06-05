@@ -10,7 +10,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 import Tooltip from '@mui/material/Tooltip';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Box } from "@mui/material";
-import AutohideSnackbar from "../../../components/snackbar/Snackbar";
+import useAlertStore from "../../../zustand/alert";
 
 export const originalPropertiesColumn = [
   {
@@ -23,11 +23,6 @@ export const originalPropertiesColumn = [
     minWidth: 500,
     renderCell: (params) => {
       return (
-        // params.row?.value ? params.row.value.startsWith("http") ?
-        //   <Link to={params.row.value} className={`cellWithStatus status-btn`} target="blank">
-        //     View Image
-        //   </Link>
-        //   : params.row.value : <></>
         <>
         {params.row.value}
         </>
@@ -37,10 +32,7 @@ export const originalPropertiesColumn = [
 ];
 
 const PupringViewList = ({ setShowSideBar }) => {
-  const [snackbar, setSnackbar] = useState({
-    open:false,
-    message:""
-  })
+const { handleAlert} = useAlertStore()
   const auth = useSelector(
     state => state.user
   )
@@ -102,43 +94,15 @@ const PupringViewList = ({ setShowSideBar }) => {
     ),
   }));
   }
-  // else if(data?.properties && (data?.properties[0]?.customizedContent || data?.properties && data?.properties[0]?.url)){
-  //    userColumns = [
-  //     {
-  //       field: "customizedContent", headerName: "Name", minWidth: 100, flex: 1,
-  //       renderCell: (params) => {
-  //         return (params.row?.customizedContent &&  <div>
-  //             {params.row?.customizedContent}
-  //           </div>
-  //         );
-  //         }
-  //     },
-  //     {
-  //       field: "url",
-  //       headerName: "Value",
-  //       flex: 1,
-  //       minWidth: 200,
-  //       renderCell: (params) => {
-  //         return (
-  //           params.row?.url &&  params.row?.url?.startsWith("http") ?
-  //             <Link to={params.row.url} className={`cellWithStatus status-btn`} target="blank">
-  //               View Image
-  //             </Link>
-  //             : params.row.url
-  //         )
-  //       },
-  //     }
-  //   ];
-  // }
-  
   else{
      userColumns = []
   }
   const handleCopy=(field,text)=>{
     navigator.clipboard.writeText(text)
-    setSnackbar({
-      open:true,
-      message:`${field} Copied to clipboad.`
+    handleAlert({
+      isOpen:true,
+      message:`${field} Copied to clipboad.`,
+      severity:"success"
     })
   }
 
@@ -216,7 +180,6 @@ const PupringViewList = ({ setShowSideBar }) => {
             rowsPerPageOptions={[10]}
           />
         }
-         <AutohideSnackbar open = {snackbar.open} message = {snackbar.message} onClose={()=>setSnackbar({open:false, message:""})}/>
       </div>
     </Container></>);
 };

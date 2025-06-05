@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import API from "../../api/api";
+import { getUpdatedFilters } from "../../Utils/Utils";
 
 function useQueryPupring(paginationModel) {
     const [isLoading, setIsLoading] = React.useState(true);
@@ -257,9 +258,9 @@ function useQueryPupring(paginationModel) {
             page: (paginationModel.page || obj.page) + 1,
             limit: paginationModel.pageSize || 10,
           };
-  
+            const cleanedFilters = getUpdatedFilters(filters)
           const requestBody = {
-            filter: filters,
+            filter: cleanedFilters,
             // ...other properties you want to include in the request body...
           };
   

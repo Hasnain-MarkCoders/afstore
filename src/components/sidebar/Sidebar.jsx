@@ -151,14 +151,14 @@ const Sidebar = ({ logoutAction }) => {
               </li>
             </NavLink>
           )}
-            {/* {(auth.type === "customer" || (auth.type === "admin" || auth.type === "suadmin")) && (
+            {(auth.type === "customer" || (auth.type === "admin" || auth.type === "suadmin")) && (
             <NavLink to="/dynamic-properties" style={{ textDecoration: "none" }}>
               <li>
                 <CommentIcon className="icon" />
                 <span>Dynamic Properties</span>
               </li>
             </NavLink>
-          )} */}
+          )}
           {(auth.type === "admin" || auth.type === "suadmin") && (
             <>
               <NavLink to="/tags" style={{ textDecoration: "none" }}>

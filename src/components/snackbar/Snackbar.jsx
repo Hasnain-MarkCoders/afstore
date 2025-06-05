@@ -1,26 +1,32 @@
 import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import { Alert } from "@mui/material";
+import useAlertStore from "../../zustand/alert";
 
-export default function AutohideSnackbar({ open,severity="success", message, onClose, bg="", color="" , anchorOrigin={ vertical:"top", horizontal:"center" }}) {
+export default function AutohideSnackbar({ anchorOrigin={ vertical:"top", horizontal:"right" }}) {
+  
+  const {Alert: ZustandAlert,handleAlert} = useAlertStore()
+  const handleClose = ()=>{
+    handleAlert({
+      message:"",
+      isOpen:false,
+      severity:"success"
+    })
+  }
   return (
     <Snackbar
-    ContentProps={{
-      sx: {
-        background: bg?bg:"black !important",
-        color:color?color:"white !important",
-      }
-    }}
+    onClose={handleClose}
+      // autoHideDuration={3000}
     anchorOrigin={anchorOrigin}
-      open={open}
+      open={ZustandAlert?.isOpen}
     >
  <Alert
-    onClose={onClose}
-    severity={severity}
+    onClose={handleClose}
+    severity={ZustandAlert?.severity}
     variant="filled"
     sx={{ width: '100%' }}
   >
-   {message}
+   {ZustandAlert?.message}
   </Alert>
 
     </Snackbar>

@@ -27,6 +27,7 @@ import { getToken, messaging, onMessage } from "./firebase";
 import API from "./api/api";
 import { useDispatch, useSelector } from "react-redux";
 import { handleRefresh } from "./redux/slices/authSlice";
+import AutohideSnackbar from "./components/snackbar/Snackbar"
 function App() {
     const pathname = window?.location?.pathname
   const dispatch = useDispatch()
@@ -276,6 +277,8 @@ useEffect(()=>{
           </Route>
         </Routes>
       </BrowserRouter>
+
+      <AutohideSnackbar/>
     </main>
   );
 }

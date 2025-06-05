@@ -43,6 +43,8 @@ import CustomListItem from "../../../components/CustomListItem/CustomListItem";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AutohideSnackbar from "../../../components/snackbar/Snackbar";
 import LineOrderPropertiesComponent from "../../../components/LineOrderPropertiesComponent/LineOrderPropertiesComponent";
+import useAlertStore from "./../../../zustand/alert";
+
 const PupringTable = ({
   tabName,
   isLoading = false,
@@ -64,10 +66,8 @@ const PupringTable = ({
   const [customerNote, setCustomerNote] = useState(null);
   const [customerNoteField, setCustomerNoteField] = useState("");
   const [isLineOrderUpdating, setIsLineOrderUpdating] = useState(false)
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: ""
-  })
+  const {handleAlert} = useAlertStore()
+ 
   // Helper function to format date and time
 
   const handleLocalStorage = (id) => {
@@ -80,6 +80,7 @@ const PupringTable = ({
 
   // Handle form submission for updating line order
   const handleSubmitUpdateLineOrder = async (e) => {
+    let message = null
     setIsLineOrderUpdating(true)
     e.preventDefault();
     return API.post(`/${auth?.type}/edit-line-order`, {
@@ -111,13 +112,24 @@ const PupringTable = ({
       shipping_label: fields.shipping_label,
       color: fields.color,
     }).then((response) => {
+        message = response.data?.message??"Order updated successfully"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"success"
+            })
       setIsLineOrderUpdating(false)
       handleEditModal(null);
       filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
     }).catch(error => {
+          message = error?.response?.data?.message ?? error?.message ?? "Error updating Order!"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"error"
+            })
       setIsLineOrderUpdating(false)
-      alert(error?.response?.data?.message ?? error.message ?? "Error Editing Line Order!")
 
     })
   };
@@ -129,16 +141,28 @@ const PupringTable = ({
 
   // Handle form submission for updating line order
   const handleSubmitfactoryNote = async (e) => {
+    let message = null
     e.preventDefault();
     return API.post(`/factory/add-note`, {
       id: factoryNote?._id,
       note: factoryNoteField,
     }).then((response) => {
+        message = response.data?.message??"Note Added successfully"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"success"
+            })
       handleFactoryNoteModal(null);
       filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
     }).catch(error => {
-      alert(error?.response?.data?.message ?? error.message ?? "Error adding note!")
+          message = error?.response?.data?.message ?? error?.message ?? "Error adding note!"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"error"
+            })
     })
       ;
   };
@@ -183,9 +207,10 @@ const PupringTable = ({
 
   const handleCopy = (field, text) => {
     navigator.clipboard.writeText(text)
-    setSnackbar({
-      open: true,
-      message: `${field} Copied to clipboad.`
+    handleAlert({
+      isOpen: true,
+      message: `${field} Copied to clipboad.`,
+      severity:"success"
     })
   }
 
@@ -682,24 +707,48 @@ const PupringTable = ({
       flex: 1,
       minWidth: 80,
       renderCell: (params) => {
+        let message = null
         const placeOrder = (id) => {
           API.post(`/factory/place-order-to-yun-express`, {
             order_id: id,
           }).then((response) => {
+            message = response.data?.message??"Order placed to yun express"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"success"
+            })
             filterFields(pageInfo, setPaginationModel, boolRef);
+
             boolRef.current = !boolRef.current;
           }).catch((error) => {
-            alert(error?.response?.data?.message ?? error.message ?? "Error Placing Order!")
-          });
+            message = error?.response?.data?.message ?? error?.message ?? "Error Placing Order!"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"error"
+            })
+          })
         };
 
         const generateLabel = (po_number) => {
           const po = [po_number];
           API.post(`/factory/generate-label`, po).then((response) => {
+            message = response.data?.message??"Label generated successfully"
+          handleAlert({
+            isOpen:true,
+            message,
+            severity:"success"
+          })
             filterFields(pageInfo, setPaginationModel, boolRef);
             boolRef.current = !boolRef.current;
           }).catch((error) => {
-            alert(error?.response?.data?.message ?? error.message ?? "Error Generating WayBill!")
+            message = error?.response?.data?.message ?? error?.message ?? "Error generating label!"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"error"
+            })
           });
         };
 
@@ -708,10 +757,21 @@ const PupringTable = ({
           API.post(`/${auth.type}/cancel-line-orders`, {
             order_ids: orderId,
           }).then((response) => {
+              message = response.data?.message??"Order cancelled successfully"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"success"
+            })
             filterFields(pageInfo, setPaginationModel, boolRef);
             boolRef.current = !boolRef.current;
           }).catch((error) => {
-            alert(error?.response?.data?.message ?? error.message ?? "Error Cancelling Order!")
+            message = error?.response?.data?.message ?? error?.message ?? "Error cancelling Order!"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"error"
+            })
           });
 
 
@@ -722,14 +782,24 @@ const PupringTable = ({
             order_id: row?._id,
           })
             .then((response) => {
+                message = response.data?.message??"Order placed to hold"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"success"
+            })
               filterFields(pageInfo, setPaginationModel, boolRef);
               boolRef.current = !boolRef.current;
-              alert(response?.data?.message ?? "Order placed on hold!");
             })
             .catch(error => {
-              alert(error?.response?.data?.message ?? error.message ?? "Error Placing Order ON Hold!")
-
+            message = error?.response?.data?.message ?? error?.message ?? "Error Placing Order on hold!"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"error"
             })
+          
+          })
         };
 
         return (
@@ -856,17 +926,30 @@ const PupringTable = ({
     setForceAccept(data);
   };
   const handleForceAccept = () => {
+    let message = null
     setLoadingForceAccept(true);
     API.post(`/${auth.type}/force-accept`, {
       order_ids: [forceAccept._id],
     })
       .then((response) => {
+          message = response.data?.message??"Order forced accept successfully"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"success"
+            })
         setForceAcceptSuccess(response?.data?.message);
         handleForceAcceptModal(null);
         filterFields(pageInfo, setPaginationModel, boolRef);
         boolRef.current = !boolRef.current;
       })
       .catch((error) => {
+            message = error?.response?.data?.message ?? error?.message ?? "Error force accepting Order!"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"error"
+            })
         setForceAcceptError(error?.response?.data?.message);
       })
       .finally(() => {
@@ -876,15 +959,28 @@ const PupringTable = ({
 
   // Approve
   const handleApproveModal = async (data) => {
+    let message = null
     await API.post(`/${auth.type}/direct-approve`, {
       id: data._id,
     })
       .then((response) => {
+            message = response.data?.message??"Order direct approve"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"success"
+            })
         setForceAcceptSuccess(response?.data?.message);
         filterFields(pageInfo, setPaginationModel, boolRef);
         boolRef.current = !boolRef.current;
       })
       .catch((error) => {
+            message = error?.response?.data?.message ?? error?.message ?? "Error error direct approving order!"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"error"
+            })
         setApproveOrderError(error?.response?.data?.message);
       });
   };
@@ -909,6 +1005,10 @@ const PupringTable = ({
       params?.api?.clearSelectedRows();
     }
   };
+
+
+
+ 
 
   return (
     <>
@@ -1414,7 +1514,7 @@ const PupringTable = ({
           />
         )}
       </div>
-      <AutohideSnackbar open={snackbar.open} message={snackbar.message} onClose={() => setSnackbar({ open: false, message: "" })} />
+      <AutohideSnackbar  />
     </>
   );
 };

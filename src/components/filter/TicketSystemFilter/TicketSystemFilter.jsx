@@ -448,7 +448,7 @@ const TicketSystemFilter = (props) => {
           </Box>
 
           <Box component="div" className="btn-group">
-            {auth.type === "admin" ? (
+            {(auth.type === "admin"  || auth.type === "suadmin") ? (
               <>
                 {props.shareDocs && (
                   <ButtonGroup>
@@ -642,7 +642,7 @@ const TicketSystemFilter = (props) => {
                 gap: "15px",
               }}
             >
-              {auth.type === "admin" && (
+              {(auth.type === "admin" || auth.type=="suadmin") && (
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "10px" }}
                 >
@@ -660,7 +660,7 @@ const TicketSystemFilter = (props) => {
                   />
                 </div>
               )}
-              {auth.type === "admin" && (
+              {(auth.type === "admin" || auth.type=="suadmin") && (
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "10px" }}
                 >
@@ -678,7 +678,7 @@ const TicketSystemFilter = (props) => {
                   />
                 </div>
               )}
-              {(auth.type === "admin" || auth.type === "factory") && (
+              {((auth.type === "admin" || auth.type=="suadmin") || auth.type === "factory") && (
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "10px" }}
                 >
@@ -696,7 +696,7 @@ const TicketSystemFilter = (props) => {
                   />
                 </div>
               )}
-              {(auth.type === "admin" || auth.type === "customer") && (
+              {((auth.type === "admin" || auth.type=="suadmin") || auth.type === "customer") && (
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "10px" }}
                 >

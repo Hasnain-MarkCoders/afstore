@@ -24,7 +24,6 @@ import API from "../../api/api";
 import CloseIcon from "@mui/icons-material/Close";
 import { useRef } from "react";
 import { useSelector } from "react-redux";
-import AutohideSnackbar from "../../components/snackbar/Snackbar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdsClickIcon from "@mui/icons-material/AdsClick";
@@ -33,10 +32,10 @@ import { TicketListEditFieldConfigs, TicketListEditNonHoldFieldConfigs, TicketLi
 import CustomPagination from "../../components/CustomPagination/CustomPagination";
 import PupringNote from "../../components/Modals/PupringTableModals/PupringNote";
 import LineOrderPropertiesComponent from "../../components/LineOrderPropertiesComponent/LineOrderPropertiesComponent";
+import useAlertStore from "../../zustand/alert";
 const formattedDateTime = (date) => {
   const dateTime = new Date(date);
   const formattedDate = dateTime.toLocaleDateString("en-US", {
-    // year: "numeric",
     month: "short",
     day: "numeric",
   });
@@ -76,8 +75,6 @@ export default function TicketList({
   const boolRef = useRef(false);
   const auth = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [fields, setFields] = useState(null);
   const [remarksNote, setRemarksNote] = useState("");
   const [remarksNoteField, setRemarksNoteField] = useState("");
@@ -89,6 +86,7 @@ export default function TicketList({
   const [factoryNote, setFactoryNote] = useState(null);
   const [factoryNoteField, setFactoryNoteField] = useState("");
   const [isLineOrderUpdating, setIsLineOrderUpdating] = useState(false)
+  const {handleAlert} = useAlertStore()
 
   const [limit, setLimit] = useState(10);
   const handleSelect = React.useCallback(
@@ -138,11 +136,17 @@ export default function TicketList({
     });
   }
 
-  const handleApiResponse = (message) => {
-    setSnackbarMessage(message);
-    setSnackbarOpen(true);
-    filterFields(pageInfo, setPaginationModel, boolRef);
-    boolRef.current = !boolRef.current;
+  const handleApiResponse = (message, isSuccess=true, isRefetch=false) => {
+      handleAlert({
+      isOpen:true,
+      message,
+      severity:isSuccess? "success":"error"
+    }
+    )
+    if(isRefetch){
+      filterFields(pageInfo, setPaginationModel, boolRef);
+      boolRef.current = !boolRef.current;
+    }
   };
 
   React.useEffect(() => {
@@ -159,77 +163,91 @@ export default function TicketList({
 
 
   const getWaybill = (id) => {
+    let message =null
     API.post(`/factory/place-order-to-yun-express`, {
       order_id: [id],
     })
       .then((response) => {
-        handleApiResponse("Waybill generated successfully!");
+      message =response.data?.message?? "Waybill generated successfully!"
+        handleApiResponse(message, true , true);
       })
       .catch(error => {
-        alert(error?.response?.data?.message ?? error.message ?? "Error Generating Waybill!")
+        message = error?.response?.data?.message ?? error.message ?? "Error Generating Waybill!"
+        handleApiResponse(message, false , false);
 
       })
   };
   const generateLabel = (po_number) => {
+    let message = null
     const po = [po_number];
     API.post(`/admin/generate-label`, po)
       .then((response) => {
-        handleApiResponse("Label generated successfully!");
+        message = response.data?.message??"Label generated successfully!"
+        handleApiResponse(message, true, true);
       })
       .catch(error => {
-        alert(error?.response?.data?.message ?? error.message ?? "Error Generating Label!")
-
+        message =error?.response?.data?.message ?? error.message ?? "Error Generating Label!" 
+        handleApiResponse(message, false, false);
       })
   };
   const handleCancelOrder = (id) => {
+    let message = null
     const orderId = [id];
     API.post(`/${auth.type}/cancel-line-orders`, { order_ids: orderId }).then(
       (response) => {
-        handleApiResponse("Order cancelled successfully!");
+        message =response.data?.message?? "Order cancelled successfully!"
+        handleApiResponse(message, true, true);
       }
     ).catch(error => {
-      alert(error?.response?.data?.message ?? error.message ?? "Error Cancelling the Order!")
-
+      message =error?.response?.data?.message ?? error.message ?? "Error Cancelling the Order!" 
+        handleApiResponse(message, false, false);
     });
   };
 
   const placeOrderOnHold = (ids) => {
+    let message = null
     API.post(`/${auth.type}/hold-orders`, {
       order_id: ids,
     })
       .then((response) => {
-        handleApiResponse("Order placed on hold!");
+        message = response.data?.message??"Order placed on hold!"
+        handleApiResponse(message, true, true);
       })
       .catch(error => {
-        alert(error?.response?.data?.message ?? error.message ?? "Error Placing Order ON Hold!")
-
+        message = error?.response?.data?.message ?? error.message ?? "Error Placing Order ON Hold!" 
+        handleApiResponse(message, false, false);
       })
   };
 
   const handlePlaceOrder = (id) => {
+    let message = null
     API.post(`/factory/place-order`, {
       order_ids: [id],
     })
       .then((response) => {
-        handleApiResponse("Order placed successfully!");
+        message =response.data?.message?? "Order placed successfully!"
+        handleApiResponse(message, true, true);
       })
       .catch((error) => {
-        handleApiResponse("Error placing order!");
-        alert(error?.response?.data?.message ?? error.message ?? "Error Placing Order!")
+        message = error?.response?.data?.message ?? error.message ?? "Error Placing Order!"
+        handleApiResponse(message, false, false);
       });
   };
 
   const handleCloseTicket = (id) => {
+    let message = null
     API.post(`/customer/close-ticket`, {
       order_id: id,
     }).then((response) => {
-      handleApiResponse("Ticket closed successfully!");
+      message = response.data?.message?? "Ticket closed successfully!"
+      handleApiResponse(message, true, true);
     }).catch(error => {
-      alert(error?.response?.data?.message ?? error.message ?? "Error Closing Ticket!")
-
+      message = error?.response?.data?.message ?? error.message ?? "Error Closing Ticket!"
+      handleApiResponse(message, false, false);
     })
   };
   const handleSubmitUpdateLineOrder = async (e) => {
+    let message = null
     e.preventDefault();
     setIsLineOrderUpdating(true)
     return API.post(`/${auth?.type}/edit-line-order`, {
@@ -261,11 +279,14 @@ export default function TicketList({
       shipping_label: fields.shipping_label,
       color: fields.color,
     }).then((response) => {
+        message =response.data?.message?? "Line order updated"
+      handleApiResponse(message, true, false);
       handleEditModal(null);
       filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
     }).catch(error => {
-      alert(error?.response?.data?.message ?? error.message ?? "Error Editing Order!")
+      message = error?.response?.data?.message ?? error.message ?? "Error Editing Order!"
+      handleApiResponse(message, false, false);
 
     }).finally(() => {
       setIsLineOrderUpdating(false)
@@ -278,6 +299,7 @@ export default function TicketList({
   };
 
   const handleSubmitremarksNote = async (e) => {
+    let message = null
     e.preventDefault();
 
     return API.post(`/${auth.type}/add-note`, {
@@ -285,13 +307,19 @@ export default function TicketList({
       note: remarksNoteField,
     }).then((response) => {
       handleRemarksNoteModal(null);
+      message = response.data?.message??"Note added successfully"
+      handleApiResponse(message, true,false)
       filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+       message = error?.response?.data?.message ?? error.message ?? "Error submitting note"
+      handleApiResponse(message, false, false)
+    })
   };
 
   // Handle form submission for updating line order
   const handleSubmitfactoryNote = async (e) => {
+    let message = null
     e.preventDefault();
 
     return API.post(`/factory/add-note`, {
@@ -299,11 +327,13 @@ export default function TicketList({
       note: factoryNoteField,
     }).then((response) => {
       handleFactoryNoteModal(null);
+      message =response.data?.message?? "Note added successfully"
+      handleApiResponse(message, true, false)
       filterFields(pageInfo, setPaginationModel, boolRef);
       boolRef.current = !boolRef.current;
     }).catch(error => {
-      alert(error?.response?.data?.message ?? error.message ?? "Error Adding Note!")
-
+      message = error?.response?.data?.message ?? error.message ?? "Error Adding Note!"
+      handleApiResponse(message, false, false)
     })
   };
 
@@ -314,6 +344,7 @@ export default function TicketList({
   };
   // Handle edit modal for line orders
   const handleEditModal = async (data) => {
+    let message = null
     try {
       setFields(data);
       const response = await API.get(`${auth.type}/sku/get`, {
@@ -322,8 +353,8 @@ export default function TicketList({
         },
       });
     } catch (error) {
-      alert(error?.response?.data?.message ?? error.message ?? "Error Editing SKU!")
-
+      message = error?.response?.data?.message ?? error.message ?? "Error Editing SKU!"
+      handleApiResponse(message, false, false)
       if (error?.response?.status === 480) {
         navigate("/login");
       }
@@ -341,6 +372,7 @@ export default function TicketList({
     setForceAccept(data);
   };
   const handleForceAccept = () => {
+    let message = null
     setLoadingForceAccept(true);
     API.post(`/${auth.type}/force-accept`, {
       order_ids: [forceAccept._id],
@@ -348,14 +380,16 @@ export default function TicketList({
       .then((response) => {
         setForceAcceptSuccess(response?.data?.message);
         handleForceAcceptModal(null);
+        message = response.data?.message??"Force accepted successfully"
+        handleApiResponse(message, true, false)
         filterFields(pageInfo, setPaginationModel, boolRef);
         boolRef.current = !boolRef.current;
       })
       .catch((error) => {
+        message =error?.response?.data?.message ?? error.message ?? "Error Force Accepting Order!" 
+      handleApiResponse(message, false, false)
         setForceAcceptError(error?.response?.data?.message);
-        alert(error?.response?.data?.message ?? error.message ?? "Error Force Accepting Order!")
       })
-
       .finally(() => {
         setLoadingForceAccept(false);
       });
@@ -363,18 +397,22 @@ export default function TicketList({
 
   // Approve
   const handleApproveModal = async (data) => {
+    let message = null
     await API.post(`/${auth.type}/direct-approve`, {
       id: data._id,
     })
       .then((response) => {
         setForceAcceptSuccess(response?.data?.message);
+        message = response.data?.message??"Direct approve successfully"
+        handleApiResponse(message, true, false)
+
         filterFields(pageInfo, setPaginationModel, boolRef);
         boolRef.current = !boolRef.current;
       })
       .catch((error) => {
         setApproveOrderError(error?.response?.data?.message);
-        alert(error?.response?.data?.message ?? error.message ?? "Error Direct Approving the Order!")
-
+        message = error?.response?.data?.message ?? error.message ?? "Error Direct Approving the Order!"
+        handleApiResponse(message, false, false)
       });
   };
 
@@ -953,20 +991,9 @@ export default function TicketList({
         </Modal>
       )}
 
-      <AutohideSnackbar
-        open={snackbarOpen}
-        message={snackbarMessage}
-        onClose={() => setSnackbarOpen(false)}
-      />
-      {/* {rows && pageInfo?.totalRowCount > pageInfo?.pageSize && ( */}
+    
+    
       <div className="data-load">
-        {/* <Button
-            className="btn btn-primary"
-            disabled={isLoading}
-            onClick={() =>filterFields(pageInfo, setPaginationModel, boolRef, 10)}
-          >
-            See More{isLoading && "..."}
-          </Button> */}
         <Box sx={{ position: "sticky", bottom: "0px" }}>
           <CustomPagination
             isLoading={isPaginationLoading}
@@ -983,7 +1010,6 @@ export default function TicketList({
           />
         </Box>
       </div>
-      {/* )} */}
     </>
   );
 }

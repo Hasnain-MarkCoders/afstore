@@ -12,8 +12,6 @@ import {
   FormControlLabel,
   FormGroup,
   Modal,
-  Radio,
-  RadioGroup,
   Typography,
 } from "@mui/material";
 import * as XLSX from "xlsx";
@@ -27,10 +25,10 @@ import API from "../../api/api";
 import CircularProgress from "@mui/material/CircularProgress";
 import ColorPlate from "./colorPlate";
 import { useNavigate } from "react-router-dom";
-import { ORDER_STATUS, tabsFilterFields } from "../../Utils/Utils";
-import AutohideSnackbar from "../snackbar/Snackbar";
+import { getUpdatedFilters, ORDER_STATUS, tabsFilterFields } from "../../Utils/Utils";
 import UploadButton from "../UploadButton/UploadButton";
 import DownloadButton from "../DownloadButton/DownloadButton";
+import useAlertStore from "./../../zustand/alert" 
 
 // Function to define the TabPanel component
 function TabPanel(props) {
@@ -65,17 +63,18 @@ function a11yProps(index) {
 }
 
 const NavTabs = (props) => {
+  const {handleAlert} = useAlertStore()
   const { rows, isLoading, pageInfo, setPaginationModel } = props;
   const navigate = useNavigate()
   const [value, setValue] = useState(0);
   const [selectedRow, setSelectedRow] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [loadinggen, setLoading] = useState(false);
   const [isLoadingInvoice, setIsLoadingInvoice] = useState(false);
   const [is_mark_as_invoiced, set_is_mark_as_invoiced] = useState(false)
   const [progressSummary, setProgressSummary] = useState(false);
   const [progressExport, setProgressExport] = useState(false);
-  const [alert, setAlert] = useState({ open: false, message: "", severity: "success" })
+  const [isGeneratingPDFInvoice,setIsGeneratingPDFInvoice] = useState(false) 
+
     // forceAccept
     const [forceAccept, setForceAccept] = useState(null);
     const [loadingForceAccept, setLoadingForceAccept] = useState(false);
@@ -214,77 +213,104 @@ useEffect(() => {
 
   // function to place orders on hold
   const placeOrderOnHold = (ids) => {
+    const message = null
     API.post(`/${auth.type}/hold-orders`, {
       order_id: ids,
     }).then((response) => {
+      message = response?.data?.message??"Placed orders on hold"
+        handleAlert({ isOpen: true, message: message, severity: "success" })
       tabsFilterFields(props, boolRef);
       boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+      message = error?.response?.data?.message??error?.message??"Hold to placed orders on hold"
+        handleAlert({ isOpen: true, message: message, severity: "error" })
+
+    })
   };
 
   // Function to place orders for selected rows
   const selectedWaybill = (id) => {
+    let message = null
     API.post(`/factory/place-order-to-yun-express`, {
       order_id: id,
     }).then((response) => {
+         message = response?.data?.message??"Placed orders on yun express"
+        handleAlert({ isOpen: true, message: message, severity: "success" })
       tabsFilterFields(props, boolRef);
       boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+      message = error?.response?.data?.message??error?.message??"Failed to placed hold-orders on yun express"
+        handleAlert({ isOpen: true, message: message, severity: "error" })
+
+    })
   };
   const selectedLabel = (id) => {
+    let message = null
     API.post(`/factory/generate-label`, {
       order_ids: id,
     }).then((response) => {
+         message = response?.data?.message??"Label generated successfully."
+        handleAlert({ isOpen: true, message: message, severity: "success" })
       tabsFilterFields(props, boolRef);
       boolRef.current = !boolRef.current;
 
-    });
+    }).catch(error=>{
+      message = error?.response?.data?.message??error?.message??"Failed to generate label."
+        handleAlert({ isOpen: true, message: message, severity: "error" })
+    })
   };
   const seletedPlaceOrder = (id) => {
+    let message = null
     API.post(`/factory/place-order`, {
       order_ids: id,
     }).then((response) => {
+         message = response?.data?.message??"Placed orders successfully"
+        handleAlert({ isOpen: true, message: message, severity: "success" })
       tabsFilterFields(props, boolRef);
       boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+      message = error?.response?.data?.message??error?.message??"Failed placed order."
+        handleAlert({ isOpen: true, message: message, severity: "error" })
+    })
   };
 
   // Function to combineOrder for selected rows
   const combineOrder = (id) => {
+    let message = null
     API.post("/admin/combine-order", {
       order_ids: id,
     }).then((response) => {
+         message = response?.data?.message??"Combine orders successfully"
+        handleAlert({ isOpen: true, message: message, severity: "success" })
       tabsFilterFields(props, boolRef);
       boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+      message = error?.response?.data?.message??error?.message??"Failed to combine orders."
+        handleAlert({ isOpen: true, message: message, severity: "error" })
+    })
   };
 
   // Function to change circle color for selected rows
   const handleColorPlate = (ids, color, key) => {
+    let message = null
     API.post(`/${auth?.type}/${key}`, {
       order_ids: ids,
       color: color,
     }).then((response) => {
+         message = response?.data?.message??"Colors updated successfully"
+        handleAlert({ isOpen: true, message: message, severity: "success" })
       tabsFilterFields(props, boolRef);
       boolRef.current = !boolRef.current;
-    });
+    }).catch(error=>{
+      message = error?.response?.data?.message??error?.message??"Failed to update the color."
+        handleAlert({ isOpen: true, message: message, severity: "error" })
+    })
   };
+ 
 
   // function sleep(ms) {
   //   return new Promise((resolve) => setTimeout(resolve, ms));
   // }
-
-  function downloadURI(uri) {
-    const name = uri.split("downloads/")[1];
-    var link = document.createElement("a");
-
-    link.download = name;
-    link.href = uri;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    // delete link;
-  }
 
   // State for storing the selected orderId
   const [orderId, setOrderId] = useState(null);
@@ -312,7 +338,9 @@ useEffect(() => {
 
   // State for storing the selected generateInvoiceModal
 
-
+if (pageInfo.po_ids && pageInfo.po_ids?.length > 0) {
+    filters.push({ type: "po_id", value: pageInfo.po_ids });
+  }
   // Check for active po filter
   if (pageInfo.po && pageInfo.po?.length > 0) {
     filters.push({ type: "po", value: pageInfo.po });
@@ -450,15 +478,18 @@ useEffect(() => {
     if (id.length > 0) {
       filters.push({ type: "order_ids", value: id });
     }
+    const cleanedFilters = getUpdatedFilters(filters)
 
     const requestBody = {
-      filter: filters,
+      filter: cleanedFilters,
       columns: exportSheet == "excel" ? checkboxValues : importOptions,
       exportType: exportSheet,
       // ...other properties you want to include in the request body...
     };
-
-    formData.append("filter", JSON.stringify(filters))
+    const updatedFilter = getUpdatedFilters(filters)
+    console.log("filters=========================>", filters)
+    console.log("updatedFilter===================>", updatedFilter)
+    formData.append("filter", JSON.stringify(updatedFilter))
     formData.append("columns", JSON.stringify(exportSheet == "excel" ? checkboxValues : importOptions))
     formData.append("exportType", exportSheet)
     formData.append("is_mark_as_invoiced", is_mark_as_invoiced)
@@ -481,10 +512,13 @@ useEffect(() => {
       //   downloadURI(response?.data?.items_sheet);
       // }
       if (response.data.success) {
-        setAlert({ open: true, message: response.data.message, severity: "success" })
+        handleAlert({ isOpen: true, message: response.data.message, severity: "success" })
+
+
+        
       }
       if (!response.data.success) {
-        setAlert({ open: true, message: response.data.message, severity: "error" })
+        handleAlert({ isOpen: true, message: response.data.message, severity: "error" })
       }
     } catch (error) {
     } finally {
@@ -506,26 +540,7 @@ useEffect(() => {
   };
   //
 
-  // Function to handle file change for upload
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
 
-  // Function to handle form submission for file upload
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append("orders", selectedFile);
-      await API.post(`/customer/upload-orders`, formData)
-        .then((response) => {
-          setPaginationModel({ bool: boolRef.current });
-          boolRef.current = !boolRef.current;
-        })
-        .catch((error) => {
-        });
-    }
-  };
 
   // Function to get order status for specific tab
   const getOrderStatus = (status) => {
@@ -559,15 +574,18 @@ useEffect(() => {
   // Function to export orders as Excel file
   const exportFile = () => {
     // Make API call to get the Excel file
+    console.log("filters====================>", filters)
     setProgressExport(true);
 
     // Check for active po filter
     if (selectedRow.length > 0) {
       filters.push({ type: "id", value: selectedRow });
     }
+    const updatedFilter = getUpdatedFilters(filters)
+
 
     const requestBody = {
-      filter: filters
+      filter: updatedFilter
       // ...other properties you want to include in the request body...
     };
 
@@ -577,10 +595,10 @@ useEffect(() => {
       .then((response) => {
         setProgressExport(false);
         if (response.data.success) {
-          setAlert({ open: true, message: response.data.message, severity: "success" })
+          handleAlert({ isOpen: true, message: response.data.message, severity: "success" })
         }
         if (!response.data.success) {
-          setAlert({ open: true, message: response.data.message, severity: "error" })
+          handleAlert({ isOpen: true, message: response.data.message, severity: "error" })
 
         }
 
@@ -600,15 +618,12 @@ useEffect(() => {
     })
       .then((response) => {
         setProgressSummary(false);
-        // const path = response.data.path;
-        // if (response.status === 200) {
-        //   window.location.href = path;
-        // }
+       
         if (response.data.success) {
-          setAlert({ open: true, message: response.data.message, severity: "success" })
+          handleAlert({ isOpen: true, message: response.data.message, severity: "success" })
         }
         if (!response.data.success) {
-          setAlert({ open: true, message: response.data.message, severity: "error" })
+          handleAlert({ isOpen: true, message: response.data.message, severity: "error" })
         }
       })
       .catch((error) => {
@@ -676,6 +691,35 @@ useEffect(() => {
       })
   };
 
+    const generatePDFInvoice = () => {
+       if (selectedRow.length > 0) {
+      filters.push({ type: "order_ids", value: selectedRow });
+    }
+      let message = null
+     const cleanedFilters =  getUpdatedFilters(filters)
+    setIsGeneratingPDFInvoice(true);
+    API.post(`/${auth.type}/invoice/generate-invoice`, {
+  filter:cleanedFilters
+    })
+      .then((response) => {
+        message= response.data?.message??"Invoice is generating..."
+        handleAlert(({
+          isOpen:true, 
+          message,
+          severity:"success"
+        }))
+      }).catch((error) => {
+        message = error?.response?.data?.message??error.message??"Error generating invoice"
+        handleAlert({
+          isOpen:true,
+          message,
+          severity:"error"
+        })
+      }).finally(() => {
+        setIsGeneratingPDFInvoice(false)
+      })
+  };
+
 
 
   // JSX for import/export file buttons
@@ -698,14 +742,24 @@ useEffect(() => {
         </div>
       }
       <div className="btn-group">
-        {/* {auth.type !== "customer" && (
-          <form onSubmit={handleSubmit}>
-            <input type="file" onChange={handleFileChange} />
-            <Button className="btn btn-primary" type="submit">
-              Upload
-            </Button>
-          </form>
-        )} */}
+        
+        
+{(auth.type === "admin" || auth.type === "suadmin") && (
+          <Button
+            className="btn btn-primary"
+            onClick={generatePDFInvoice}
+            style={{ display: "flex", alignItems: "center", gap: "5px" }}
+          >
+            Generate PDF Invoice{" "}
+            {isGeneratingPDFInvoice ? (
+              <CircularProgress color="inherit" className="hw-12" />
+            ) : (
+              <></>
+            )}
+          </Button>
+        )}
+
+
         {
           (auth.type !== "suadmin" && auth.type !== "admin") &&
 
@@ -853,23 +907,23 @@ useEffect(() => {
           <Tab
             label="Submitted"
             {...a11yProps(1)}
-            onClick={() => getOrderStatus(ORDER_STATUS.SUBMITTED)}
+            onClick={() => getOrderStatus([ORDER_STATUS.SUBMITTED])}
           />
           <Tab
             label="Accepted"
             {...a11yProps(2)}
-            onClick={() => getOrderStatus(ORDER_STATUS.ACCEPTED)}
+            onClick={() => getOrderStatus([ORDER_STATUS.ACCEPTED])}
           />
           <Tab
             label="In Production"
             {...a11yProps(3)}
-            onClick={() => getOrderStatus(ORDER_STATUS.IN_PRODUCTION)}
+            onClick={() => getOrderStatus([ORDER_STATUS.IN_PRODUCTION])}
           />
           <Tab
             label="Shipped Out"
             {...a11yProps(4)}
             onClick={() => {
-              getOrderStatus(ORDER_STATUS.SHIPPED_OUT);
+              getOrderStatus([ORDER_STATUS.SHIPPED_OUT]);
             }}
           />
           {/* {(auth.type === "admin" || auth.type === "suadmin" ) && (
@@ -1135,18 +1189,7 @@ useEffect(() => {
               <Box className="check-fields">
                 <FormGroup style={{ gap: "8px" }}>
 
-                {/* <FormControlLabel
-
-style={{ gap: "5px" }}
-control={
-  <Checkbox
-    value="mark_as_invoiced"
-    checked={is_mark_as_invoiced}
-    onChange={() => set_is_mark_as_invoiced(prev=>!prev)}
-  />
-}
-label="mark_as_invoiced"
-/> */}
+               
                   <FormControlLabel
 
                     style={{ gap: "5px" }}
@@ -1194,32 +1237,6 @@ label="mark_as_invoiced"
 
 
                   <>
-
-                    {/* <RadioGroup
-                  style={{ flexDirection: "row", paddingLeft: "10px" }}
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={exportSheet}
-                  name="radio-buttons-group"
-                  onChange={(e) =>{
-                    if(e.target.value === "excel"){
-                      setFile(null)
-                      setError(null)
-                    }
-                    setExportSheet(e.target.value)
-                  }}
-                >
-                  <FormControlLabel
-                    value="excel"
-                    control={<Radio />}
-                    label="Export Sheet"
-                  />
-                  <FormControlLabel
-                  // disabled={true}
-                    value="pdf"
-                    control={<Radio />}
-                    label="Generate Invoice"
-                  />
-                </RadioGroup> */}
                     {exportSheet === "pdf" && (
                       <Box sx={{
                         display: "flex",
@@ -1246,7 +1263,7 @@ label="mark_as_invoiced"
 
 
                         </Box>
-                        {/* <input type="file" accept=".xlsx" onChange={handleExportFileChange} /> */}
+                   
                         {error && <p style={{ color: "red" }}>{error}</p>}
                       </Box>
                     )}
@@ -1327,10 +1344,6 @@ label="mark_as_invoiced"
                 justifyContent: "space-between !important",
                 borderRadius: "10px !important",
               }}>
-
-                {/* <div className="modal-icon">
-                <FileUploadIcon />
-              </div> */}
                 <Box sx={{
                   // mb:"50px !important"
                 }}>
@@ -1349,7 +1362,7 @@ label="mark_as_invoiced"
                   height: "100%",
                   gap: "10px"
                 }}>
-                  {/* <DownloadButton title="Download mark as Invoice sample file"/> */}
+               
                   <a
                     onClick={() => setIsShowExportModal((e) => !e)}
                   // className="close-btn"
@@ -2000,13 +2013,7 @@ label="mark_as_invoiced"
         </Fade>
       </Modal>}
       {/*  */}
-      <AutohideSnackbar
-        onClose={() => setAlert({ ...alert, open: false })}
-        open={alert.open}
-        severity={alert.severity}
-        message={alert.message}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      />
+     
     </div>
   );
 };

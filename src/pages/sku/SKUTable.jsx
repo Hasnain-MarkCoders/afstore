@@ -203,6 +203,8 @@ export default function ({
   const [isSKUDeleting, setIsSKUDeleting] = useState(false)
   const [isEditingSKU, setIsEditingSKU] = useState(false)
   const boolRef = useRef(false);
+  const DEFAULT = { enabled: false, code: '7113.11.5000', scope: 'US' };
+  const [hscodeSettings, setHscodeSettings] = useState(DEFAULT);
 
   const navigate = useNavigate()
   // add Action
@@ -214,6 +216,7 @@ export default function ({
   // delete
   const handleDeleteModal = (data) => {
     setDeleteId(data);
+   
   };
   const deleteSku = async (_id) => {
     setIsSKUDeleting(true)
@@ -230,6 +233,9 @@ export default function ({
 
   // edit
   const handleEditModal = (data) => {
+     if(data?.hscode){
+      setHscodeSettings(data?.hscode)
+    }
     setFields(data);
   };
   const handleInput = (e) => {
@@ -259,22 +265,13 @@ export default function ({
   };
 
   const handleSubmitUpdateSKU = async (e) => {
+    const hscode = hscodeSettings.enabled? hscodeSettings : {...hscodeSettings, code:null , scope:null}
+    const {customer_shipment_price, ...rest }  = fields
     setIsEditingSKU(true)
     e.preventDefault();
     API.post(`/${auth?.type}/sku/edit`, {
-      ...fields,
-      // id: fields._id,
-      // title: fields.title,
-      // ename:fields.ename,
-      // cname:fields.cname,
-      // production_time: fields.production_time,
-      // factory_price: parseFloat(fields.factory_price),
-      // customer_price: parseFloat(fields.customer_price),
-      // properties: {
-      //   pair: fields.properties.pair,
-      //   name: fields.properties.name,
-      //   image: fields.properties.image,
-      // },
+      ...rest,
+      hscode
     })
       .then((response) => {
         handleEditModal(null);
@@ -368,16 +365,28 @@ export default function ({
             handleUpdateKey={handleUpdateKey}
             handleAddKey={handleAddKey}
             sku={fields?.sku}
+            cname={fields?.cname}
+            ename={fields?.ename}
+            factoryPrice={fields?.factory_price}
+            customerPrice={fields.customer_price}
             sku_id={fields?.sku_id}
             unit_price={fields?.unit_price}
             keys={fields.keys}
+            productionTime = {fields.production_time}
+            setProductionTime={(e) => { setFields({ ...fields, production_time: e }) }}
             setSku={(e) => { setFields({ ...fields, sku: e }) }}
+                setCustomerPrice={(e) => { setFields({ ...fields, customer_price: e }) }}
+                setFactoryPrice={(e) => { setFields({ ...fields, factory_price: e }) }}
+                setEname={(e) => { setFields({ ...fields, ename: e }) }}
+                setCname={(e) => { setFields({ ...fields, cname: e }) }}
             setSkuId={(e) => { setFields({ ...fields, sku_id: e }) }}
             setUnitPrice={(e) => { setFields({ ...fields, unit_price: e }) }}
             handleEditModal={() => handleEditModal(null)}
             fields={fields}
             handleInput={(e) => handleInput(e)}
             handleSubmitUpdateSKU={(e) => handleSubmitUpdateSKU(e)}
+            hscodeSettings={hscodeSettings}
+            setHscodeSettings={setHscodeSettings}
           />
         )}
 

@@ -121,7 +121,7 @@ useEffect(()=>{
             <Box sx={{
               mt:filter?"20px":""
             }}>
-              {auth.type === "admin" ? (
+              {(auth.type === "admin"||auth.type === "suadmin") ? (
                 <Box
                   sx={{
                     display: "flex",

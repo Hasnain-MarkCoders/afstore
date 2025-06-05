@@ -1,21 +1,16 @@
 import { Box, Button, Fade, Modal, Typography, Backdrop } from '@mui/material';
-import { DataGridPro } from '@mui/x-data-grid-pro';
 import * as React from 'react';
 import CloseIcon from "@mui/icons-material/Close";
-import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Tooltip from '@mui/material/Tooltip';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import AutohideSnackbar from '../../components/snackbar/Snackbar';
 import { localeDateAndTime } from '../../Utils/Utils';
+import LineOrderPropertiesComponent from '../../components/LineOrderPropertiesComponent/LineOrderPropertiesComponent';
+import useAlertStore from '../../zustand/alert';
 
 export default function   TicketUserInfo({ data }) {
+  const {handleAlert} = useAlertStore()
   const auth = useSelector((state) => state.user);
-  const [snackbar, setSnackbar] = React.useState({
-    open:false,
-    message:""
-  })
-
   const [propertiesData, setPropertiesData] = React.useState(null);
   // Function to format keys
   const formatKey = (key) => {
@@ -67,10 +62,12 @@ export default function   TicketUserInfo({ data }) {
 
   const handleCopy=(field,text)=>{
     navigator.clipboard.writeText(text)
-    setSnackbar({
-      open:true,
-      message:`${field} Copied to clipboad.`
-    })
+    handleAlert({
+      isOpen:true,
+      message:`${field} Copied to clipboad.`,
+      severity:"success"
+    }
+    )
   }
   return (
     <div style={{
@@ -157,19 +154,11 @@ export default function   TicketUserInfo({ data }) {
                 Properties
               </Typography>
               <div className="datatable skuTable" style={{ position: "relative", minHeight: '150px' }}>
-
-                {data?.properties &&
-                  <DataGridPro
-                    className="datagrid"
-                    getRowId={(row) => row.id ? row.id : Math.random().toString()}
-                    rows={data?.properties}
-                    columns={userColumns}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
-                  />
-                }
+                  <LineOrderPropertiesComponent
+                          isDisabeld={true}
+                          fields={data}
+                          />
               </div>
-
               <Box className="modal-footer">
                 <Button
                   className="btn btn-outline-primary"
@@ -182,7 +171,6 @@ export default function   TicketUserInfo({ data }) {
           </Box>
         </Fade>
       </Modal>}
-      <AutohideSnackbar open = {snackbar.open} message = {snackbar.message} onClose={()=>setSnackbar({open:false, message:""})}/>
 
     </div>
   );

@@ -3,11 +3,11 @@ import { useRef, useState } from "react";
 import { Box, Button, Modal, Typography, Fade, Backdrop, Tooltip, TextField, IconButton, MenuItem, Select, InputLabel, FormControl, Alert, Snackbar } from "@mui/material";
 import API from "../../api/api";
 import CloseIcon from "@mui/icons-material/Close";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import EditIcon from '@mui/icons-material/Edit';
 import CustomIcon from "../../components/CustomIcon/CustomIcon";
 import CustomChip from "../../components/CustomChip/CustomChip";
+import useAlertStore from "../../zustand/alert";
+
 
 const userColumns = [
   { field: "email", headerName: "Email", flex: 1 },
@@ -38,15 +38,9 @@ const Datatable = ({ data  ,isLoading , setPaginationModel }) => {
 
   const [error, setError] = useState("")
   const [fields, setFields] = useState(null)
-  // const [currentPassword, setCurrentPassword] = useState("");
+  const {handleAlert} = useAlertStore()
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [alert, setAlert] = useState({
-    open:false,
-    severity:"success",
-    message:""
-  })
-
   const boolRef = useRef(false);
 
   const handleEditModal = (data) => {
@@ -57,13 +51,14 @@ const Datatable = ({ data  ,isLoading , setPaginationModel }) => {
     setFields(p => ({ ...p, [name]: value }))
   }
   const handleSubmitUpdateUser = async (e) => {
-
+    let message = null
     if (newPassword !== confirmPassword) {
       e.preventDefault()
-      setAlert({
+      message = "Password and confirm password do not match"
+      handleAlert({
         severity:"error",
-        open:true,
-        message:"Password and confirm password do not match"
+        isOpen:true,
+        message
       })
       return   ;
     }
@@ -73,21 +68,28 @@ const Datatable = ({ data  ,isLoading , setPaginationModel }) => {
       name: fields.name,
       email: fields.email,
       type: fields.type,
-      // current_password: currentPassword,
       new_password: newPassword,
       confirm_password: confirmPassword,
     }).then((response) => {
       handleEditModal(null);
       setPaginationModel({ bool: boolRef.current });
       boolRef.current = !boolRef.current;
-      setAlert({
+      message = response.data?.message?? "Details updated successfully"
+      handleAlert({
         severity:"success",
-        open:true,
-        message:"Details updated successfully"
+        isOpen:true,
+        message,
       })
       setConfirmPassword("")
       setNewPassword("")
-    }).catch((error) => { setError(error) })
+    }).catch((error) => { 
+          message = error?.response?.data?.message ?? error?.message ?? "Error updating!"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"error"
+            })
+      setError(error) })
   };
 
   const actionColumn = [
@@ -181,30 +183,6 @@ const Datatable = ({ data  ,isLoading , setPaginationModel }) => {
       </Modal>}
 
 
-      <Snackbar 
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={alert.open} autoHideDuration={6000} onClose={()=>{
-      setAlert({
-        open:false,
-        severity:"success",
-        message:""
-      })
-    }}>
-  <Alert
-    onClose={()=>{
-      setAlert({
-        open:false,
-        severity:"success",
-        message:""
-      })
-    }}
-    severity={alert.severity}
-    variant="filled"
-    sx={{ width: '100%' }}
-  >
-    {alert.message}
-  </Alert>
-</Snackbar>
 
         <DataGridPro
           className="datagrid"

@@ -478,3 +478,27 @@ export const tabsFilterFields = (props, boolRef) => {
     return true;
   }
  
+export function getUpdatedFilters(filters, falsyValues = [""]) {
+    if (!Array.isArray(filters)) return [];
+
+    return filters.reduce((acc, filter) => {
+        if (
+            typeof filter === "object" &&
+            filter !== null &&
+            "type" in filter &&
+            "value" in filter
+        ) {
+            const { type, value } = filter;
+
+            if (Array.isArray(value)) {
+                const cleanedArray = value.filter(v => !falsyValues.includes(v));
+                if (cleanedArray.length > 0) {
+                    acc.push({ type, value: cleanedArray });
+                }
+            } else {
+                acc.push({ type, value });
+            }
+        }
+        return acc;
+    }, []);
+}

@@ -1,44 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {  useState, useRef } from "react";
 import API from "../../api/api";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import DoneIcon from "@mui/icons-material/Done";
-import AvTimerIcon from "@mui/icons-material/AvTimer";
 import dayjs from "dayjs";
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import CloseIcon from "@mui/icons-material/Close";
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 import {
   Box,
-  Button,
-  Modal,
-  Typography,
-  Fade,
-  Backdrop,
-  Container,
-  TextField,
-  TextareaAutosize,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  Switch,
-  FormControlLabel,
-  FormGroup,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Tooltip,
-  IconButton,
   Chip,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 
 import ErrorModal from "../../components/Modals/ErrorModal";
-import PostEditModal from "../../components/Modals/PostsModal/PostEditModal";
 import PostActivatorModal from "../../components/Modals/PostsModal/PostActivatorModal";
 import CustomIcon from "../../components/CustomIcon/CustomIcon";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -47,30 +16,8 @@ import EditStateModal from "../../components/EditStateModal/EditStateModal";
 import MakePremiumPostServiceModal from "../../components/MakePremiumPostServiceModal/MakePremiumPostServiceModal";
 import DeletePostServiceModal from "../../components/DeletePostServiceModal/DeletePostServiceModal";
 import { useSelector } from "react-redux";
+import useAlertStore from "../../zustand/alert";
 
-const formattedDateTime = (date) => {
-  const dateTime = new Date(date);
-  const formattedDate = dateTime.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-
-  // Format options for date and time
-  const timeFormatOptions = {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  };
-  const formattedTime = dateTime.toLocaleTimeString(
-    undefined,
-    timeFormatOptions
-  );
-
-  const formatted = `${formattedDate}`;
-  return formatted;
-};
 
 
 const PostServiceGrid = ({ rows, isLoading , handleRefresh=()=>{}, setPaginationModel=()=>{}}) => {
@@ -78,18 +25,13 @@ const PostServiceGrid = ({ rows, isLoading , handleRefresh=()=>{}, setPagination
     page: 0,        // Current page index (0-based)
     pageSize: 12,   // Number of rows per page
   });
-
+  const {handleAlert} = useAlertStore()
   // Handle pagination changes
   const handlePaginationModelChange = (newModel) => {
     setPaginationModelPostSrevice(newModel);
   };
   const auth = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: '',
-  });
   const [startDate, setStartDate] = React.useState(dayjs());
   const [endDate, setEndDate] = React.useState(dayjs());
   // add modal
@@ -118,6 +60,7 @@ const PostServiceGrid = ({ rows, isLoading , handleRefresh=()=>{}, setPagination
   };
 
   const handleSubmitActivate = async (e) => {
+    let message = null
     e.preventDefault();
 
     await API.post(`/admin/set-post-service`, {
@@ -125,43 +68,55 @@ const PostServiceGrid = ({ rows, isLoading , handleRefresh=()=>{}, setPagination
       start_date: startDate,
       end_date: endDate,
     })
-      .then((responce) => {
+      .then((response) => {
         setFields(null);
         setPaginationModel({ bool: boolRef.current });
         boolRef.current = !boolRef.current;
         // Reset the form fields
         setStartDate(dayjs());
         setEndDate(dayjs());
+          message = response.data?.message??"Post  service activated"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"success"
+            })
       })
       .catch((error) => {
         handleSetServiceError(error?.response?.data?.message);
+            message = error?.response?.data?.message ?? error?.message ?? "Error activating post service!"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"error"
+            })
       });
   };
 
-  const handleSnackbarClose = () => {
-    setSnackbar({ open: false, message: '', severity: '' });
-  };
+  
 
   const handlePremium =async(data)=>{
+    let message = null
     try{
       setLoading(true)
     const response = await API.post(`${auth.type}/toggle-premium`, data);
+    message = response.data?.message??"Post service toggled!"
+    console.log("message", message)
+    handleAlert({
+      isOpen:true,
+      message,
+      severity:"success"
+    })    
     handleRefresh()
-    if (response.data){
-      setSnackbar({
-        open: true,
-        message: response?.data?.message,
-        severity: 'success',
-      });
-    }
 
-      
     }catch(error){ 
-      setSnackbar({
-        open: true,
-        message: error?.message,
-        severity: 'error',
-      });
+    message = error?.response?.data?.message ?? error?.message ?? "Error toggle post service!"
+            handleAlert({
+              isOpen:true,
+              message,
+              severity:"error"
+            })
+            console.log(error)
     }finally{
       setLoading(false)
     }
@@ -254,12 +209,6 @@ const columns = [
              cb={()=>{handleEditModal({_id:params.row._id, states, loss_code:params.row.loss_code,service:params.row.service })}}
              icon={<EditIcon/>}
             />}
-             {/* <CustomIcon
-             title={"Premium"}
-             className="action-icon-btn editBtn"
-             cb={()=>{handlePremiumPostServiceModal({_id:params.row._id, states}); console.log(states)}}
-             icon={<StarBorderIcon/>}
-            /> */}
                <CustomIcon
              title={"Delete"}
              className="action-icon-btn editBtn"
@@ -280,17 +229,7 @@ const columns = [
   return (
     <Box className="datatable" sx={{ height: "calc(100vh - 180px)" }}>
       <DataGridPro
-        // rows={rows}
-        // getRowId={(row) => row._id}
-        // columns={[...columns]}
-        // pageSize={12}
-        // pagination
-        // disableSelectionOnClick={true}
-        // autoHeight
-        // rowsPerPageOptions={[12, 20, 30, 40, 50]}
-        // onPaginationModelChange={handlePaginationModelChange}
-        // // pageSizeOptions={[5, 10, 20, 50]}
-        // loading={isLoading}
+       
         rows={rows}
         columns={columns}
         getRowId={(row) => row._id}
@@ -347,30 +286,7 @@ const columns = [
               postService={deletePostService||{}}
               />
             }
-      {/* {editFields && (
-       <PostEditModal
-       handleEditModal={()=>handleEditModal(null)}
-       editFields={editFields}
-       handleSubmitEdit={()=>handleSubmitEdit()}
-       handleInput={(e)=>handleInput(e)}
-     />
-      )} */}
-        
-
-        <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
-        >
-          {snackbar.message}
-        </Alert>
-        </Snackbar>
+    
       {serviceError && (
        <ErrorModal
        reason={serviceError}

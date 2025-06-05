@@ -82,7 +82,6 @@ const PupringFilter = (props) => {
     props.setPaginationModel({
       po_ids: POIDS.split(/[, \n]+/),
       po: query.split(/[ ,\n]+/),
-             multiple_order_status: status,
       multiple_order_status: status,
       order_status: props.pageInfo.order_status,
       invoice_status: invoiceStatus,
@@ -123,7 +122,6 @@ const PupringFilter = (props) => {
     props.setPaginationModel({
       po_ids: POIDS.split(/[, \n]+/),
       po: query.split(/[ ,\n]+/),
-             multiple_order_status: status,
       multiple_order_status: status,
       order_status: props.pageInfo.order_status,
       invoice_status: invoiceStatus,
@@ -154,7 +152,6 @@ const PupringFilter = (props) => {
     props.setPaginationModel({
       po_ids: POIDS.split(/[, \n]+/),
       po: query.split(/[ ,\n]+/),
-             multiple_order_status: status,
       multiple_order_status: status,
       order_status: props.pageInfo.order_status,
       invoice_status: invoiceStatus,
@@ -442,11 +439,19 @@ const PupringFilter = (props) => {
             />
           </Box>
 
-          <Box component="div" className="btn-group">
+          <Box component="div" sx={{
+            display:"flex",
+            alignItems:"center"
+          }} className="btn-group">
             {auth.type === "admin" ? (
               <>
                 {props.shareDocs && (
-                  <ButtonGroup>
+                  <ButtonGroup sx={{
+                    display:"flex",
+                    gap:"10px",
+                    alignItems:"center",
+                  }}>
+
                     <Link
                       target="_blank"
                       className="btn btn-primary"
@@ -454,6 +459,8 @@ const PupringFilter = (props) => {
                         borderTopRightRadius: "0",
                         borderBottomRightRadius: 0,
                         borderRight: "1px solid #ffffff",
+                        // height:"30px"
+
                       }}
                       to={shareDocs}
                     >
@@ -483,6 +490,10 @@ const PupringFilter = (props) => {
                   target="_blank"
                   className="btn btn-primary"
                   to={shareDocs}
+                  style={{
+                    // height:"30px"
+                    marginTop:"10px"
+                  }}
                 >
                   Shared Docs
                 </Link>

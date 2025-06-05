@@ -1,12 +1,10 @@
 import { Backdrop, Box, Button, Fade, IconButton, Modal, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import HscodeField from '../../HscodeField/HscodeField';
 const AddSKUModal = ({
   sku = "",
   sku_id = "",
-  unit_price = null,
-  setUnitPrice = () => { },
   setSkuId = () => { },
   setSku = () => { },
   handleModal = () => { },
@@ -16,7 +14,19 @@ const AddSKUModal = ({
   removeKey=()=>{},
   updateKeyValue=()=>{},
   addNewKey=()=>{},
-  isLoading=false
+  isLoading=false,
+  setCname = () => {},
+  setEname = () => {},
+  cname = "",
+  ename = "",
+  factoryPrice = "",
+  customerPrice = "",
+  productionTime="",
+  setFactoryPrice = () => {},
+  setProductionTime=()=>{},
+  setCustomerPrice = () => {},
+   hscodeSettings,
+  setHscodeSettings=()=>{} 
 }) => {
   return (
     <Modal
@@ -65,15 +75,53 @@ const AddSKUModal = ({
                 onChange={(e) => setSkuId(e.target.value)}
                 required
               />
-              <TextField type="number"
-                inputProps={{ min: 0, step: "any"  }}
-                label="UNIT_PRICE"
+                     <TextField
+                type="text"
+                label="Ename"
                 fullWidth
                 variant="outlined"
                 style={{ marginBottom: "20px" }}
-                value={unit_price}
-                onChange={(e) => setUnitPrice(e.target.value)}
-                required
+                value={ename}
+                onChange={(e) => setEname(e.target.value)}
+              />
+
+              <TextField
+                type="text"
+                label="Cname"
+                fullWidth
+                variant="outlined"
+                style={{ marginBottom: "20px" }}
+                value={cname}
+                onChange={(e) => setCname(e.target.value)}
+              />
+                  <TextField
+                type="text"
+                label="Production Time"
+                fullWidth
+                variant="outlined"
+                style={{ marginBottom: "20px" }}
+                value={productionTime}
+                onChange={(e) => setProductionTime(e.target.value)}
+              />
+
+
+                 <TextField
+                inputProps={{ min: 0 }}
+                label="Factory Price RMB"
+                fullWidth
+                variant="outlined"
+                style={{ marginBottom: "20px" }}
+                value={factoryPrice}
+                onChange={(e) => setFactoryPrice(e.target.value)}
+              />
+              <TextField
+                inputProps={{ min: 0 }}
+                label="Customer Price USD"
+                fullWidth
+                variant="outlined"
+                style={{ marginBottom: "20px" }}
+                value={customerPrice}
+                onChange={(e) => setCustomerPrice(e.target.value)}
               />
                <Typography variant="h6">Custom SKU Properties</Typography>
                {Object.entries(keys).map(([key, value]) => (
@@ -98,7 +146,10 @@ const AddSKUModal = ({
               >
                 + Add Property
               </Button>
-
+     <HscodeField 
+               hscodeSettings={hscodeSettings}
+               setHscodeSettings={setHscodeSettings}/>
+              <Box className="modal-footer"></Box>
               <Box className="modal-footer">
                 <Button
                   className="btn btn-outline-primary"

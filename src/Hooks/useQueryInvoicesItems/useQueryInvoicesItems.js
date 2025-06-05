@@ -28,7 +28,7 @@ function useQueryInvoicesItems(paginationModel) {
           const response = await API.post(`/${auth.type}/line-orders`, 
              {
 
-              filter:[{type:"invoice_status" , value:INVOICE_STATUS.INVOICED }]
+              filter:[{type:"invoice_status" , value:[INVOICE_STATUS.INVOICED] }]
             },
             {
               params: {

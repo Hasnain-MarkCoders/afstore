@@ -1,6 +1,6 @@
-import { useRef } from "react";
-import { useSelector } from "react-redux";
+
 import API from "../../api/api";
+import { getUpdatedFilters } from "../../Utils/Utils";
 
 
 
@@ -26,19 +26,6 @@ export const filterFields = (props, boolRef) => {
 
     });
 };
-// Function to change circle color for selected rows
-// export const handleColorPlate = (ids, color, key) => {
-//     const boolRef = useRef(false);
-//     const auth = useSelector((state) => state.user);
-//     API.post(`/${auth?.type}/${key}`, {
-//         order_ids: ids,
-//         color: color,
-//     }).then((response) => {
-//         filterFields(props, boolRef);
-//         boolRef.current = !boolRef.current;
-//     });
-// };
-
 
 // Function to export orders summary as Excel file
 export const exportSummary = (props, setProgressSummary) => {
@@ -244,9 +231,9 @@ export const selectedMarkAsInvoiced = async (id , props ,  checkboxValues , expo
         document.body.removeChild(link);
         // delete link;
       }
-
+      const cleanedFilters = getUpdatedFilters(filters)
     const requestBody = {
-        filter: filters,
+        filter: cleanedFilters,
         columns: checkboxValues,
         exportType: exportSheet,
         // ...other properties you want to include in the request body...

@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DownloadIcon from '@mui/icons-material/Download';
 import "./../style.scss";
-import { IconButton, Tooltip } from "@mui/material";
 import CustomIcon from "../../../components/CustomIcon/CustomIcon";
-import { colors } from "@material-ui/core";
 
 export default function DataGridDemo({ rows, isLoading, pageInfo, setPaginationModel }) {
   const columns = [
@@ -36,7 +33,7 @@ export default function DataGridDemo({ rows, isLoading, pageInfo, setPaginationM
       minWidth: 100,
       renderCell: (params) => {
         const handleViewInvoice = () => {
-          // window.open(params.value, "_blank");
+          window.open(params.value, "_blank");
         };
 
         return (
@@ -57,7 +54,7 @@ export default function DataGridDemo({ rows, isLoading, pageInfo, setPaginationM
       minWidth: 100,
       renderCell: (params) => {
         const handleViewItemsSheet = () => {
-          // window.open(params.value, "_blank");
+          window.open(params.value, "_blank");
         };
 
         return (
