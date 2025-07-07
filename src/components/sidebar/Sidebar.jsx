@@ -41,7 +41,7 @@ const Sidebar = ({ logoutAction }) => {
             </li>
           </NavLink>
           <div
-            className={`dropdown ${(pathname === "pupring" || pathname === "raw-orders") ? "active" : ""}`}
+            className={`dropdown ${(pathname === "afstore" || pathname === "raw-orders") ? "active" : ""}`}
             style={{ textDecoration: "none" }}
           >
             <li

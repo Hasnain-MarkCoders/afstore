@@ -139,7 +139,7 @@ export default function TicketFooter({ data, setPaginationModel, isLoading, disp
                                             {item.name}
                                         </li>
                                     ))}
-                                    <li className="type"><span>Blue : message to pupring</span></li>
+                                    <li className="type"><span>Blue : message to afstore</span></li>
                                     {getTags?.filter(item => item.type === 'blue').map((item, index) => (
                                         <li key={`blue-${index}`} className={`${selectedTag && selectedTag?.value === item?.name ? 'active' : ''}`} onClick={() => {setSelectedTag({type : item.type , value: item.name}); setDropDownTag((e)=>!e)}}>
                                             {item.name}
