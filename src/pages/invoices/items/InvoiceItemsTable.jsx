@@ -112,11 +112,7 @@ const navigate = useNavigate()
           cb={()=>navigate(`/afstore/${params.row._id}`)}
           icon={ <RemoveRedEyeIcon />}
          />
-            {/* <Tooltip title="View">
-              <Link to={`/pupring/${params.row._id}`} style={{ color: "#7451f8" }}>
-                <RemoveRedEyeIcon />
-              </Link>
-            </Tooltip> */}
+           
           </div>
         );
       },
